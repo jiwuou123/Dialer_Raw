@@ -1,0 +1,1 @@
+include ':app', ':common', ':jsr305', ':libphonenumber', ':vcard', ':contactscommon', ':contactscommon2', ':contactscommon3', ':contactscommon', ':phonecommon', ':incallui'

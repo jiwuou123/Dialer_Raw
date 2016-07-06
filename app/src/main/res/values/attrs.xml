@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2012 The Android Open Source Project
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License
+  -->
+<resources>
+
+    <declare-styleable name="CallLog">
+        <attr name="call_log_primary_text_color" format="color" />
+        <attr name="call_log_primary_background_color" format="color" />
+        <attr name="call_log_secondary_text_color" format="color" />
+        <attr name="call_log_secondary_background_color" format="color" />
+        <attr name="call_log_header_color" format="color" />
+    </declare-styleable>
+
+    <declare-styleable name="VoicemailStatus">
+        <attr name="call_log_voicemail_status_height" format="dimension" />
+        <attr name="call_log_voicemail_status_background_color" format="color" />
+        <attr name="call_log_voicemail_status_text_color" format="color" />
+        <attr name="call_log_voicemail_status_action_text_color" format="color" />
+    </declare-styleable>
+
+    <declare-styleable name="SearchEditTextLayout" />
+    <declare-styleable name="ResizingText">
+        <attr name="resizing_text_min_size" format="dimension"/>
+    </declare-styleable>
+    <declare-styleable name="Theme.Dialpad">
+        <attr name="dialpad_text_color" format="color" />
+        <attr name="dialpad_text_color_primary" format="color" />
+        <attr name="dialpad_text_color_secondary" format="color" />
+        <attr name="dialpad_icon_tint" format="color" />
+        <attr name="dialpad_voicemail_tint" format="color" />
+        <attr name="dialpad_background" format="color" />
+    </declare-styleable>
+    <declare-styleable name="Dialpad">
+        <attr name="dialpad_key_button_touch_tint" format="color"/>
+    </declare-styleable>
+    <declare-styleable name="GlowPadView">
+        <attr name="android:gravity"/>
+
+        <!-- Reference to an array resource that be shown as targets around a circle. -->
+        <attr name="targetDrawables" format="reference"/>
+
+        <!-- Reference to an array resource that be used as description for the targets around the circle. -->
+        <attr name="targetDescriptions" format="reference"/>
+
+        <!-- Reference to an array resource that be used to announce the directions with targets around the circle. -->
+        <attr name="directionDescriptions" format="reference"/>
+
+        <!-- Sets a drawable as the center. -->
+        <attr name="handleDrawable" format="reference"/>
+
+        <!-- Drawable to use for wave ripple animation. -->
+        <attr name="outerRingDrawable" format="reference"/>
+
+        <!-- Drawble used for drawing points -->
+        <attr name="pointDrawable" format="reference"/>
+
+        <!-- Inner radius of glow area. -->
+        <attr name="innerRadius" format="dimension"/>
+
+        <!-- Outer radius of glow area. Target icons will be drawn on this circle. -->
+        <attr name="outerRadius" format="dimension"/>
+
+        <!-- Size of target radius. Points within this distance of target center is a "hit". -->
+        <!--
+        <attr name="hitRadius" format="dimension"/>
+        -->
+
+        <!-- Radius of glow under finger. -->
+        <attr name="glowRadius" format="dimension"/>
+
+        <!-- Tactile feedback duration for actions. Set to '0' for no vibration. -->
+        <attr name="vibrationDuration" format="integer"/>
+
+        <!-- How close we need to be before snapping to a target. -->
+        <attr name="snapMargin" format="dimension"/>
+
+        <!-- Number of waves/chevrons to show in animation. -->
+        <attr name="feedbackCount" format="integer"/>
+
+        <!-- Used when the handle shouldn't wait to be hit before following the finger -->
+        <attr name="alwaysTrackFinger" format="boolean"/>
+
+        <!-- Determine whether the glow pad is allowed to scale to fit the bounds indicated
+            by its parent. If this is set to false, no scaling will occur. If this is set to true
+            scaling will occur to fit for any axis in which gravity is set to center. -->
+        <attr name="allowScaling" format="boolean" />
+    </declare-styleable>
+
+</resources>

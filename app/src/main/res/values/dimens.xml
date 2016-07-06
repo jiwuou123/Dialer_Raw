@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2012 The Android Open Source Project
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License
+-->
+<resources>
+    <!--
+          Drag to remove view (in dp because it is used in conjunction with a statically
+          sized icon
+    -->
+    <dimen name="remove_text_size">16dp</dimen>
+
+    <!-- Call Log -->
+    <dimen name="call_log_horizontal_margin">8dp</dimen>
+    <dimen name="call_log_call_action_size">32dp</dimen>
+    <dimen name="call_log_call_action_width">54dp</dimen>
+    <dimen name="call_log_icon_margin">4dp</dimen>
+    <dimen name="call_log_inner_margin">13dp</dimen>
+    <dimen name="call_log_outer_margin">8dp</dimen>
+    <dimen name="call_log_start_margin">8dp</dimen>
+    <dimen name="call_log_indent_margin">24dp</dimen>
+    <dimen name="call_log_name_margin_bottom">2dp</dimen>
+    <dimen name="call_log_vertical_padding">12dp</dimen>
+    <dimen name="call_log_list_item_height">56dp</dimen>
+    <dimen name="call_log_list_item_info_margin_start">16dp</dimen>
+    <dimen name="show_call_history_list_item_height">72dp</dimen>
+
+    <!-- Size of contact photos in the call log and call details. -->
+    <dimen name="contact_photo_size">40dp</dimen>
+    <dimen name="call_detail_button_spacing">2dip</dimen>
+    <dimen name="call_detail_horizontal_margin">16dp</dimen>
+    <dimen name="call_detail_top_margin">36dp</dimen>
+    <dimen name="call_detail_bottom_margin">32dp</dimen>
+    <dimen name="call_detail_header_top_margin">20dp</dimen>
+    <dimen name="call_detail_header_bottom_margin">9dp</dimen>
+    <dimen name="call_detail_translation_z">0.5dp</dimen>
+    <dimen name="transcription_top_margin">18dp</dimen>
+    <dimen name="transcription_bottom_margin">18dp</dimen>
+
+    <!-- Size of call provider icon width and height -->
+    <dimen name="call_provider_small_icon_size">12dp</dimen>
+
+    <!-- Match call_button_height to Phone's dimens/in_call_end_button_height -->
+    <dimen name="call_button_height">74dp</dimen>
+
+    <!-- Dimensions for speed dial tiles -->
+    <dimen name="contact_tile_divider_width">1dp</dimen>
+    <dimen name="contact_tile_info_button_height_and_width">36dp</dimen>
+    <item name="contact_tile_height_to_width_ratio" type="dimen">76%</item>
+    <dimen name="contact_tile_text_side_padding">12dp</dimen>
+    <dimen name="contact_tile_text_bottom_padding">9dp</dimen>
+    <dimen name="favorites_row_top_padding">2dp</dimen>
+    <dimen name="favorites_row_bottom_padding">0dp</dimen>
+    <dimen name="favorites_row_start_padding">1dp</dimen>
+
+    <!-- Padding from the last contact tile will provide the end padding. -->
+    <dimen name="favorites_row_end_padding">0dp</dimen>
+    <dimen name="favorites_row_undo_text_side_padding">32dp</dimen>
+
+    <!-- Size of the star icon on the favorites tile. -->
+    <dimen name="favorites_star_icon_size">12dp</dimen>
+
+    <!-- Padding for the tooltip -->
+    <dimen name="dismiss_button_padding_start">20dip</dimen>
+    <dimen name="dismiss_button_padding_end">28dip</dimen>
+
+    <!-- Height of the actionBar - this is 8dps bigger than the platform standard to give more
+    room to the search box-->
+    <dimen name="action_bar_height">56dp</dimen>
+    <dimen name="action_bar_height_large">64dp</dimen>
+    <dimen name="action_bar_elevation">2dp</dimen>
+    <dimen name="tab_height">43dp</dimen>
+    <!-- actionbar height + tab height -->
+    <dimen name="actionbar_and_tab_height">107dp</dimen>
+    <dimen name="actionbar_contentInsetStart">72dp</dimen>
+
+    <!-- Margin to the left and right of the search box. -->
+    <dimen name="search_margin_horizontal">8dp</dimen>
+    <!-- Margin above the search box. -->
+    <dimen name="search_top_margin">8dp</dimen>
+    <!-- Margin below the search box. -->
+    <dimen name="search_bottom_margin">8dp</dimen>
+    <dimen name="search_collapsed_text_size">14sp</dimen>
+    <!-- Search box interior padding - left -->
+    <dimen name="search_box_left_padding">8dp</dimen>
+    <!-- Search box interior padding - right -->
+    <dimen name="search_box_right_padding">8dp</dimen>
+    <!-- Padding around the icon in the search box. -->
+    <dimen name="search_box_icon_margin">4dp</dimen>
+    <dimen name="search_box_search_icon_padding">2dp</dimen>
+    <dimen name="search_box_collapsed_text_margin_left">22dp</dimen>
+    <dimen name="search_list_padding_top">16dp</dimen>
+    <dimen name="search_box_elevation">3dp</dimen>
+
+    <dimen name="call_log_action_icon_margin_start">16dp</dimen>
+    <dimen name="call_log_action_icon_dimen">24dp</dimen>
+    <dimen name="call_log_action_horizontal_padding">24dp</dimen>
+
+    <dimen name="call_log_actions_left_padding">64dp</dimen>
+    <dimen name="call_log_primary_text_size">14sp</dimen>
+    <dimen name="call_log_secondary_text_size">14sp</dimen>
+    <dimen name="call_log_list_item_actions_text_size">12sp</dimen>
+    <!-- Height of the call log actions section for each call log entry -->
+    <dimen name="call_log_action_height">44dp</dimen>
+    <dimen name="call_log_day_group_padding_top">15dp</dimen>
+    <dimen name="call_log_day_group_padding_bottom">9dp</dimen>
+
+    <!-- Padding for icons to increase their touch target. Icons are typically 24 dps in size
+         so this extra padding makes the entire touch target 40dp -->
+    <dimen name="icon_padding">8dp</dimen>
+
+    <!-- Length of dialpad's shadows in dialer. -->
+    <dimen name="shadow_length">10dp</dimen>
+
+    <dimen name="empty_list_message_top_padding">20dp</dimen>
+    <dimen name="empty_list_message_text_size">16sp</dimen>
+
+    <!-- Dimensions for individual preference cards -->
+    <dimen name="preference_padding_top">16dp</dimen>
+    <dimen name="preference_padding_bottom">16dp</dimen>
+    <dimen name="preference_side_margin">16dp</dimen>
+    <dimen name="preference_summary_line_spacing_extra">4dp</dimen>
+
+    <dimen name="call_log_list_item_primary_action_dimen">36dp</dimen>
+
+    <!-- Dimensions for promo cards -->
+    <dimen name="promo_card_icon_size">24dp</dimen>
+    <dimen name="promo_card_start_padding">16dp</dimen>
+    <dimen name="promo_card_top_padding">21dp</dimen>
+    <dimen name="promo_card_main_padding">24dp</dimen>
+    <dimen name="promo_card_title_padding">12dp</dimen>
+    <dimen name="promo_card_action_vertical_padding">4dp</dimen>
+    <dimen name="promo_card_action_end_padding">4dp</dimen>
+    <dimen name="promo_card_action_between_padding">11dp</dimen>
+    <dimen name="promo_card_line_spacing">4dp</dimen>
+
+    <dimen name="voicemail_playback_top_padding">12dp</dimen>
+    
+    <dimen name="dialpad_key_numbers_default_size">36sp</dimen>
+    <dimen name="dialpad_digits_height">60dp</dimen>
+    <dimen name="dialpad_digits_text_size">34sp</dimen>
+    <!-- Zero key should have less space between self and text because "+" is smaller -->
+    <dimen name="dialpad_zero_key_number_default_margin_bottom">1dp</dimen>
+    <dimen name="dialpad_key_number_default_margin_bottom">3dp</dimen>
+    <dimen name="dialpad_voicemail_icon_padding_top">2dp</dimen>
+    <dimen name="dialpad_key_star_size">36sp</dimen>
+    <dimen name="dialpad_key_letters_size">12sp</dimen>
+    <dimen name="dialpad_symbol_margin_bottom">13dp</dimen>
+    <!-- Text dimensions for dialpad keys -->
+    <dimen name="dialpad_key_pound_size">23sp</dimen>
+    <!-- The bottom row of the dialpad is slightly taller to account for the dial button -->
+    <dimen name="dialpad_bottom_key_height">65dp</dimen>
+    <dimen name="dialpad_key_height">64dp</dimen>
+    <dimen name="dialpad_space_above_keys">14dp</dimen>
+    <dimen name="dialpad_digits_padding">16dp</dimen>
+    <dimen name="dialpad_digits_text_min_size">24sp</dimen>
+    <!-- Provide adjustable dimensions so that different apps can use different dialpad sizes. -->
+    <dimen name="dialpad_digits_menu_left_padding">8dp</dimen>
+    <dimen name="dialpad_digits_menu_right_padding">10dp</dimen>
+    <dimen name="dialpad_overflow_margin">8dp</dimen>
+
+    <dimen name="ild_margin_height">10dp</dimen>
+    <dimen name="contact_browser_list_item_text_size">16sp</dimen>
+    <dimen name="contact_browser_list_item_photo_size">40dp</dimen>
+    <dimen name="contact_browser_list_item_gap_between_image_and_text">15dp</dimen>
+    <dimen name="contact_browser_list_top_margin">12dp</dimen>
+    <!-- Whether or not the landscape mode layout is currently being used -->
+    <bool name="is_layout_landscape">false</bool>
+
+    <!-- Dimensions for CallCard elements (the normal in-call UI) -->
+
+    <!-- Height of the "call banner" overlay on top of the upper part of the call info area.
+         Note: This is the default size for small (<600dp height) devices: larger screen sizes apply
+         the values in values-h600dp/dimens.xml. -->
+    <dimen name="call_banner_height">90dp</dimen>
+    <dimen name="incall_action_bar_elevation">3dp</dimen>
+
+    <!-- Margin between the bottom of the "call card" photo
+         and the top of the in-call button cluster. -->
+    <dimen name="in_call_touch_ui_upper_margin">2dp</dimen>
+
+    <!-- Padding at the left and right edges of the "call banner". -->
+    <dimen name="call_banner_side_padding">24dp</dimen>
+    <!-- Padding at the top and bottom edges of the "call banner". -->
+    <dimen name="call_banner_primary_call_container_top_padding">16dp</dimen>
+    <dimen name="secondary_call_info_horizontal_padding">24dp</dimen>
+    <dimen name="secondary_call_info_vertical_padding">32dp</dimen>
+    <dimen name="secondary_call_info_text_size">16sp</dimen>
+
+    <!-- Padding at the top and bottom edges of the "provider information" -->
+    <dimen name="provider_info_top_bottom_padding">8dp</dimen>
+
+    <!-- Text sizes for information in the call card.
+         Note: These are the default sizes for small (<600dp height) devices: larger screen sizes
+         apply the values in values-sw360dp/dimens.xml. -->
+    <dimen name="call_status_text_size">16sp</dimen>
+    <dimen name="call_status_text_min_size">12sp</dimen>
+    <dimen name="call_name_text_size">34dp</dimen>
+    <dimen name="call_name_text_min_size">28sp</dimen>
+    <dimen name="call_label_text_size">16sp</dimen>
+    <!-- Right padding for name and number fields in the call banner.
+         This padding is used to ensure that ultra-long names or
+         numbers won't overlap the elapsed time indication. -->
+    <dimen name="call_banner_name_number_right_padding">50sp</dimen>
+
+    <!-- Height and width of the in-call buttons. -->
+    <dimen name="in_call_button_dimension">48dp</dimen>
+
+    <dimen name="primary_call_elevation">5dp</dimen>
+    <dimen name="dialpad_elevation">2dp</dimen>
+
+    <!-- The InCallUI dialpad will sometimes want digits sizes that are different from dialer.
+         Note: These are the default sizes for small (<600dp height) devices: larger screen sizes
+         apply the values in values-h600dp/dimens.xml. -->
+    <dimen name="dialpad_key_number_margin_bottom">1dp</dimen>
+    <!-- Zero key should have less space between self and text because "+" is smaller -->
+    <dimen name="dialpad_zero_key_number_margin_bottom">0dp</dimen>
+    <dimen name="dialpad_digits_adjustable_text_size">20sp</dimen>
+    <dimen name="dialpad_digits_adjustable_height">50dp</dimen>
+    <dimen name="dialpad_key_numbers_size">36dp</dimen>
+
+    <dimen name="floating_action_button_vertical_offset">-24dp</dimen>
+
+    <dimen name="call_button_margin_vertical">8dp</dimen>
+    <dimen name="call_button_margin_horizontal">6dp</dimen>
+
+    <!-- Dimensions for OTA Call Card -->
+    <dimen name="otaactivate_layout_marginTop">10dp</dimen>
+    <dimen name="otalistenprogress_layout_marginTop">5dp</dimen>
+    <dimen name="otasuccessfail_layout_marginTop">10dp</dimen>
+
+    <!-- Dimension used to possibly down-scale high-res photo into what is suitable
+         for notification's large icon. -->
+    <dimen name="notification_icon_size">64dp</dimen>
+
+    <!-- Circle size for incoming call widget's each item. -->
+    <dimen name="incoming_call_widget_circle_size">56dp</dimen>
+
+    <!-- Size of alarm alert outer ring. -->
+    <dimen name="glowpadview_outerring_diameter">250dp</dimen>
+    <!-- Default target placement radius for GlowPadView. Should be 1/2 of outerring diameter. -->
+    <dimen name="glowpadview_target_placement_radius">125dp</dimen>
+
+    <!-- Default glow radius for GlowPadView -->
+    <dimen name="glowpadview_glow_radius">70dip</dimen>
+
+    <!-- Default distance beyond which GlowPadView snaps to the matching target -->
+    <dimen name="glowpadview_snap_margin">40dip</dimen>
+
+    <!-- Default distance from each snap target that GlowPadView considers a "hit" -->
+    <dimen name="glowpadview_inner_radius">15dip</dimen>
+
+    <dimen name="glowpadview_margin_bottom">-48dip</dimen>
+    <dimen name="glowpadview_margin_right">0dip</dimen>
+    <!-- Height of translucent shadow effect -->
+    <dimen name="translucent_shadow_height">2dp</dimen>
+
+    <dimen name="end_call_button_margin_bottom">8dp</dimen>
+
+    <dimen name="call_card_anim_translate_y_offset">50dp</dimen>
+
+    <!-- The smaller dimension of the video preview.  When in portrait orientation this is the
+         width of the preview.  When in landscape, this is the height. -->
+    <dimen name="video_preview_small_dimension">90dp</dimen>
+
+    <dimen name="video_preview_margin">20dp</dimen>
+
+    <dimen name="end_call_floating_action_button_diameter">72dp</dimen>
+    <dimen name="end_call_floating_action_button_small_diameter">56dp</dimen>
+
+    <dimen name="conference_call_manager_padding_top">64dp</dimen>
+    <dimen name="conference_call_manager_button_dimension">46dp</dimen>
+</resources>
