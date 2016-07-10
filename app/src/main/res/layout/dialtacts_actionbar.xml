@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal" >
+    
+   <TextView
+	    android:id="@+id/actionbar_name"
+	    android:textSize="@dimen/bbk_tab_text_size"
+	    android:layout_marginRight="48dp"
+	    android:layout_marginLeft="48dp"
+	    android:layout_width="wrap_content"
+	    android:layout_height="match_parent"
+	    android:ellipsize="none"
+	    android:gravity="center"
+	    android:singleLine="true"
+	    android:textAppearance="?android:attr/textAppearanceMedium"
+	    android:textColor="@color/bbk_actionbar_icon_color" />
+   <EditText
+	    android:id="@+id/edittext"
+	    android:visibility="gone"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content">
+   </EditText>
+   <TextView
+      android:id="@+id/actionbar_call_dialtacts_action_editer"
+      android:layout_width="wrap_content"
+      android:layout_height="match_parent"
+      android:textSize="15sp"
+      android:layout_marginRight="16dp"
+      android:gravity="center_vertical"
+      android:textColor="#ff16b900" 
+      android:layout_alignParentRight="true"
+      android:singleLine="true"
+      android:text="@string/call_detail_editer"
+      android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+</RelativeLayout>

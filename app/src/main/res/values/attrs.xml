@@ -42,6 +42,7 @@
         <attr name="dialpad_icon_tint" format="color" />
         <attr name="dialpad_voicemail_tint" format="color" />
         <attr name="dialpad_background" format="color" />
+        <attr name="dialpad_key_number_color" format="color"/>
     </declare-styleable>
     <declare-styleable name="Dialpad">
         <attr name="dialpad_key_button_touch_tint" format="color"/>

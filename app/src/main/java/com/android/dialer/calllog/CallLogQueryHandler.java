@@ -130,7 +130,7 @@ public class CallLogQueryHandler extends NoNullCursorAsyncQueryHandler {
     public void fetchCalls(int callType, long newerThan) {
         cancelFetch();
         if (PermissionsUtil.hasPhonePermissions(mContext)) {
-            fetchCalls(QUERY_CALLLOG_TOKEN, callType, false /* newOnly */, newerThan);
+            fetchCalls(QUERY_CALLLOG_TOKEN, callType, false /* newOnly */, newerThan, null);
         } else {
             updateAdapterData(null);
         }
@@ -148,7 +148,7 @@ public class CallLogQueryHandler extends NoNullCursorAsyncQueryHandler {
     }
 
     /** Fetches the list of calls in the call log. */
-    private void fetchCalls(int token, int callType, boolean newOnly, long newerThan) {
+    private void fetchCalls(int token, int callType, boolean newOnly, long newerThan, String accountId) {
         // We need to check for NULL explicitly otherwise entries with where READ is NULL
         // may not match either the query or its negation.
         // We consider the calls that are not yet consumed (i.e. IS_READ = 0) as "new".
@@ -283,5 +283,37 @@ public class CallLogQueryHandler extends NoNullCursorAsyncQueryHandler {
          * Returns true if takes ownership of cursor.
          */
         boolean onCallsFetched(Cursor combinedCursor);
+
+        /// M: [Multi-Delete] for Calllog delete @{
+        void onCallsDeleted();
     }
+
+    /// M: [Multi-Delete] For call log delete @{
+    public static final String CALL_LOG_TYPE_FILTER = "call_log_type_filter";
+    private static final int DELETE_CALLS_TOKEN = 59;
+
+    @Override
+    protected void onDeleteComplete(int token, Object cookie, int result) {
+        final Listener listener = mListener.get();
+        if (listener != null) {
+            listener.onCallsDeleted();
+        }
+    }
+
+    public void deleteSpecifiedCalls(String deleteFilter) {
+        /// M: [ALPS01757324] in case of deleting VM, use uri with vm parameters instead
+        startDelete(DELETE_CALLS_TOKEN, null, Calls.CONTENT_URI_WITH_VOICEMAIL, deleteFilter, null);
+    }
+    /// @}
+
+    /// M: [Dialer Global Search] For call log global search. @{
+    private static final int QUERY_SEARCH_TOKEN = 60;
+    public void fetchSearchCalls(Uri uri) {
+        cancelFetch();
+        Log.d(TAG, "[Dialer Global Search] fetchSearchCalls, uri " + uri);
+        startQuery(QUERY_SEARCH_TOKEN, null, uri,
+                CallLogQuery._PROJECTION, null, null,
+                Calls.DEFAULT_SORT_ORDER);
+    }
+    /// @}
 }

@@ -97,6 +97,9 @@
     <color name="answered_call">@color/dialer_green_highlight_color</color>
 
     <!-- Color for icons in the actionbar -->
+
+    <color name="bbk_actionbar_icon_color">#464646</color>
+
     <color name="actionbar_icon_color">#ffffff</color>
 
     <color name="dialer_dialpad_touch_tint">#330288d1</color>
@@ -114,6 +117,8 @@
     <color name="dialer_theme_color">#0288d1</color>
     <color name="dialpad_primary_text_color">@color/dialer_theme_color</color>
     <color name="focus_color">#44ff0000</color>
+    <color name="dialpad_key_number_color">#cc000000</color>
+    <color name="dialpad_fab_ic_call_color">#737373</color>
     <!-- In-call UI background color. -->
     <color name="incall_background_color">@color/dialer_theme_color</color>
     <color name="incall_accent_color">#ffffff</color>

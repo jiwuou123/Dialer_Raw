@@ -101,6 +101,7 @@ public class EmptyContentView extends LinearLayout implements View.OnClickListen
     public boolean isShowingContent() {
         return mImageView.getVisibility() == View.VISIBLE
                 || mDescriptionView.getVisibility() == View.VISIBLE
+
                 || mActionView.getVisibility() == View.VISIBLE;
     }
 

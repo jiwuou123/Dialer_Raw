@@ -39,6 +39,7 @@ import android.os.Trace;
 import android.provider.Contacts.People;
 import android.provider.Contacts.Phones;
 import android.provider.Contacts.PhonesColumns;
+import android.provider.ContactsContract;
 import android.provider.Settings;
 import android.telecom.PhoneAccount;
 import android.telecom.PhoneAccountHandle;
@@ -98,13 +99,18 @@ public class DialpadFragment extends Fragment
         AdapterView.OnItemClickListener, TextWatcher,
         PopupMenu.OnMenuItemClickListener,
         DialpadKeyButton.OnPressedListener {
+
     private static final String TAG = "DialpadFragment";
+
+    //BBK wanchunhe
+    private Activity activity;
+    private View mSearchView;
 
     /**
      * LinearLayout with getter and setter methods for the translationY property using floats,
      * for animation purposes.
      */
-    public static class DialpadSlidingRelativeLayout extends RelativeLayout {
+    public static class  DialpadSlidingRelativeLayout extends RelativeLayout {
 
         public DialpadSlidingRelativeLayout(Context context) {
             super(context);
@@ -319,6 +325,12 @@ public class DialpadFragment extends Fragment
         updateDeleteButtonEnabledState();
     }
 
+    public DialpadFragment(){
+    }
+    public DialpadFragment(Activity activity){
+        this.activity = activity;
+    }
+
     @Override
     public void onCreate(Bundle state) {
         Trace.beginSection(TAG + " onCreate");
@@ -367,6 +379,8 @@ public class DialpadFragment extends Fragment
         Trace.beginSection(TAG + " setup views");
 
         mDialpadView = (DialpadView) fragmentView.findViewById(R.id.dialpad_view);
+        mSearchView = mDialpadView.findViewById(R.id.digits_container);
+        hideSearchView();
         mDialpadView.setCanDigitsBeEdited(true);
         mDigits = mDialpadView.getDigits();
         mDigits.setKeyListener(UnicodeDialerKeyListener.INSTANCE);
@@ -413,9 +427,13 @@ public class DialpadFragment extends Fragment
                 fragmentView.findViewById(R.id.dialpad_floating_action_button_container);
         final ImageButton floatingActionButton =
                 (ImageButton) fragmentView.findViewById(R.id.dialpad_floating_action_button);
+//        mDialCall = (ImageButton) fragmentView.findViewById(R.id.dial_call);
+//        mDialContacts = (ImageButton) fragmentView.findViewById(R.id.dial_contacts);
+//        mDialContacts = (ImageButton) fragmentView.findViewById(R.id.dial_group_contacts);
         floatingActionButton.setOnClickListener(this);
         mFloatingActionButtonController = new FloatingActionButtonController(getActivity(),
                 floatingActionButtonContainer, floatingActionButton);
+
         Trace.endSection();
         Trace.endSection();
         return fragmentView;
@@ -1666,6 +1684,15 @@ public class DialpadFragment extends Fragment
                 mFloatingActionButtonController.setVisible(false);
             }
         }
+    }
+
+    public void hideSearchView(){
+        if(mSearchView != null)
+            mSearchView.setVisibility(View.GONE);
+    }
+    public void showSearchView(){
+        if(mSearchView != null)
+            mSearchView.setVisibility(View.VISIBLE);
     }
 
     public void setAnimate(boolean value) {

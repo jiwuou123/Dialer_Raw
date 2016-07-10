@@ -51,6 +51,8 @@
          [CHAR LIMIT=30] -->
     <string name="call_detail_menu_report">Report inaccurate number</string>
 
+
+
     <!-- Menu item used to copy a number from the call log to the dialer so it can be edited before calling it -->
     <string name="recentCalls_editNumberBeforeCall">Edit number before call</string>
 
@@ -1258,4 +1260,9 @@
     <!-- Description of the "camera off" icon displayed when the device's camera is disabled during
          a video call. [CHAR LIMIT=NONE] -->
     <string name="camera_off_description">Camera off</string>
+
+    <!-- BBK actionbar  -->
+    <string name="call_detail_editer">"EDITER"</string>
+
+    <string name="all_calls">"ALL CALLS"</string>
 </resources>

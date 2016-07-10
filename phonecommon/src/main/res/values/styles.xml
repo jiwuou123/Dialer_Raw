@@ -90,7 +90,8 @@
     </style>
 
     <style name="Dialpad_Light">
-        <item name="dialpad_text_color">@color/dialpad_digits_text_color</item>
+        <!--<item name="dialpad_text_color">@color/dialpad_digits_text_color</item>-->
+
         <item name="dialpad_text_color_primary">@color/dialpad_primary_text_color</item>
         <item name="dialpad_text_color_secondary">@color/dialpad_secondary_text_color</item>
         <item name="dialpad_icon_tint">@color/dialpad_icon_tint</item>

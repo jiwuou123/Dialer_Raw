@@ -260,6 +260,11 @@ public class CallLogFragment extends Fragment implements CallLogQueryHandler.Lis
         return true;
     }
 
+    @Override
+    public void onCallsDeleted() {
+
+    }
+
     /**
      * Called by {@link CallLogQueryHandler} after a successful query to voicemail status provider.
      */
@@ -511,4 +516,16 @@ public class CallLogFragment extends Fragment implements CallLogQueryHandler.Lis
             }
         }
     }
+    /**
+     *add by liupengfei
+     *new interface to get calllog num.
+     */
+    public int getListItemCount() {
+        if(mEmptyListView != null)
+            return mEmptyListView.getVisibility() == View.VISIBLE ? 0:1;
+        return 0;
+    }
+
+
+
 }
