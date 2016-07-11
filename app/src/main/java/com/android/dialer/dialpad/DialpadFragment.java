@@ -102,7 +102,7 @@ public class DialpadFragment extends Fragment
 
     private static final String TAG = "DialpadFragment";
 
-    //BBK wanchunhe
+
     private Activity activity;
     private View mSearchView;
 
@@ -427,9 +427,6 @@ public class DialpadFragment extends Fragment
                 fragmentView.findViewById(R.id.dialpad_floating_action_button_container);
         final ImageButton floatingActionButton =
                 (ImageButton) fragmentView.findViewById(R.id.dialpad_floating_action_button);
-//        mDialCall = (ImageButton) fragmentView.findViewById(R.id.dial_call);
-//        mDialContacts = (ImageButton) fragmentView.findViewById(R.id.dial_contacts);
-//        mDialContacts = (ImageButton) fragmentView.findViewById(R.id.dial_group_contacts);
         floatingActionButton.setOnClickListener(this);
         mFloatingActionButtonController = new FloatingActionButtonController(getActivity(),
                 floatingActionButtonContainer, floatingActionButton);
@@ -695,10 +692,12 @@ public class DialpadFragment extends Fragment
         // is disabled while Dialer is paused, the "Send a text message" option can be correctly
         // removed when resumed.
         mOverflowMenuButton = mDialpadView.getOverflowMenuButton();
-        mOverflowPopupMenu = buildOptionsMenu(mOverflowMenuButton);
-        mOverflowMenuButton.setOnTouchListener(mOverflowPopupMenu.getDragToOpenListener());
+//        mOverflowPopupMenu = buildOptionsMenu(mOverflowMenuButton);
+//        mOverflowMenuButton.setOnTouchListener(mOverflowPopupMenu.getDragToOpenListener());
         mOverflowMenuButton.setOnClickListener(this);
-        mOverflowMenuButton.setVisibility(isDigitsEmpty() ? View.INVISIBLE : View.VISIBLE);
+//        mOverflowMenuButton.setVisibility(isDigitsEmpty() ? View.INVISIBLE : View.VISIBLE);
+        mOverflowMenuButton.setVisibility(View.INVISIBLE);
+
 
         if (mFirstLaunch) {
             // The onHiddenChanged callback does not get called the first time the fragment is
@@ -943,7 +942,7 @@ public class DialpadFragment extends Fragment
                 break;
             }
             case R.id.dialpad_overflow: {
-                mOverflowPopupMenu.show();
+//                mOverflowPopupMenu.show();
                 break;
             }
             default: {

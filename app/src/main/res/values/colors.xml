@@ -98,7 +98,7 @@
 
     <!-- Color for icons in the actionbar -->
 
-    <color name="bbk_actionbar_icon_color">#464646</color>
+
 
     <color name="actionbar_icon_color">#ffffff</color>
 
@@ -164,7 +164,21 @@
     <!-- Background color for status bar. For portrait this will be ignored. -->
     <color name="statusbar_background_color">@color/dialer_theme_color</color>
 
+    <color name="bbk_actionbar_background_color">#f7f7f7</color>
+
     <color name="translucent_shadow">#33999999</color>
+
+    <!-- actionbar title text clolor  -->
+    <color name="bbk_actionbar_icon_color">#464646</color>
+    <color name="bbk_miss_call_color">#f43737</color>
+    <color name="bbk_call_color">#313131</color>
+    <color name="bbk_search_append_list_item_color">#2073ff</color>
+    <color name="bbk_call_log_secondary_text_color">#8c8c8c</color>
+    <color name="bbk_tab_text_color">#464646</color>
+    <color name="bbk_tab_text_color_alph">#80464646</color>
+    <color name="bbk_tab_text_delete_color">#f13738</color>
+    <color name="bbk_tab_text_delete_color_alph">#80f13738</color>
+    <color name="ccc_color">#cccccc</color>
 
     <!-- 70% opacity, black. -->
     <color name="glowpad_background_color">#b3000000</color>

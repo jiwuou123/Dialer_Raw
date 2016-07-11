@@ -32,6 +32,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.Trace;
 import android.provider.CallLog.Calls;
+import android.provider.Settings;
 import android.speech.RecognizerIntent;
 import android.support.v4.view.ViewPager;
 import android.telecom.PhoneAccount;
@@ -165,7 +166,7 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
 
     private static final int FAB_SCALE_IN_DELAY_MS = 300;
 
-    private RelativeLayout mParentLayout;
+    private FrameLayout mParentLayout;
 
     /**
      * Fragment containing the dialpad that slides into view
@@ -506,10 +507,10 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
         mSlideIn.setInterpolator(AnimUtils.EASE_IN);
         mSlideOut.setInterpolator(AnimUtils.EASE_OUT);
 
-        //mSlideIn.setAnimationListener(mSlideInListener);
+//        mSlideIn.setAnimationListener(mSlideInListener);
         mSlideOut.setAnimationListener(mSlideOutListener);
 
-        mParentLayout = (RelativeLayout) findViewById(R.id.dialtacts_mainlayout);
+        mParentLayout = (FrameLayout) findViewById(R.id.dialtacts_mainlayout);
         mParentLayout.setOnDragListener(new LayoutOnDragListener());
         floatingActionButtonContainer.getViewTreeObserver().addOnGlobalLayoutListener(
                 new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -525,7 +526,7 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
                         mFloatingActionButtonController.setScreenWidth(screenWidth);
 //                        mFloatingActionButtonController.align(
 //                                getFabAlignment(), false /* animate */);
-                        mFloatingActionButtonController.setVisible(true);
+//                        mFloatingActionButtonController.setVisible(true);
                     }
                 });
 
@@ -542,9 +543,6 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
     @Override
     protected void onResume() {
         Trace.beginSection(TAG + " onResume");
-        getActionBar().show();
-
-        Log.d(TAG, "1233");
 
         if (!isInSearchUi()) {
             //if(mCalllogList != null)
@@ -553,7 +551,7 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
         }else {
             showSearchFragment();
             showDialpadFragment(true);
-            mFloatingActionButtonController.setVisible(true);
+//            mFloatingActionButtonController.setVisible(true);
         }
         super.onResume();
 
@@ -565,7 +563,6 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
             mInCallDialpadUp = false;
         } else if (mShowDialpadOnResume) {
             showDialpadFragment(false);
-//            mShowDialpadOnResume = false;
             mShowDialpadOnResume = true;
             if(getCallLogFragment() != null){
                 mCalllogList = (CallLogFragment)getCallLogFragment();
@@ -580,7 +577,6 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
         // shown until onResume has completed.  Active the search UI and set the search term now.
         if (!TextUtils.isEmpty(mVoiceSearchQuery)) {
 //            mActionBarController.onSearchBoxTapped();
-            getActionBar().show();
             mSearchView.setText(mVoiceSearchQuery);
 //            mVoiceSearchQuery = null;
         }
@@ -610,13 +606,12 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
                 mListsFragment.showTab(ListsFragment.TAB_INDEX_RECENTS);
             }
         }
-        sendMessageToReflushEditerView();
         Trace.endSection();
-        if (isActionBarShowing()){
-            Log.d(TAG," ActionBar Showing ....");
-        } else {
-            Log.d(TAG,"  ActionBar Not Showing");
-        }
+        sendMessageToReflushEditerView();
+
+
+
+
     }
 
     /**
@@ -638,7 +633,7 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
      *show editerview if calllog list is not empty.
      */
     private void showEditerViewIfNeed(){
-        //Log.e(TAG,"showEditerViewIfNeed mCalllogList = "+mCalllogList);
+//        Log.e(TAG,"showEditerViewIfNeed mCalllogList = "+ mCalllogList);
         if(mCalllogList != null) {
             int calllogCount = mCalllogList.getListItemCount();
             Log.e(TAG," calllogCount = "+calllogCount);
@@ -695,9 +690,11 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
             mInCallDialpadUp = false;
             showDialpadFragment(true);
         } else if (fragment instanceof SmartDialSearchFragment) {
+            Log.e(TAG,"SmartDialSearchFragment");
             mSmartDialSearchFragment = (SmartDialSearchFragment) fragment;
             mSmartDialSearchFragment.setOnPhoneNumberPickerActionListener(this);
         } else if (fragment instanceof SearchFragment) {
+            Log.e(TAG,"RegularSearchFragment");
             mRegularSearchFragment = (RegularSearchFragment) fragment;
             mRegularSearchFragment.setOnPhoneNumberPickerActionListener(this);
         } else if (fragment instanceof ListsFragment) {
@@ -751,6 +748,12 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
                     /// @}
                 }
                 break;
+            case R.id.floating_action_button_contacts:
+
+//                hideDialpadFragment(true,true);
+                Log.d(TAG,"isDialpadShown: "+ isDialpadShown() + " mInDialpadSearch : " + mInDialpadSearch);
+                break;
+
             default: {
                 Log.wtf(TAG, "Unexpected onClick event from " + view);
                 break;
@@ -819,35 +822,52 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
 //        if (mIsDialpadShown || mStateSaved) {
 //            return;
 //        }
-        if (mIsDialpadShown || mStateSaved || mDialpadFragment == null) {
-            Log.e("liupengfei","mDialpadFragment == null");
+        if (mIsDialpadShown || mStateSaved ||mDialpadFragment == null) {
+            Log.e("showDialpadFragment "," return; ");
             return;
         }
-//        mIsDialpadShown = true;
+        mIsDialpadShown = true;
         animate = false;
+        mDialpadFragment.setAnimate(animate);
 //        mListsFragment.setUserVisibleHint(false);
+        AnalyticsUtil.sendScreenView(mDialpadFragment);
 
 
         final FragmentTransaction ft = getFragmentManager().beginTransaction();
-        if (mDialpadFragment == null) {
-            mDialpadFragment = new DialpadFragment();
-            ft.add(R.id.dialtacts_container, mDialpadFragment, TAG_DIALPAD_FRAGMENT);
-        } else {
+        //if (mDialpadFragment == null) {
+            //mDialpadFragment = new DialpadFragment();
+          //  ft.add(R.id.dialtacts_container, mDialpadFragment, TAG_DIALPAD_FRAGMENT);
+        //} else {
             ft.show(mDialpadFragment);
-        }
+        //}
 
-        mDialpadFragment.setAnimate(animate);
-        AnalyticsUtil.sendScreenView(mDialpadFragment);
-        ft.commit();
+        //mDialpadFragment.setAnimate(animate);
 
-        if (animate) {
+//        ft.commit();
+
+//        if (animate) {
 //            mFloatingActionButtonController.scaleOut();
-        } else {
-            mFloatingActionButtonController.setVisible(true);
-            maybeEnterSearchUi();
+//        } else {
+//            mFloatingActionButtonController.setVisible(true);
+//            maybeEnterSearchUi();
+//        }
+        if (!isInSearchUi() && TextUtils.isEmpty(mSearchQuery)) {
+            if(getCallLogFragment() == null){
+                mCalllogList  = new CallLogFragment(CallLogQueryHandler.CALL_TYPE_ALL);
+                //mCalllogList.setRecyclerViewChangedImpl(mRecyclerViewChangedImpl);
+                ft.add(R.id.dialtacts_frame, mCalllogList,"mCalllogList");
+                ft.show(mCalllogList);
+            }else {
+                if(mSearchViewShow)
+                    mDialpadFragment.showSearchView();
+                else
+                    mDialpadFragment.hideSearchView();
+            }
         }
-//        mActionBarController.onDialpadUp();
-        getActionBar().show();
+        ft.commitAllowingStateLoss();
+        sendMessageToReflushEditerView();
+        Log.e(TAG," showDialpadFragment mIsDialpadShown: "+mIsDialpadShown + " mInDialpadSearch:" + mInDialpadSearch  + "isDialpadShown() :" + isDialpadShown() );
+
 
 //        mListsFragment.getView().animate().alpha(0).withLayer();
     }
@@ -872,7 +892,7 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
      * @see #commitDialpadFragmentHide
      */
     public void hideDialpadFragment(boolean animate, boolean clearDialpad) {
-        if (mDialpadFragment == null || mDialpadFragment.getView() == null) {
+        if (mDialpadFragment == null ) {
             return;
         }
         if (clearDialpad) {
@@ -896,13 +916,14 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
         }
 
 //        mActionBarController.onDialpadDown();
-        getActionBar().show();
+//        getActionBar().show();
 
         if (isInSearchUi()) {
             if (TextUtils.isEmpty(mSearchQuery)) {
                 exitSearchUi();
             }
         }
+
     }
 
     /**
@@ -914,8 +935,7 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
             ft.hide(mDialpadFragment);
             ft.commit();
         }
-//        mFloatingActionButtonController.scaleIn(AnimUtils.NO_DELAY);
-        mFloatingActionButtonController.setVisible(true);
+        mFloatingActionButtonController.scaleIn(AnimUtils.NO_DELAY);
     }
 
     private void updateSearchFragmentPosition() {
@@ -962,12 +982,13 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
 
     private void prepareVoiceSearchButton() {
         final Intent voiceIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-        if (canIntentBeHandled(voiceIntent)) {
+        boolean canBeHandled = canIntentBeHandled(voiceIntent);
+//        if (canIntentBeHandled(voiceIntent)) {
 //            mVoiceSearchButton.setVisibility(View.VISIBLE);
 //            mVoiceSearchButton.setOnClickListener(this);
-        } else {
+//        } else {
 //            mVoiceSearchButton.setVisibility(View.GONE);
-        }
+//        }
     }
 
     protected OptionsPopupMenu buildOptionsMenu(View invoker) {
@@ -1140,7 +1161,8 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
         if (!smartDialSearch) {
             fragment.setQueryString(query, false /* delaySelection */);
         }
-        transaction.commit();
+        transaction.commitAllowingStateLoss();
+//        transaction.commit();
 
 //        if (animate) {
 //            mListsFragment.getView().animate().alpha(0).withLayer();
@@ -1193,7 +1215,7 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
         }
         addCallLogFragmentInList();
 //        mActionBarController.onSearchUiExited();
-        getActionBar().show();
+//        getActionBar().show();
     }
 
 
@@ -1281,15 +1303,40 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
 
 
     private void showFabInSearchUi() {
-        mFloatingActionButtonController.changeIcon(
-                getResources().getDrawable(R.drawable.fab_ic_dial),
-                getResources().getString(R.string.action_menu_dialpad_button));
-        mFloatingActionButtonController.align(getFabAlignment(), false /* animate */);
-        mFloatingActionButtonController.scaleIn(FAB_SCALE_IN_DELAY_MS);
+//        mFloatingActionButtonController.changeIcon(
+//                getResources().getDrawable(R.drawable.fab_ic_dial),
+//                getResources().getString(R.string.action_menu_dialpad_button));
+//        mFloatingActionButtonController.align(getFabAlignment(), false /* animate */);
+//        mFloatingActionButtonController.scaleIn(FAB_SCALE_IN_DELAY_MS);
     }
 
     @Override
     public void onDialpadQueryChanged(String query) {
+        //Log.d(TAG, "---query---:" + query);
+        if(query.length() == 8){
+            if(query.equals("*#5858#*"))
+                sendBroadcast(new Intent("com.android.dialer.DialtactsActivity.recovery.hgc"));
+        }
+        if(query.length() == 9){
+            if(query.equals("*#58058#*")) {
+        	   /*start self test app*/
+                Intent selftestIntent = new Intent();
+                selftestIntent.setClassName("com.eebbk.selftest","com.eebbk.selftest.ui.STHomeActivity");
+                selftestIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(selftestIntent);
+            }
+        }
+        if(query == null || query.length() == 0){
+            mSearchQuery = query;
+            hideSearchFragment();
+        }
+        else{
+            if (!isInSearchUi()) {
+                mSearchQuery = query;
+                enterSearchUi(false /* isSmartDial */, query, true);
+            }
+            showSearchFragment();
+        }
         if (mSmartDialSearchFragment != null) {
             mSmartDialSearchFragment.setAddToContactNumber(query);
         }
@@ -1349,7 +1396,7 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
     public void onListFragmentScroll(int firstVisibleItem, int visibleItemCount,
                                      int totalItemCount) {
         // TODO: No-op for now. This should eventually show/hide the actionBar based on
-        // interactions with the ListsFragments.
+        // interactions with the ListsFragments.on
     }
 
     private boolean phoneIsInUse() {
@@ -1454,7 +1501,7 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-        int tabIndex = mListsFragment.getCurrentTabIndex();
+//        int tabIndex = mListsFragment.getCurrentTabIndex();
 
         // Scroll the button from center to end when moving from the Speed Dial to Recents tab.
         // In RTL, scroll when the current tab is Recents instead of Speed Dial, because the order
@@ -1471,16 +1518,16 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
 
     @Override
     public void onPageSelected(int position) {
-        int tabIndex = mListsFragment.getCurrentTabIndex();
-        if (tabIndex == ListsFragment.TAB_INDEX_ALL_CONTACTS) {
-            mFloatingActionButtonController.changeIcon(
-                    getResources().getDrawable(R.drawable.ic_person_add_24dp),
-                    getResources().getString(R.string.search_shortcut_create_new_contact));
-        } else {
-            mFloatingActionButtonController.changeIcon(
-                    getResources().getDrawable(R.drawable.fab_ic_dial),
-                    getResources().getString(R.string.action_menu_dialpad_button));
-        }
+//        int tabIndex = mListsFragment.getCurrentTabIndex();
+//        if (tabIndex == ListsFragment.TAB_INDEX_ALL_CONTACTS) {
+//            mFloatingActionButtonController.changeIcon(
+//                    getResources().getDrawable(R.drawable.ic_person_add_24dp),
+//                    getResources().getString(R.string.search_shortcut_create_new_contact));
+//        } else {
+//            mFloatingActionButtonController.changeIcon(
+//                    getResources().getDrawable(R.drawable.fab_ic_dial),
+//                    getResources().getString(R.string.action_menu_dialpad_button));
+//        }
     }
 
     @Override
@@ -1546,6 +1593,8 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
         return getFragmentManager().findFragmentByTag("mCalllogList");
 
     }
+
+
 
 
 

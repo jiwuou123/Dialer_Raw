@@ -358,4 +358,32 @@
     <string name="profile_photo_description" msgid="5609894336203315400">"个人资料照片"</string>
     <string name="camera_off_description" msgid="5689494614359429889">"关闭摄像头"</string>
 
+    <!-- bbk wangchunhe 6.0 strings must be translate into english-->
+    <string name="ip_call">"IP呼叫"</string>
+    <string name="before_call_editer">"呼叫前编辑"</string>
+    <string name="cope_this">"复制"</string>
+    <string name="editer_message">"发信息"</string>
+    <string name="editer_delete">"删除("<xliff:g id="count">%d</xliff:g>")"</string>
+    <string name="block_this_number">"添加黑名单"</string>
+    <string name="remove_this_number_in_blacklist">"从黑名单中移除"</string>
+    <string name="remove_this_number_in_blacklist_success">"移除成功"</string>
+    <string name="remove_this_number_in_blacklist_fail">"移除失败"</string>
+    <string name="block_this_number_success">"添加成功"</string>
+    <string name="block_this_number_fail">"添加失败"</string>
+    <string name="add_new_contacts">"新建联系人"</string>
+    <string name="add_new_exits_contacts">"添加到已有联系人"</string>
+    <string name="all_calls">"全部通话"</string>
+    <string name="cansel">"取消"</string>
+    <string name="unkown_location">"未知归属地"</string>
+    <string name="call_log_pm">"下午"</string>
+    <string name="call_log_am">"上午"</string>
+    <string name="call_delete_select_all">"全选"</string>
+    <string name="call_delete_cansel_all">"全不选"</string>
+    <string name="call_detail_editer">"编辑"</string>
+    <string name="copy_success">"文本已复制"</string>
+    <string name="importent_number_is_empty">"号码为空！"</string>
+    <string name="no_sim_card">"请插入SIM卡！"</string>
+    <string name="multiple_delete_title">"删除"</string>
+    <string name="multiple_delete_content">"是否删除所选记录？"</string>
+
 </resources>

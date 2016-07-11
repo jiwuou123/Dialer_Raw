@@ -173,6 +173,8 @@
     <dimen name="dialpad_digits_menu_left_padding">8dp</dimen>
     <dimen name="dialpad_digits_menu_right_padding">10dp</dimen>
     <dimen name="dialpad_overflow_margin">8dp</dimen>
+    <!-- dialtacts_container marginBottom -->
+    <dimen name="dialtacts_container_marginBottom">50dp</dimen>
 
     <dimen name="ild_margin_height">10dp</dimen>
     <dimen name="contact_browser_list_item_text_size">16sp</dimen>

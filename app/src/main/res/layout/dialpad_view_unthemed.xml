@@ -55,7 +55,7 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="1dp"
+            android:layout_height="0dp"
             android:background="#e3e3e3" />
 
     </LinearLayout>
@@ -120,14 +120,14 @@
         android:layout_height="1dp"
         android:background="#e3e3e3" />
 
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/dialpad_space_above_keys" />
+    <!--<Space-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="@dimen/dialpad_space_above_keys" />-->
 
     <include layout="@layout/dialpad" />
 
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="8dp" />
+    <!--<Space-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="8dp" />-->
 
 </view>

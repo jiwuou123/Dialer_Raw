@@ -232,9 +232,9 @@ public class SpeedDialFragment extends Fragment implements OnItemClickListener,
         mListView.setScrollBarStyle(ListView.SCROLLBARS_OUTSIDE_OVERLAY);
         mListView.getDragDropController().addOnDragDropListener(mContactTileAdapter);
 
-        final ImageView dragShadowOverlay =
-                (ImageView) getActivity().findViewById(R.id.contact_tile_drag_shadow_overlay);
-        mListView.setDragShadowOverlay(dragShadowOverlay);
+//        final ImageView dragShadowOverlay =
+//                (ImageView) getActivity().findViewById(R.id.contact_tile_drag_shadow_overlay);
+//        mListView.setDragShadowOverlay(dragShadowOverlay);
 
         mEmptyView = (EmptyContentView) mParentView.findViewById(R.id.empty_list_view);
         mEmptyView.setImage(R.drawable.empty_speed_dial);

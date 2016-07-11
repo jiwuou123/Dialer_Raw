@@ -13,7 +13,7 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<RelativeLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/dialtacts_mainlayout"
     android:layout_width="match_parent"
@@ -28,8 +28,8 @@
         android:id="@+id/dialtacts_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal|center_vertical"
-        android:layout_above="@+id/floating_action_button_container"
+        android:layout_gravity="clip_vertical"
+        android:layout_marginBottom="@dimen/dialtacts_container_marginBottom"
         android:clipChildren="false">
         <!-- The main contacts grid -->
         <FrameLayout
@@ -130,16 +130,16 @@
     </FrameLayout>
 
      Host container for the contact tile drag shadow
-    <FrameLayout
-        android:id="@+id/activity_overlay"
-        android:layout_height="match_parent"
-        android:layout_width="match_parent">
-        <ImageView
-            android:id="@+id/contact_tile_drag_shadow_overlay"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:importantForAccessibility="no" />
-    </FrameLayout>
+    <!--<FrameLayout-->
+        <!--android:id="@+id/activity_overlay"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_width="match_parent">-->
+        <!--<ImageView-->
+            <!--android:id="@+id/contact_tile_drag_shadow_overlay"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:visibility="gone"-->
+            <!--android:importantForAccessibility="no" />-->
+    <!--</FrameLayout>-->
 
-</RelativeLayout>
+</FrameLayout>

@@ -90,6 +90,7 @@ public class CallLogFragment extends Fragment implements CallLogQueryHandler.Lis
     private static final int READ_CALL_LOG_PERMISSION_REQUEST_CODE = 1;
 
     private RecyclerView mRecyclerView;
+
     private LinearLayoutManager mLayoutManager;
     private CallLogAdapter mAdapter;
     private CallLogQueryHandler mCallLogQueryHandler;
