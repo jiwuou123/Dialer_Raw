@@ -40,6 +40,7 @@ import android.provider.ContactsContract;
 import android.provider.VoicemailContract.Status;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,6 +53,7 @@ import com.android.contacts.common.GeoUtil;
 import com.android.contacts.common.util.PermissionsUtil;
 import com.android.contacts.common.util.ViewUtil;
 import com.android.dialer.R;
+import com.android.dialer.bbk.RecyclerViewChangedImpl;
 import com.android.dialer.list.ListsFragment.HostInterface;
 import com.android.dialer.util.DialerUtils;
 import com.android.dialer.util.EmptyLoader;
@@ -292,6 +294,18 @@ public class CallLogFragment extends Fragment implements CallLogQueryHandler.Lis
         View view = inflater.inflate(R.layout.call_log_fragment, container, false);
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
+        // bbk wangchunhe   2016/07/12
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView,
+                                             int newState) {
+                // TODO Auto-generated method stub
+                super.onScrollStateChanged(recyclerView, newState);
+                Log.e(TAG,"onScrollStateChanged newState = "+newState);
+                if(mRecyclerViewChangedImpl != null)
+                    mRecyclerViewChangedImpl.onScrollStateChanged(newState);
+            }
+        });
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
@@ -525,6 +539,14 @@ public class CallLogFragment extends Fragment implements CallLogQueryHandler.Lis
         if(mEmptyListView != null)
             return mEmptyListView.getVisibility() == View.VISIBLE ? 0:1;
         return 0;
+    }
+
+    /** @} */
+    //////////////BBK liupengfei add RecyclerView scroll lisener////////////
+    private RecyclerViewChangedImpl mRecyclerViewChangedImpl;
+    public void setRecyclerViewChangedImpl(RecyclerViewChangedImpl mRecyclerViewChangedImpl){
+
+        this.mRecyclerViewChangedImpl = mRecyclerViewChangedImpl;
     }
 
 

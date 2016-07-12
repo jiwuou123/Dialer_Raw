@@ -63,6 +63,7 @@ import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
@@ -103,9 +104,10 @@ public class DialpadFragment extends Fragment
     private static final String TAG = "DialpadFragment";
 
 
+    //bbk wangchunhe 2016/07/12
     private Activity activity;
     private View mSearchView;
-
+    private LinearLayout mDialpadViewContainer;
     /**
      * LinearLayout with getter and setter methods for the translationY property using floats,
      * for animation purposes.
@@ -377,6 +379,8 @@ public class DialpadFragment extends Fragment
         Trace.endSection();
 
         Trace.beginSection(TAG + " setup views");
+
+        mDialpadViewContainer = (LinearLayout)fragmentView.findViewById(R.id.dialpad_view);
 
         mDialpadView = (DialpadView) fragmentView.findViewById(R.id.dialpad_view);
         mSearchView = mDialpadView.findViewById(R.id.digits_container);
@@ -692,10 +696,10 @@ public class DialpadFragment extends Fragment
         // is disabled while Dialer is paused, the "Send a text message" option can be correctly
         // removed when resumed.
         mOverflowMenuButton = mDialpadView.getOverflowMenuButton();
-//        mOverflowPopupMenu = buildOptionsMenu(mOverflowMenuButton);
-//        mOverflowMenuButton.setOnTouchListener(mOverflowPopupMenu.getDragToOpenListener());
+        mOverflowPopupMenu = buildOptionsMenu(mOverflowMenuButton);
+        mOverflowMenuButton.setOnTouchListener(mOverflowPopupMenu.getDragToOpenListener());
         mOverflowMenuButton.setOnClickListener(this);
-//        mOverflowMenuButton.setVisibility(isDigitsEmpty() ? View.INVISIBLE : View.VISIBLE);
+        mOverflowMenuButton.setVisibility(isDigitsEmpty() ? View.INVISIBLE : View.VISIBLE);
         mOverflowMenuButton.setVisibility(View.INVISIBLE);
 
 
@@ -942,7 +946,7 @@ public class DialpadFragment extends Fragment
                 break;
             }
             case R.id.dialpad_overflow: {
-//                mOverflowPopupMenu.show();
+                mOverflowPopupMenu.show();
                 break;
             }
             default: {
@@ -1730,6 +1734,16 @@ public class DialpadFragment extends Fragment
                 mPseudoEmergencyAnimator.end();
             }
         }
+    }
+
+    public void showMenuDailpadBtn() {
+                mDialpadViewContainer.setVisibility(View.GONE);
+                mFloatingActionButtonController.changeIcon(
+                getResources().getDrawable(R.drawable.fab_ic_dial),
+                getResources().getString(R.string.action_menu_dialpad_button));
+        mFloatingActionButtonController.align(FloatingActionButtonController.ALIGN_MIDDLE, false /* animate */);
+        mFloatingActionButtonController.scaleIn(300);
+
     }
 
 }

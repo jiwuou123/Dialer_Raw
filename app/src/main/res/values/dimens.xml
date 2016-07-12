@@ -176,6 +176,8 @@
     <!-- dialtacts_container marginBottom -->
     <dimen name="dialtacts_container_marginBottom">50dp</dimen>
 
+    <dimen name="dialtacts_floating_action_button_marginBotton">16dp</dimen>
+
     <dimen name="ild_margin_height">10dp</dimen>
     <dimen name="contact_browser_list_item_text_size">16sp</dimen>
     <dimen name="contact_browser_list_item_photo_size">40dp</dimen>

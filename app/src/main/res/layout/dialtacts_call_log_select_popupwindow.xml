@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp"
+    android:orientation="vertical">
+    
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="24dp"
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/dialtacts_popupwindow_all_calls_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textColor="@color/bbk_actionbar_icon_color"
+            android:layout_marginLeft="20dp"
+            android:layout_alignParentLeft="true"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/all_calls"
+            />
+        <ImageView
+            android:id="@+id/dialtacts_popupwindow_all_calls_image"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_dialtacts_call_log_select"
+            android:layout_marginRight="20dp"
+            android:layout_alignParentRight="true"
+            android:tint="@color/bbk_actionbar_icon_color"/>
+    </RelativeLayout>
+
+    <view
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#636363"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="24dp"
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/dialtacts_popupwindow_call_log_missed_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textColor="@color/bbk_actionbar_icon_color"
+            android:layout_marginLeft="20dp"
+            android:layout_alignParentLeft="true"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/all_calls"
+            />
+        <ImageView
+            android:id="@+id/dialtacts_popupwindow_call_log_missed_image"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_dialtacts_call_log_select"
+            android:layout_marginRight="20dp"
+            android:layout_alignParentRight="true"
+            android:tint="@color/bbk_actionbar_icon_color"/>
+    </RelativeLayout>
+
+
+
+</LinearLayout>
