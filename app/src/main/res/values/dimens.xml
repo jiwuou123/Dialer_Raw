@@ -77,13 +77,39 @@
 
     <!-- Height of the actionBar - this is 8dps bigger than the platform standard to give more
     room to the search box-->
-    <dimen name="action_bar_height">56dp</dimen>
-    <dimen name="action_bar_height_large">64dp</dimen>
-    <dimen name="action_bar_elevation">2dp</dimen>
+    <dimen name="action_bar_height">54dp</dimen>
+    <dimen name="action_bar_height_large">46dp</dimen>
+    <dimen name="action_bar_elevation">1px</dimen>
     <dimen name="tab_height">43dp</dimen>
+
     <!-- actionbar height + tab height -->
     <dimen name="actionbar_and_tab_height">107dp</dimen>
     <dimen name="actionbar_contentInsetStart">72dp</dimen>
+
+    <!-- Dimensions for bbk dialtacts actionbar -->
+    <dimen name="bbk_tab_text_size">16sp</dimen>
+    <dimen name="dialtacts_actionbar_editer_text_size">15sp</dimen>
+    <dimen name="dialtacts_actionbar_name_layout_marginRight">48dp</dimen>
+    <dimen name="dialtacts_actionbar_name_layout_marginLeft">48dp</dimen>
+    <dimen name="dialtacts_actionbar_menu_layout_marginLeft">210dp</dimen>
+
+    <!-- Dimensions for  all calls select popupwindow -->
+    <dimen name="popupwindow_all_calls_cantainer_height">35dp</dimen>
+    <dimen name="popupwindow_all_calls_cantainer_padding">5dp</dimen>
+    <dimen name="popupwindow_all_calls_image_layout_marginRight">20dp</dimen>
+    <dimen name="popupwindow_all_calls_txt_layout_marginLeft">20dp</dimen>
+    <dimen name="popupwindow_all_calls_txt_layout_marginStart">21dp</dimen>
+    <dimen name="popupwindow_divider_layout_height">0.5px</dimen>
+    <dimen name="popupwindow_divider_layout_marginLeft">15dp</dimen>
+    <dimen name="popupwindow_divider_layout_marginRight">15dp</dimen>
+    <dimen name="popupwindow_call_log_missed_container_layout_height">35dp</dimen>
+    <dimen name="popupwindow_call_log_missed_container_padding">5dp</dimen>
+    <dimen name="popupwindow_call_log_missed_txt_layout_marginLeft">20dp</dimen>
+    <dimen name="popupwindow_call_log_missed_image_layout_marginRight">20dp</dimen>
+    <dimen name="popupwindow_call_log_select_texr_size">16sp</dimen>
+
+
+
 
     <!-- Margin to the left and right of the search box. -->
     <dimen name="search_margin_horizontal">8dp</dimen>
@@ -112,9 +138,7 @@
     <dimen name="call_log_secondary_text_size">14sp</dimen>
     <dimen name="call_log_list_item_actions_text_size">12sp</dimen>
 
-    <!-- Dimensions for bbk actionbar -->
 
-    <dimen name="bbk_tab_text_size">16sp</dimen>
     <!-- Height of the call log actions section for each call log entry -->
     <dimen name="call_log_action_height">44dp</dimen>
     <dimen name="call_log_day_group_padding_top">15dp</dimen>

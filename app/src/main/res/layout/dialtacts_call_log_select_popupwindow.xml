@@ -1,63 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="10dp"
+    android:background="@color/popupwindow_background_color"
     android:orientation="vertical">
-    
+
     <RelativeLayout
+        android:id="@+id/dialtacts_popupwindow_all_calls_cantainer"
         android:layout_width="match_parent"
-        android:layout_height="24dp"
-        android:orientation="horizontal">
-        <TextView
-            android:id="@+id/dialtacts_popupwindow_all_calls_txt"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:textColor="@color/bbk_actionbar_icon_color"
-            android:layout_marginLeft="20dp"
-            android:layout_alignParentLeft="true"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/all_calls"
-            />
+        android:layout_height="@dimen/popupwindow_all_calls_cantainer_height"
+        android:padding="@dimen/popupwindow_all_calls_cantainer_padding"
+        android:background="@color/popupwindow_item_background_color"
+        >
+
         <ImageView
             android:id="@+id/dialtacts_popupwindow_all_calls_image"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:src="@drawable/ic_dialtacts_call_log_select"
-            android:layout_marginRight="20dp"
+            android:layout_marginRight="@dimen/popupwindow_all_calls_image_layout_marginRight"
             android:layout_alignParentRight="true"
-            android:tint="@color/bbk_actionbar_icon_color"/>
+            />
+
+        <TextView
+            android:id="@+id/dialtacts_popupwindow_all_calls_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textColor="@color/popupwindow_item_text_color"
+            android:layout_marginLeft="@dimen/popupwindow_all_calls_txt_layout_marginLeft"
+            android:textSize="@dimen/popupwindow_call_log_select_texr_size"
+            android:text="@string/all_calls"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="@dimen/popupwindow_all_calls_txt_layout_marginStart" />
     </RelativeLayout>
 
-    <view
+    <View
+        android:id="@+id/popupwindow_divider"
         android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:background="#636363"/>
+        android:layout_height="@dimen/popupwindow_divider_layout_height"
+        android:layout_marginLeft="@dimen/popupwindow_divider_layout_marginLeft"
+        android:layout_marginRight="@dimen/popupwindow_divider_layout_marginRight"
+        android:layout_alignBottom="@id/dialtacts_popupwindow_all_calls_cantainer"
+        android:background="@color/popupwindow_divider_color"/>
 
     <RelativeLayout
+        android:id="@+id/dialtacts_popupwindow_call_log_missed_container"
         android:layout_width="match_parent"
-        android:layout_height="24dp"
-        android:orientation="horizontal">
+        android:layout_height="@dimen/popupwindow_call_log_missed_container_layout_height"
+        android:background="@color/popupwindow_item_background_color"
+        android:layout_below="@id/popupwindow_divider"
+        android:padding="@dimen/popupwindow_call_log_missed_container_padding"
+        >
         <TextView
             android:id="@+id/dialtacts_popupwindow_call_log_missed_txt"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:textColor="@color/bbk_actionbar_icon_color"
-            android:layout_marginLeft="20dp"
+            android:textColor="@color/popupwindow_item_text_color"
+            android:layout_marginLeft="@dimen/popupwindow_call_log_missed_txt_layout_marginLeft"
             android:layout_alignParentLeft="true"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/all_calls"
+            android:textSize="@dimen/popupwindow_call_log_select_texr_size"
+            android:text="@string/call_log_missed"
             />
         <ImageView
             android:id="@+id/dialtacts_popupwindow_call_log_missed_image"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:src="@drawable/ic_dialtacts_call_log_select"
-            android:layout_marginRight="20dp"
+            android:layout_marginRight="@dimen/popupwindow_call_log_missed_image_layout_marginRight"
             android:layout_alignParentRight="true"
-            android:tint="@color/bbk_actionbar_icon_color"/>
+            />
     </RelativeLayout>
 
 
 
-</LinearLayout>
+</RelativeLayout>

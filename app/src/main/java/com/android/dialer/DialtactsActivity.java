@@ -26,6 +26,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -110,6 +111,9 @@ import junit.framework.Assert;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.view.WindowManager.LayoutParams.FIRST_SYSTEM_WINDOW;
+import static android.view.WindowManager.LayoutParams.TYPE_WALLPAPER;
 
 /**
  * The dialer tab's title is 'phone', a more common name (see strings.xml).
@@ -441,8 +445,8 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
         mEditerToCalldetail.setOnClickListener(this);
         actionbar_name.setClickable(false);
         actionbar_name.setText(getString(R.string.all_calls));
-//        mSearchView = (EditText) actionBar.getCustomView().findViewById(R.id.edittext);
-//        mSearchView.setVisibility(View.GONE);
+        mSearchView = (EditText) actionBar.getCustomView().findViewById(R.id.edittext);
+        mSearchView.setVisibility(View.GONE);
 //        actionBar.setBackgroundDrawable(null);
 
 //        SearchEditTextLayout searchEditTextLayout =
@@ -770,12 +774,13 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
                 if (!mIsDialpadShown) {
                     mInCallDialpadUp = false;
                     showDialpadFragment(true);
-                    //mDialpadFragment.clearDialpad();
-                    ///M: WFC <To show WFC notification on status bar>@{
-//                    if (ImsManager.isWfcEnabledByUser(this)) {
-//                        mDialpadFragment.showWfcNotification();
-//                    }
-                    /// @}
+                }else {
+                    if (TextUtils.isEmpty(mSearchQuery) ||
+                            (mSmartDialSearchFragment != null && mSmartDialSearchFragment.isVisible()
+                                    && mSmartDialSearchFragment.getAdapter().getCount() == 0)) {
+                        exitSearchUi();
+                    }
+                    hideDialpadFragment(true, true);
                 }
                 break;
             case R.id.actionbar_menu:
@@ -1627,40 +1632,40 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
 
     }
 
-
+    //bbk wangchunhe 2016/07/13
     private void initCallLogSelectPopupWindow(View v) {
         if (mCallLogSelectPopupWindow == null) {
             LayoutInflater layoutInflater = LayoutInflater.from(this);
-            if (layoutInflater == null) {
-                Log.e(TAG," layoutInflater is null  ");
-            }
-            View contentView = layoutInflater.inflate(R.layout.dialtacts_call_log_select_popupwindow,mParentLayout);
-            mCallLogSelectPopupWindow = new PopupWindow(contentView, ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
-            ColorDrawable colorDrawable = new ColorDrawable(0x000000);
-            mCallLogSelectPopupWindow.setBackgroundDrawable(colorDrawable);
-            WindowManager.LayoutParams lp=getWindow().getAttributes();
-            lp.alpha = 0.4f;
-            getWindow().setAttributes(lp);
-            mCallLogSelectPopupWindow.setOutsideTouchable(true);
-            mCallLogSelectPopupWindow.setFocusable(true);
-            mCallLogSelectPopupWindow.showAtLocation(v, Gravity.TOP|Gravity.CENTER_HORIZONTAL|Gravity.CENTER_VERTICAL,0,0);
-            mCallLogSelectPopupWindow.update();
-            mCallLogSelectPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
-                @Override
-                public void onDismiss() {
-                    WindowManager.LayoutParams lp=getWindow().getAttributes();
-                    lp.alpha = 1f;
-                    getWindow().setAttributes(lp);
-                }
-            });
-
+            View contentView = layoutInflater.inflate(R.layout.dialtacts_call_log_select_popupwindow,mParentLayout,false);
+            mCallLogSelectPopupWindow = new PopupWindow(contentView, ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT);
         }
+
+
+
+        mCallLogSelectPopupWindow.setTouchable(true);
+        mCallLogSelectPopupWindow.setFocusable(true);
+        mCallLogSelectPopupWindow.setOutsideTouchable(true);
+        mCallLogSelectPopupWindow.setAnimationStyle(R.anim.popup_anim);
+        mCallLogSelectPopupWindow.setBackgroundDrawable(new BitmapDrawable());
+        mCallLogSelectPopupWindow.showAsDropDown(getActionBar().getCustomView());
+
+        mCallLogSelectPopupWindow.update();
+        mCallLogSelectPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+//                WindowManager.LayoutParams lp=getWindow().getAttributes();
+//                lp.alpha = 1f;
+//                mParentLayout.setAlpha(1f);
+//                getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+//                getWindow().setAttributes(lp);
+            }
+        });
 
 
     }
 
     ////////////BBK liupengfei add 2015/12/22///////////////////
-    /*
+    /**
     the method of com.android.dialer.bbk.RecyclerViewChangedImpl
     */
 
