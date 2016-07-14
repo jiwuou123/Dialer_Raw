@@ -382,7 +382,9 @@ public class DialpadFragment extends Fragment
 
         mDialpadViewContainer = (LinearLayout)fragmentView.findViewById(R.id.dialpad_view);
 
+
         mDialpadView = (DialpadView) fragmentView.findViewById(R.id.dialpad_view);
+
         mSearchView = mDialpadView.findViewById(R.id.digits_container);
         hideSearchView();
         mDialpadView.setCanDigitsBeEdited(true);
@@ -567,7 +569,7 @@ public class DialpadFragment extends Fragment
 
             }
         }
-        showDialpadChooser(needToShowDialpadChooser);
+//        showDialpadChooser(needToShowDialpadChooser);
         setStartedFromNewIntent(false);
     }
 
@@ -696,11 +698,12 @@ public class DialpadFragment extends Fragment
         // is disabled while Dialer is paused, the "Send a text message" option can be correctly
         // removed when resumed.
         mOverflowMenuButton = mDialpadView.getOverflowMenuButton();
+        mOverflowMenuButton.setVisibility(View.INVISIBLE);
         mOverflowPopupMenu = buildOptionsMenu(mOverflowMenuButton);
         mOverflowMenuButton.setOnTouchListener(mOverflowPopupMenu.getDragToOpenListener());
-        mOverflowMenuButton.setOnClickListener(this);
-        mOverflowMenuButton.setVisibility(isDigitsEmpty() ? View.INVISIBLE : View.VISIBLE);
-        mOverflowMenuButton.setVisibility(View.INVISIBLE);
+//        mOverflowMenuButton.setOnClickListener(this);
+//        mOverflowMenuButton.setVisibility(isDigitsEmpty() ? View.INVISIBLE : View.VISIBLE);
+
 
 
         if (mFirstLaunch) {
@@ -1552,9 +1555,9 @@ public class DialpadFragment extends Fragment
     private void updateMenuOverflowButton(boolean transitionIn) {
         mOverflowMenuButton = mDialpadView.getOverflowMenuButton();
         if (transitionIn) {
-            AnimUtils.fadeIn(mOverflowMenuButton, AnimUtils.DEFAULT_DURATION);
+//            AnimUtils.fadeIn(mOverflowMenuButton, AnimUtils.DEFAULT_DURATION);
         } else {
-            AnimUtils.fadeOut(mOverflowMenuButton, AnimUtils.DEFAULT_DURATION);
+//            AnimUtils.fadeOut(mOverflowMenuButton, AnimUtils.DEFAULT_DURATION);
         }
     }
 

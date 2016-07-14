@@ -24,16 +24,21 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.content.res.ColorStateList;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.content.res.XmlResourceParser;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Trace;
 import android.provider.CallLog.Calls;
+import android.provider.ContactsContract;
 import android.provider.Settings;
 import android.speech.RecognizerIntent;
 import android.support.v4.view.ViewPager;
@@ -109,6 +114,9 @@ import com.android.phone.common.animation.AnimationListenerAdapter;
 
 import junit.framework.Assert;
 
+import org.xmlpull.v1.XmlPullParserException;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -167,6 +175,7 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
      *  bbk wangchunhe 2016/07/12 for popupwindow
      */
     private PopupWindow mCallLogSelectPopupWindow;
+    private ImageView mActionbarMenu;
 
 
     /**
@@ -432,15 +441,8 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
         actionBar.setCustomView(R.layout.dialtacts_actionbar);
         actionBar.setDisplayShowCustomEnabled(true);
         TextView actionbar_name = (TextView)actionBar.getCustomView().findViewById(R.id.actionbar_name);
-        ImageView actionbarMenu = (ImageView)actionBar.getCustomView().findViewById(R.id.actionbar_menu);
-        actionbarMenu.setEnabled(true);
-        actionbarMenu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                initCallLogSelectPopupWindow(view);
-            }
-        });
-
+        mActionbarMenu = (ImageView)actionBar.getCustomView().findViewById(R.id.actionbar_menu);
+        mActionbarMenu.setOnClickListener(this);
         mEditerToCalldetail = (TextView)actionBar.getCustomView().findViewById(R.id.actionbar_call_dialtacts_action_editer);
         mEditerToCalldetail.setOnClickListener(this);
         actionbar_name.setClickable(false);
@@ -566,39 +568,46 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
         Trace.endSection();
         initFlushHandler();
 
-        Log.e(TAG, " onCreate()  mFloatingActionButtonController " + mFloatingActionButtonController.isVisible() );
+        Log.e(TAG, " onCreate()  dialerFragment  " +  mIsDialpadShown  );
     }
 
     @Override
     protected void onResume() {
         Trace.beginSection(TAG + " onResume");
-
-        if (!isInSearchUi()) {
-            //if(mCalllogList != null)
-            //   mCalllogList.scrollToTop();
-            showDialpadFragment(false);
-        }else {
-            showSearchFragment();
-            showDialpadFragment(true);
-            mFloatingActionButtonController.setVisible(false);
-        }
         super.onResume();
+
+
 
         mStateSaved = false;
         if (mFirstLaunch) {
             displayFragment(getIntent());
+            Log.e(TAG," onResume show ");
         } else if (!phoneIsInUse() && mInCallDialpadUp) {
             hideDialpadFragment(false, true);
             mInCallDialpadUp = false;
+            Log.e(TAG, " ---- onResume() --- show 3");
         } else if (mShowDialpadOnResume) {
             showDialpadFragment(false);
             mShowDialpadOnResume = true;
+            Log.e(TAG, " ---- onResume() ---- 3");
             if(getCallLogFragment() != null){
                 mCalllogList = (CallLogFragment)getCallLogFragment();
                 mCalllogList.setRecyclerViewChangedImpl(mRecyclerViewChangedImpl);
             }else {
                 Log.d(TAG,"getCallLogFragment == null importent log ********");
             }
+        }
+
+        if (!isInSearchUi()) {
+            //if(mCalllogList != null)
+            //   mCalllogList.scrollToTop();
+            showDialpadFragment(false);
+            Log.e(TAG," ------ onResume() ----    hide 1" );
+        }else {
+            showSearchFragment();
+            showDialpadFragment(true);
+            mFloatingActionButtonController.setVisible(false);
+            Log.e(TAG, " ----- onResume() -----  show 2");
         }
 
         // If there was a voice query result returned in the {@link #onActivityResult} callback, it
@@ -617,6 +626,7 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
             // will not cause an extra view to be sent out on rotation
             if (mIsDialpadShown) {
                 AnalyticsUtil.sendScreenView(mDialpadFragment, this);
+                Log.e(TAG," ----- onResume() -----  mIsDialpadShown is true ");
             }
             mIsRestarting = false;
         }
@@ -635,6 +645,8 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
                 mListsFragment.showTab(ListsFragment.TAB_INDEX_RECENTS);
             }
         }
+
+        actionbarMenuOpen();
         Trace.endSection();
         sendMessageToReflushEditerView();
 
@@ -699,7 +711,7 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
         outState.putBoolean(KEY_FIRST_LAUNCH, mFirstLaunch);
         outState.putBoolean(KEY_IS_DIALPAD_SHOWN, mIsDialpadShown);
 //        mActionBarController.saveInstanceState(outState);
-//        mStateSaved = true;
+        mStateSaved = true;
     }
 
     @Override
@@ -718,6 +730,7 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
             }
             mInCallDialpadUp = false;
             showDialpadFragment(true);
+            Log.e(TAG," ----- onAttachFragment ----  showDialpadFragment");
         } else if (fragment instanceof SmartDialSearchFragment) {
             Log.e(TAG,"SmartDialSearchFragment");
             mSmartDialSearchFragment = (SmartDialSearchFragment) fragment;
@@ -784,7 +797,12 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
                 }
                 break;
             case R.id.actionbar_menu:
-                initCallLogSelectPopupWindow(view);
+                initCallLogSelectPopupWindow();
+                Log.e(TAG, " onClick actionbar_menu");
+
+                break;
+
+
 
 
             default: {
@@ -875,7 +893,7 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
             ft.show(mDialpadFragment);
         //}
 
-        mDialpadFragment.setAnimate(animate);
+//        mDialpadFragment.setAnimate(animate);
 
 //        ft.commit();
 
@@ -1633,35 +1651,93 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
     }
 
     //bbk wangchunhe 2016/07/13
-    private void initCallLogSelectPopupWindow(View v) {
+    private void initCallLogSelectPopupWindow() {
+          View contentView = null;
         if (mCallLogSelectPopupWindow == null) {
             LayoutInflater layoutInflater = LayoutInflater.from(this);
-            View contentView = layoutInflater.inflate(R.layout.dialtacts_call_log_select_popupwindow,mParentLayout,false);
+             contentView = layoutInflater.inflate(R.layout.dialtacts_call_log_select_popupwindow,mParentLayout,false);
             mCallLogSelectPopupWindow = new PopupWindow(contentView, ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT);
+
         }
-
-
 
         mCallLogSelectPopupWindow.setTouchable(true);
         mCallLogSelectPopupWindow.setFocusable(true);
         mCallLogSelectPopupWindow.setOutsideTouchable(true);
-        mCallLogSelectPopupWindow.setAnimationStyle(R.anim.popup_anim);
+        mCallLogSelectPopupWindow.setAnimationStyle(R.style.PopupWindowAinm);
         mCallLogSelectPopupWindow.setBackgroundDrawable(new BitmapDrawable());
         mCallLogSelectPopupWindow.showAsDropDown(getActionBar().getCustomView());
-
+        mActionbarMenu.setImageResource(R.drawable.ic_actionbar_meun_up);
+        popupWindowItemSelect(mCallLogSelectPopupWindow);
         mCallLogSelectPopupWindow.update();
         mCallLogSelectPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
             @Override
             public void onDismiss() {
-//                WindowManager.LayoutParams lp=getWindow().getAttributes();
-//                lp.alpha = 1f;
-//                mParentLayout.setAlpha(1f);
-//                getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-//                getWindow().setAttributes(lp);
+                mActionbarMenu.setImageResource(R.drawable.ic_actionbar_meun_down);
+
             }
         });
 
 
+
+
+    }
+
+    // bbk wangchunhe 2016/07/13
+    private void popupWindowItemSelect(PopupWindow popupWindow) {
+        View contentView = popupWindow.getContentView();
+        RelativeLayout callLogsContainer = (RelativeLayout)contentView.findViewById(R.id.dialtacts_popupwindow_all_calls_cantainer);
+        final TextView  callLogsTxt = (TextView) contentView.findViewById(R.id.dialtacts_popupwindow_all_calls_txt);
+        final ImageView callLogsImage = (ImageView) contentView.findViewById(R.id.dialtacts_popupwindow_all_calls_image);
+
+        RelativeLayout callLogMissedContainer = (RelativeLayout)contentView.findViewById(R.id.dialtacts_popupwindow_call_log_missed_container);
+        final TextView  callLogMissedTxt = (TextView) contentView.findViewById(R.id.dialtacts_popupwindow_call_log_missed_txt);
+        final ImageView callLogMissedImage = (ImageView) contentView.findViewById(R.id.dialtacts_popupwindow_call_log_missed_image);
+
+
+        ColorStateList colorStateListTxt = getColorStateList(R.color.popupwindows_item_text_color);
+        ColorStateList colorStateListImage = getColorStateList(R.color.popupwindows_item_image_color);
+
+        callLogsImage.setImageTintList(colorStateListImage);
+        callLogMissedImage.setImageTintList(colorStateListImage);
+
+        callLogsTxt.setTextColor(colorStateListTxt);
+        callLogMissedTxt.setTextColor(colorStateListTxt);
+
+
+        callLogsContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                callLogsImage.setSelected(true);
+                callLogsTxt.setSelected(true);
+                callLogMissedImage.setSelected(false);
+                callLogMissedTxt.setSelected(false);
+
+
+            }
+        });
+
+        callLogMissedContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                callLogsImage.setSelected(false);
+                callLogsTxt.setSelected(false);
+                callLogMissedImage.setSelected(true);
+                callLogMissedTxt.setSelected(true);
+
+            }
+        });
+
+
+    }
+
+
+
+
+    private void actionbarMenuOpen() {
+        if(mCallLogSelectPopupWindow != null && mCallLogSelectPopupWindow.isShowing()){
+            mActionbarMenu.setImageResource(R.drawable.ic_actionbar_meun_up);
+
+        }
     }
 
     ////////////BBK liupengfei add 2015/12/22///////////////////

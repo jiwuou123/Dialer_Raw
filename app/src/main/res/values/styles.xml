@@ -414,4 +414,9 @@
         <item name="android:textColor">@color/incall_action_bar_text_color</item>
     </style>
 
+    <style name="PopupWindowAinm" parent="android:Animation">
+        <item name="android:windowEnterAnimation">@anim/popupwindows_slide_in_top</item>
+        <!--<item name="android:windowExitAnimation">@anim/popupwindows_slide_out_top</item>-->
+    </style>
+
 </resources>

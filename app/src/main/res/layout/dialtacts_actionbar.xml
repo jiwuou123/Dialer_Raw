@@ -38,13 +38,17 @@
          android:textColor="@color/bbk_actionbar_icon_color"
 		android:layout_alignParentTop="true"
 		android:layout_centerHorizontal="true" />
+
 	<ImageView
 		android:id="@+id/actionbar_menu"
 		android:layout_width="wrap_content"
 		android:layout_height="match_parent"
 		android:layout_marginLeft="@dimen/dialtacts_actionbar_menu_layout_marginLeft"
-		android:layout_alignParentTop="true"
+		android:clickable="true"
 		android:tint="@color/bbk_actionbar_icon_color"
-		android:src="@drawable/ic_actionbar_meun_down"/>
+		android:src="@drawable/ic_actionbar_meun_down"
+		android:layout_alignParentTop="true"
+		android:layout_toStartOf="@+id/actionbar_call_dialtacts_action_editer"
+		android:layout_marginEnd="75dp" />
 
 </RelativeLayout>

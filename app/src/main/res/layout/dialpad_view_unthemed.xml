@@ -104,15 +104,14 @@
 
         <ImageButton
             android:id="@+id/deleteButton"
-            android:background="@drawable/btn_dialpad_key"
-            android:tint="?attr/dialpad_icon_tint"
+            android:background="@drawable/bbk_dialpad_delete"
+
             android:paddingLeft="@dimen/dialpad_digits_padding"
             android:paddingRight="@dimen/dialpad_digits_padding"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:state_enabled="false"
+            android:layout_height="wrap_content"
             android:contentDescription="@string/description_delete_button"
-            android:src="@drawable/ic_dialpad_delete" />
+             />
     </LinearLayout>
 
     <View

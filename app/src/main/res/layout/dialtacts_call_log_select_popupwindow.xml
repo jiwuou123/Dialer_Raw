@@ -20,13 +20,14 @@
             android:src="@drawable/ic_dialtacts_call_log_select"
             android:layout_marginRight="@dimen/popupwindow_all_calls_image_layout_marginRight"
             android:layout_alignParentRight="true"
+            android:tint="@color/popupwindow_item_selected_color"
             />
 
         <TextView
             android:id="@+id/dialtacts_popupwindow_all_calls_txt"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:textColor="@color/popupwindow_item_text_color"
+            android:textColor="@color/popupwindow_item_selected_color"
             android:layout_marginLeft="@dimen/popupwindow_all_calls_txt_layout_marginLeft"
             android:textSize="@dimen/popupwindow_call_log_select_texr_size"
             android:text="@string/all_calls"
