@@ -313,4 +313,7 @@
 
     <dimen name="conference_call_manager_padding_top">64dp</dimen>
     <dimen name="conference_call_manager_button_dimension">46dp</dimen>
+    <!-->new <-->
+    <dimen name="dialpad_search_list_item_height">56dp</dimen>
+    <dimen name="dialpad_search_list_item_padding">8dp</dimen>
 </resources>

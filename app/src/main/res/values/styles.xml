@@ -413,6 +413,27 @@
         <item name="android:background">@color/incall_action_bar_background_color</item>
         <item name="android:textColor">@color/incall_action_bar_text_color</item>
     </style>
+    <style name="DialpadSearchAddContactStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/call_log_action_height</item>
+        <item name="android:paddingStart">@dimen/call_log_action_horizontal_padding</item>
+        <item name="android:paddingEnd">@dimen/call_log_action_horizontal_padding</item>
+        <item name="android:textColor">?attr/call_log_secondary_text_color</item>
+        <item name="android:textSize">@dimen/call_log_list_item_actions_text_size</item>
+        <item name="android:fontFamily">"sans-serif-medium"</item>
+        <item name="android:focusable">true</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:importantForAccessibility">no</item>
+    </style>
+    <style name="DialpadSearchAddContactTextStyle" parent="DialpadSearchAddContactStyle">
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:background">?android:attr/selectableItemBackground</item>
+    </style>
+
+    <style name="DialpadSearchPopupWindowAnim">
+        <item name="android:windowEnterAnimation">@anim/dialpad_search_popup_enter</item>
+        <item name="android:windowExitAnimation">@anim/dialpad_search_popup_exit</item>
+    </style>
 
     <style name="PopupWindowAinm" parent="android:Animation">
         <item name="android:windowEnterAnimation">@anim/popupwindows_slide_in_top</item>

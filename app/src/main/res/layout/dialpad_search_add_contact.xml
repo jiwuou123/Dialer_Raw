@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <TextView
+        android:id="@+id/contact_phone_number"
+        style="@style/DialpadSearchAddContactStyle"
+        android:gravity="center"
+        >
+    </TextView>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@android:color/darker_gray"></View>
+    <TextView
+        style="@style/DialpadSearchAddContactTextStyle"
+        android:text="@string/search_shortcut_create_new_contact"
+        android:id="@+id/create_new_contact_action"
+        />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@android:color/darker_gray"></View>
+    <TextView
+        style="@style/DialpadSearchAddContactTextStyle"
+        android:text="@string/search_shortcut_add_to_contact"
+        android:id="@+id/add_to_existing_contact_action"/>
+
+</LinearLayout>

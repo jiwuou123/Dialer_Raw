@@ -341,6 +341,7 @@ public abstract class ContactEntryListFragment<T extends ContactEntryListAdapter
             long directoryId = args != null && args.containsKey(DIRECTORY_ID_ARG_KEY)
                     ? args.getLong(DIRECTORY_ID_ARG_KEY)
                     : Directory.DEFAULT;
+
             mAdapter.configureLoader(loader, directoryId);
             return loader;
         }
