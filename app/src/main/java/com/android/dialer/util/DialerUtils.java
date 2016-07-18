@@ -186,4 +186,8 @@ public class DialerUtils {
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }
+    public static boolean canUseDialpadSearch(){
+        return true;
+    }
+
 }

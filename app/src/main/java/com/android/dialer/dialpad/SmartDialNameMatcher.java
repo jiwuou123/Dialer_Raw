@@ -46,6 +46,7 @@ public class SmartDialNameMatcher {
     private final ArrayList<SmartDialMatchPosition> mMatchPositions = Lists.newArrayList();
 
     public static final SmartDialMap LATIN_SMART_DIAL_MAP = new LatinSmartDialMap();
+    public static final SmartDialMap SMART_DIALPAD_MAP = new SmartDialPadMap();
 
     private final SmartDialMap mMap;
 
