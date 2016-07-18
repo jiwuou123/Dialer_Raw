@@ -27,19 +27,13 @@ import android.content.pm.ResolveInfo;
 import android.content.res.ColorStateList;
 import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.content.res.XmlResourceParser;
-import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Trace;
 import android.provider.CallLog.Calls;
-import android.provider.ContactsContract;
-import android.provider.Settings;
 import android.speech.RecognizerIntent;
 import android.support.v4.view.ViewPager;
 import android.telecom.PhoneAccount;
@@ -57,10 +51,8 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnDragListener;
-import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AbsListView.OnScrollListener;
@@ -68,7 +60,6 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
@@ -81,7 +72,6 @@ import com.android.contacts.common.interactions.ImportExportDialogFragment;
 import com.android.contacts.common.interactions.TouchPointManager;
 import com.android.contacts.common.list.OnPhoneNumberPickerActionListener;
 import com.android.contacts.common.util.PermissionsUtil;
-//import com.android.contacts.common.widget.FloatingActionButtonController;
 import com.android.contacts.commonbind.analytics.AnalyticsUtil;
 import com.android.dialer.bbk.RecyclerViewChangedImpl;
 import com.android.dialer.bbkwidget.FloatingActionButtonController;
@@ -103,25 +93,19 @@ import com.android.dialer.list.SearchFragment;
 import com.android.dialer.list.SmartDialSearchFragment;
 import com.android.dialer.list.SpeedDialFragment;
 import com.android.dialer.settings.DialerSettingsActivity;
-import com.android.dialer.util.IntentUtil;
 import com.android.dialer.util.DialerUtils;
+import com.android.dialer.util.IntentUtil;
 import com.android.dialer.widget.ActionBarController;
-import com.android.dialer.widget.SearchEditTextLayout;
-import com.android.dialer.widget.SearchEditTextLayout.Callback;
 import com.android.dialerbind.DatabaseHelperManager;
 import com.android.phone.common.animation.AnimUtils;
 import com.android.phone.common.animation.AnimationListenerAdapter;
 
 import junit.framework.Assert;
 
-import org.xmlpull.v1.XmlPullParserException;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static android.view.WindowManager.LayoutParams.FIRST_SYSTEM_WINDOW;
-import static android.view.WindowManager.LayoutParams.TYPE_WALLPAPER;
+//import com.android.contacts.common.widget.FloatingActionButtonController;
 
 /**
  * The dialer tab's title is 'phone', a more common name (see strings.xml).
@@ -440,37 +424,45 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
         Trace.beginSection(TAG + " setup Views");
         final ActionBar actionBar = getActionBar();
         //在actionbar中放入搜索框
-        actionBar.setCustomView(R.layout.search_edittext);
+        actionBar.setCustomView(R.layout.dialtacts_actionbar);
         actionBar.setDisplayShowCustomEnabled(true);
-        actionBar.setBackgroundDrawable(null);
-        //获取搜索框布局文件
-        SearchEditTextLayout searchEditTextLayout =
-                (SearchEditTextLayout) actionBar.getCustomView().findViewById(R.id.search_view_container);
-        //猜测为输入时的智能提示(用来监听back键按下之后到底是退出搜索框还是退出搜索界面)
-        searchEditTextLayout.setPreImeKeyListener(mSearchEditTextLayoutListener);
-        //绑定控制器
-        mActionBarController = new ActionBarController(this, searchEditTextLayout);
-        mSearchView = (EditText) searchEditTextLayout.findViewById(R.id.search_view);
-        mSearchView.addTextChangedListener(mPhoneSearchQueryTextListener);
-        mVoiceSearchButton = searchEditTextLayout.findViewById(R.id.voice_search_button);
-        //设置监听器，进入搜索界面
-        searchEditTextLayout.findViewById(R.id.search_magnifying_glass)
-                .setOnClickListener(mSearchViewOnClickListener);
-        searchEditTextLayout.findViewById(R.id.search_box_start_search)
-                .setOnClickListener(mSearchViewOnClickListener);
-        searchEditTextLayout.setOnClickListener(mSearchViewOnClickListener);
-        searchEditTextLayout.setCallback(new SearchEditTextLayout.Callback() {
-            @Override
-            public void onBackButtonClicked() {
-                onBackPressed();
-            }
+        TextView actionbar_name = (TextView)actionBar.getCustomView().findViewById(R.id.actionbar_name);
+        mActionbarMenu = (ImageView)actionBar.getCustomView().findViewById(R.id.actionbar_menu);
+        mActionbarMenu.setOnClickListener(this);
+        mEditerToCalldetail = (TextView)actionBar.getCustomView().findViewById(R.id.actionbar_call_dialtacts_action_editer);
+        mEditerToCalldetail.setOnClickListener(this);
+        actionbar_name.setClickable(false);
+        actionbar_name.setText(getString(R.string.all_calls));
+        mSearchView = (EditText) actionBar.getCustomView().findViewById(R.id.edittext);
+        mSearchView.setVisibility(View.GONE);
+//        actionBar.setBackgroundDrawable(null);
 
-            @Override
-            public void onSearchViewClicked() {
-                // Hide FAB, as the keyboard is shown.
-                mFloatingActionButtonController.scaleOut();
-            }
-        });
+//        SearchEditTextLayout searchEditTextLayout =
+//                (SearchEditTextLayout) actionBar.getCustomView().findViewById(R.id.search_view_container);
+//        searchEditTextLayout.setPreImeKeyListener(mSearchEditTextLayoutListener);
+
+//        mActionBarController = new ActionBarController(this, searchEditTextLayout);
+
+//        mSearchView = (EditText) searchEditTextLayout.findViewById(R.id.search_view);
+//        mSearchView.addTextChangedListener(mPhoneSearchQueryTextListener);
+//        mVoiceSearchButton = searchEditTextLayout.findViewById(R.id.voice_search_button);
+//        searchEditTextLayout.findViewById(R.id.search_magnifying_glass)
+//                .setOnClickListener(mSearchViewOnClickListener);
+//        searchEditTextLayout.findViewById(R.id.search_box_start_search)
+//                .setOnClickListener(mSearchViewOnClickListener);
+//        searchEditTextLayout.setOnClickListener(mSearchViewOnClickListener);
+//        searchEditTextLayout.setCallback(new SearchEditTextLayout.Callback() {
+//            @Override
+//            public void onBackButtonClicked() {
+//                onBackPressed();
+//            }
+//
+//            @Override
+//            public void onSearchViewClicked() {
+//                // Hide FAB, as the keyboard is shown.
+////                mFloatingActionButtonController.scaleOut();
+//            }
+//        });
         mIsLandscape = getResources().getConfiguration().orientation
                 == Configuration.ORIENTATION_LANDSCAPE;
 
