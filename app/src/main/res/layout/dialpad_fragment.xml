@@ -20,6 +20,7 @@
     android:orientation="horizontal">
 
     <LinearLayout
+        android:id="@+id/dialpad_view_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -29,12 +30,11 @@
             android:id="@+id/spacer"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
-            android:background="#00000000" />
+            android:layout_weight="1"/>
         <!-- Dialpad shadow -->
         <View
             android:layout_width="match_parent"
-            android:layout_height="@dimen/shadow_length"
+            android:layout_height="0dp"
             android:background="@drawable/shadow_fade_up" />
         <include layout="@layout/dialpad_view" />
         <!-- "Dialpad chooser" UI, shown only when the user brings up the

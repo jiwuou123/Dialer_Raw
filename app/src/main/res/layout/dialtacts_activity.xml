@@ -22,50 +22,130 @@
     android:focusable="true"
     android:focusableInTouchMode="true"
     android:clipChildren="false"
-    android:background="@color/background_dialer_light">
+    >
+
+
 
     <FrameLayout
         android:id="@+id/dialtacts_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginBottom="@dimen/dialtacts_container_marginBottom"
+        android:layout_gravity="center_horizontal|bottom"
         android:clipChildren="false">
+
         <!-- The main contacts grid -->
         <FrameLayout
             android:layout_height="match_parent"
             android:layout_width="match_parent"
             android:id="@+id/dialtacts_frame"
             android:clipChildren="false" />
+
+        <FrameLayout
+            android:id="@+id/floating_action_button_container"
+            android:background="@drawable/fab_blue"
+            android:layout_width="@dimen/floating_action_button_width"
+            android:layout_height="@dimen/floating_action_button_height"
+            android:layout_gravity="center_horizontal|bottom"
+            android:layout_marginBottom="@dimen/dialtacts_floating_action_button_marginBotton"
+            >
+
+            <ImageButton
+                android:id="@+id/floating_action_button"
+                android:background="@drawable/floating_action_button"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:contentDescription="@string/action_menu_dialpad_button"
+                android:src="@drawable/fab_ic_dial"/>
+        </FrameLayout>
+
+
+
     </FrameLayout>
 
+
     <FrameLayout
-        android:id="@+id/floating_action_button_container"
-        android:background="@drawable/fab_blue"
-        android:layout_width="@dimen/floating_action_button_width"
-        android:layout_height="@dimen/floating_action_button_height"
-        android:layout_marginBottom="@dimen/floating_action_button_margin_bottom"
+        android:id="@+id/dialtacts_bottom_menu_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="0px"
+        android:background="#f1f1f1"
+        android:clipChildren="false"
+        android:layout_alignParentBottom="true"
         android:layout_gravity="center_horizontal|bottom">
 
-        <ImageButton
-            android:id="@+id/floating_action_button"
-            android:background="@drawable/floating_action_button"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:contentDescription="@string/action_menu_dialpad_button"
-            android:src="@drawable/fab_ic_dial"/>
-
-    </FrameLayout>
-
-    <!-- Host container for the contact tile drag shadow -->
-    <FrameLayout
-        android:id="@+id/activity_overlay"
-        android:layout_height="match_parent"
-        android:layout_width="match_parent">
-        <ImageView
-            android:id="@+id/contact_tile_drag_shadow_overlay"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:importantForAccessibility="no" />
+            android:orientation="vertical">
+            <View
+                android:id="@+id/dialtacts_bottom_menu_divider"
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="#979797" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:orientation="horizontal">
+                <LinearLayout
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <ImageButton
+                        android:id="@+id/dialtacts_bottom_menu_button_call"
+                        android:background="@drawable/dialtacts_bottom_menu_button_call"
+                        android:layout_width="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:layout_height="wrap_content"
+                        />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_weight="1.02"
+                    android:gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <ImageButton
+                        android:id="@+id/dialtacts_bottom_menu_button_contacts"
+                        android:background="@drawable/dialtacts_bottom_menu_button_contacts"
+                        android:contentDescription="@string/action_menu_dialpad_button"
+                        android:layout_width="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:layout_height="wrap_content"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <ImageButton
+                        android:id="@+id/dialtacts_bottom_menu_button_setting"
+                        android:background="@drawable/dialtacts_bottom_menu_button_setting"
+                        android:layout_width="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:layout_height="wrap_content"/>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
     </FrameLayout>
+
+     Host container for the contact tile drag shadow
+    <!--<FrameLayout-->
+        <!--android:id="@+id/activity_overlay"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_width="match_parent">-->
+        <!--<ImageView-->
+            <!--android:id="@+id/contact_tile_drag_shadow_overlay"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:visibility="gone"-->
+            <!--android:importantForAccessibility="no" />-->
+    <!--</FrameLayout>-->
 
 </FrameLayout>

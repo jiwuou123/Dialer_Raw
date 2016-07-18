@@ -55,7 +55,7 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="1dp"
+            android:layout_height="0dp"
             android:background="#e3e3e3" />
 
     </LinearLayout>
@@ -104,15 +104,14 @@
 
         <ImageButton
             android:id="@+id/deleteButton"
-            android:background="@drawable/btn_dialpad_key"
-            android:tint="?attr/dialpad_icon_tint"
+            android:background="@drawable/bbk_dialpad_delete"
+
             android:paddingLeft="@dimen/dialpad_digits_padding"
             android:paddingRight="@dimen/dialpad_digits_padding"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:state_enabled="false"
+            android:layout_height="wrap_content"
             android:contentDescription="@string/description_delete_button"
-            android:src="@drawable/ic_dialpad_delete" />
+             />
     </LinearLayout>
 
     <View
@@ -120,14 +119,14 @@
         android:layout_height="1dp"
         android:background="#e3e3e3" />
 
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/dialpad_space_above_keys" />
+    <!--<Space-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="@dimen/dialpad_space_above_keys" />-->
 
     <include layout="@layout/dialpad" />
 
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="8dp" />
+    <!--<Space-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="8dp" />-->
 
 </view>
