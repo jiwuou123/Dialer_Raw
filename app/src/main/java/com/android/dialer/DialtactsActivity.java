@@ -888,12 +888,12 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
 
 //        ft.commit();
 
-//        if (animate) {
+        if (animate) {
 //            mFloatingActionButtonController.scaleOut();
-//        } else {
+        } else {
 //            mFloatingActionButtonController.setVisible(false);
-//            maybeEnterSearchUi();
-//        }
+            maybeEnterSearchUi();
+        }
         if (!isInSearchUi() && TextUtils.isEmpty(mSearchQuery)) {
             if(getCallLogFragment() == null){
                 mCalllogList  = new CallLogFragment(CallLogQueryHandler.CALL_TYPE_ALL);
@@ -1156,6 +1156,7 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
             return;
         }
         mDialpadFragment.showSearchView();
+
         if (DEBUG) {
             Log.d(TAG, "Entering search UI - smart dial " + smartDialSearch);
         }
@@ -1185,6 +1186,8 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
             transaction.setTransition(FragmentTransaction.TRANSIT_NONE);
         }
         if (fragment == null) {
+
+            Log.e(TAG, " --- enterSearchUi --- null" );
             if (smartDialSearch) {
                 fragment = new SmartDialSearchFragment();
             } else {
@@ -1202,6 +1205,7 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
             transaction.add(R.id.dialtacts_frame, fragment, tag);
         } else {
             transaction.show(fragment);
+
         }
         // DialtactsActivity will provide the options menu
         fragment.setHasOptionsMenu(false);
@@ -1316,7 +1320,9 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
     private void maybeEnterSearchUi() {
         if (!isInSearchUi()) {
             enterSearchUi(true /* isSmartDial */, mSearchQuery, false);
+//            enterSearchUi(false,mSearchQuery,false);
         }
+
     }
 
     /**
