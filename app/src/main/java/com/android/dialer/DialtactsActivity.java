@@ -96,6 +96,7 @@ import com.android.dialer.settings.DialerSettingsActivity;
 import com.android.dialer.util.DialerUtils;
 import com.android.dialer.util.IntentUtil;
 import com.android.dialer.widget.ActionBarController;
+import com.android.dialer.widget.SearchEditTextLayout;
 import com.android.dialerbind.DatabaseHelperManager;
 import com.android.phone.common.animation.AnimUtils;
 import com.android.phone.common.animation.AnimationListenerAdapter;
@@ -361,19 +362,19 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
     };
 
 
-//    /**
-//     * Open the search UI when the user clicks on the search box.
-//     */
-//    private final View.OnClickListener mSearchViewOnClickListener = new View.OnClickListener() {
-//        @Override
-//        public void onClick(View v) {
-//            if (!isInSearchUi()) {
-//                mActionBarController.onSearchBoxTapped();
-//                enterSearchUi(false /* smartDialSearch */, mSearchView.getText().toString(),
-//                        true /* animate */);
-//            }
-//        }
-//    };
+    /**
+     * Open the search UI when the user clicks on the search box.
+     */
+    private final View.OnClickListener mSearchViewOnClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if (!isInSearchUi()) {
+                mActionBarController.onSearchBoxTapped();
+                enterSearchUi(false /* smartDialSearch */, mSearchView.getText().toString(),
+                        true /* animate */);
+            }
+        }
+    };
 
     /**
      * Handles the user closing the soft keyboard.
@@ -437,17 +438,16 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
         mSearchView.setVisibility(View.GONE);
 //        actionBar.setBackgroundDrawable(null);
 
-//        SearchEditTextLayout searchEditTextLayout =
-//                (SearchEditTextLayout) actionBar.getCustomView().findViewById(R.id.search_view_container);
+        SearchEditTextLayout searchEditTextLayout =
+                (SearchEditTextLayout) actionBar.getCustomView().findViewById(R.id.search_view_container);
 //        searchEditTextLayout.setPreImeKeyListener(mSearchEditTextLayoutListener);
 
 //        mActionBarController = new ActionBarController(this, searchEditTextLayout);
 
 //        mSearchView = (EditText) searchEditTextLayout.findViewById(R.id.search_view);
-//        mSearchView.addTextChangedListener(mPhoneSearchQueryTextListener);
+        mSearchView.addTextChangedListener(mPhoneSearchQueryTextListener);
 //        mVoiceSearchButton = searchEditTextLayout.findViewById(R.id.voice_search_button);
-//        searchEditTextLayout.findViewById(R.id.search_magnifying_glass)
-//                .setOnClickListener(mSearchViewOnClickListener);
+//        mSearchView.setOnClickListener(mSearchViewOnClickListener);
 //        searchEditTextLayout.findViewById(R.id.search_box_start_search)
 //                .setOnClickListener(mSearchViewOnClickListener);
 //        searchEditTextLayout.setOnClickListener(mSearchViewOnClickListener);
@@ -677,7 +677,7 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
     protected void onRestart() {
         super.onRestart();
         mIsRestarting = true;
-        Log.e(TAG,"  ----- onRestart() ----- "+ " mIsDialpadShown is:  " + mIsDialpadShown);
+        Log.e(TAG, "  ----- onRestart() ----- " + " mIsDialpadShown is:  " + mIsDialpadShown);
     }
 
     @Override
@@ -689,7 +689,7 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
         if (mSlideOut.hasStarted() && !mSlideOut.hasEnded()) {
             commitDialpadFragmentHide();
         }
-        Log.e(TAG,"  ----- onPause() ----- "+ " mIsDialpadShown is:  " + mIsDialpadShown);
+        Log.e(TAG, "  ----- onPause() ----- " + " mIsDialpadShown is:  " + mIsDialpadShown);
         super.onPause();
     }
 
@@ -1107,7 +1107,7 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
             }
 
         }
-        Log.e(TAG, " --- displayFragment(Intent intent) --- " +" mIsDialpadShown  is " + mIsDialpadShown);
+        Log.e(TAG, " --- displayFragment(Intent intent) --- " + " mIsDialpadShown  is " + mIsDialpadShown);
     }
 
     @Override
@@ -1206,9 +1206,7 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
         // DialtactsActivity will provide the options menu
         fragment.setHasOptionsMenu(false);
         fragment.setShowEmptyListForNullQuery(true);
-        if (!smartDialSearch) {
-            fragment.setQueryString(query, false /* delaySelection */);
-        }
+        fragment.setQueryString(query, false /* delaySelection */);
         transaction.commitAllowingStateLoss();
 //        transaction.commit();
 
@@ -1381,12 +1379,12 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
             }
         }
         if(query == null || query.length() == 0){
-            mSearchQuery = query;
+//            mSearchQuery = query;
             hideSearchFragment();
         }
         else{
             if (!isInSearchUi()) {
-                mSearchQuery = query;
+//                mSearchQuery = query;
                 enterSearchUi(false /* isSmartDial */, query, true);
             }
             showSearchFragment();
@@ -1414,7 +1412,6 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
             }
             mSearchView.setText(normalizedQuery);
         }
-
         try {
             if (mDialpadFragment != null && mDialpadFragment.isVisible()) {
                 mDialpadFragment.process_quote_emergency_unquote(normalizedQuery);
