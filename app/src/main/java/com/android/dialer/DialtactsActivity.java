@@ -1187,6 +1187,7 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
         if (fragment == null) {
             if (smartDialSearch) {
                 fragment = new SmartDialSearchFragment();
+                transaction.add(R.id.dialtacts_frame, fragment, tag);
             } else {
                 fragment = new RegularSearchFragment();
                 fragment.setOnTouchListener(new View.OnTouchListener() {
@@ -1199,7 +1200,7 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
                     }
                 });
             }
-            transaction.add(R.id.dialtacts_frame, fragment, tag);
+
         } else {
             transaction.show(fragment);
         }
