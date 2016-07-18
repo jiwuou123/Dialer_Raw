@@ -380,6 +380,7 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
         mFirstLaunch = true;
 
         final Resources resources = getResources();
+        //获取actionbar高度
         mActionBarHeight = resources.getDimensionPixelSize(R.dimen.action_bar_height_large);
 
         Trace.beginSection(TAG + " setContentView");
@@ -389,19 +390,21 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
 
         Trace.beginSection(TAG + " setup Views");
         final ActionBar actionBar = getActionBar();
+        //在actionbar中放入搜索框
         actionBar.setCustomView(R.layout.search_edittext);
         actionBar.setDisplayShowCustomEnabled(true);
         actionBar.setBackgroundDrawable(null);
-
+        //获取搜索框布局文件
         SearchEditTextLayout searchEditTextLayout =
                 (SearchEditTextLayout) actionBar.getCustomView().findViewById(R.id.search_view_container);
+        //猜测为输入时的智能提示(用来监听back键按下之后到底是退出搜索框还是退出搜索界面)
         searchEditTextLayout.setPreImeKeyListener(mSearchEditTextLayoutListener);
-
+        //绑定控制器
         mActionBarController = new ActionBarController(this, searchEditTextLayout);
-
         mSearchView = (EditText) searchEditTextLayout.findViewById(R.id.search_view);
         mSearchView.addTextChangedListener(mPhoneSearchQueryTextListener);
         mVoiceSearchButton = searchEditTextLayout.findViewById(R.id.voice_search_button);
+        //设置监听器，进入搜索界面
         searchEditTextLayout.findViewById(R.id.search_magnifying_glass)
                 .setOnClickListener(mSearchViewOnClickListener);
         searchEditTextLayout.findViewById(R.id.search_box_start_search)
@@ -419,17 +422,17 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
                 mFloatingActionButtonController.scaleOut();
             }
         });
-
         mIsLandscape = getResources().getConfiguration().orientation
                 == Configuration.ORIENTATION_LANDSCAPE;
 
         final View floatingActionButtonContainer = findViewById(
                 R.id.floating_action_button_container);
+        //底部拨号按钮
         ImageButton floatingActionButton = (ImageButton) findViewById(R.id.floating_action_button);
         floatingActionButton.setOnClickListener(this);
         mFloatingActionButtonController = new FloatingActionButtonController(this,
                 floatingActionButtonContainer, floatingActionButton);
-
+        //监听更多选项optionMenu，就是mOverflowMenu
         ImageButton optionsMenuButton =
                 (ImageButton) searchEditTextLayout.findViewById(R.id.dialtacts_options_menu_button);
         optionsMenuButton.setOnClickListener(this);
@@ -438,6 +441,7 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
 
         // Add the favorites fragment but only if savedInstanceState is null. Otherwise the
         // fragment manager is responsible for recreating it.
+        //恢复状态
         if (savedInstanceState == null) {
             getFragmentManager().beginTransaction()
                     .add(R.id.dialtacts_frame, new ListsFragment(), TAG_FAVORITES_FRAGMENT)
@@ -452,7 +456,9 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
         }
 
         final boolean isLayoutRtl = DialerUtils.isRtl();
+        //拨号界面切换的动画设置。横屏时为上下划出，竖屏时为左右划出
         if (mIsLandscape) {
+            //判断横屏方向。
             mSlideIn = AnimationUtils.loadAnimation(this,
                     isLayoutRtl ? R.anim.dialpad_slide_in_left : R.anim.dialpad_slide_in_right);
             mSlideOut = AnimationUtils.loadAnimation(this,
@@ -1061,12 +1067,16 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
             return;
         }
         if (mIsDialpadShown) {
-            if (TextUtils.isEmpty(mSearchQuery) ||
-                    (mSmartDialSearchFragment != null && mSmartDialSearchFragment.isVisible()
-                            && mSmartDialSearchFragment.getAdapter().getCount() == 0)) {
-                exitSearchUi();
+            if(mSmartDialSearchFragment!=null && mSmartDialSearchFragment.popupWindowIsShowing()){
+                mSmartDialSearchFragment.popupWindowDismiss();
+            }else {
+                if (TextUtils.isEmpty(mSearchQuery) ||
+                        (mSmartDialSearchFragment != null && mSmartDialSearchFragment.isVisible()
+                                && mSmartDialSearchFragment.getAdapter().getCount() == 0)) {
+                    exitSearchUi();
+                }
+                hideDialpadFragment(true, false);
             }
-            hideDialpadFragment(true, false);
         } else if (isInSearchUi()) {
             exitSearchUi();
             DialerUtils.hideInputMethod(mParentLayout);

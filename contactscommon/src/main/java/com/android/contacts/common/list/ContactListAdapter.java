@@ -196,7 +196,7 @@ public abstract class ContactListAdapter extends ContactEntryListAdapter {
     @Override
     protected ContactListItemView newView(
             Context context, int partition, Cursor cursor, int position, ViewGroup parent) {
-        ContactListItemView view = super.newView(context, partition, cursor, position, parent);
+        ContactListItemView view = (ContactListItemView) super.newView(context, partition, cursor, position, parent);
         view.setUnknownNameText(mUnknownNameText);
         view.setQuickContactEnabled(isQuickContactEnabled());
         view.setAdjustSelectionBoundsEnabled(isAdjustSelectionBoundsEnabled());

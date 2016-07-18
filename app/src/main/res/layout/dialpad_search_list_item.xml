@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="@dimen/dialpad_search_list_item_height"
+    android:padding="@dimen/dialpad_search_list_item_padding"
+    android:descendantFocusability="blocksDescendants">
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_weight="1">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:elegantTextHeight="false"
+            android:textColor="@android:color/black"
+            android:maxLines="1"
+            android:textSize="@dimen/contact_browser_list_item_text_size"
+            android:id="@+id/primary_call_info"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:elegantTextHeight="false"
+            android:maxLines="1"
+            android:textSize="14sp"
+            android:textColor="#737373"
+            android:id="@+id/secondary_call_info"/>
+    </LinearLayout>
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:background="@android:color/transparent"
+        android:id="@+id/call_detail"/>
+</LinearLayout>

@@ -368,6 +368,7 @@ public class DialpadFragment extends Fragment
 
         mDialpadView = (DialpadView) fragmentView.findViewById(R.id.dialpad_view);
         mDialpadView.setCanDigitsBeEdited(true);
+        //拨号器 键盘
         mDigits = mDialpadView.getDigits();
         mDigits.setKeyListener(UnicodeDialerKeyListener.INSTANCE);
         mDigits.setOnClickListener(this);
@@ -388,7 +389,7 @@ public class DialpadFragment extends Fragment
             mDelete.setOnClickListener(this);
             mDelete.setOnLongClickListener(this);
         }
-
+        //空白空间，点击后回去
         mSpacer = fragmentView.findViewById(R.id.spacer);
         mSpacer.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -911,6 +912,7 @@ public class DialpadFragment extends Fragment
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.dialpad_floating_action_button:
+                //处理拨号事件响应
                 mHaptic.vibrate();
                 handleDialButtonPressed();
                 break;

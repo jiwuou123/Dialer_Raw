@@ -116,7 +116,7 @@ public abstract class ContactEntryListAdapter extends IndexerListAdapter {
     }
 
     @Override
-    protected ContactListItemView newView(
+    protected View newView(
             Context context, int partition, Cursor cursor, int position, ViewGroup parent) {
         final ContactListItemView view = new ContactListItemView(context, null);
         view.setIsSectionHeaderEnabled(isSectionHeaderDisplayEnabled());
@@ -451,7 +451,6 @@ public abstract class ContactEntryListAdapter extends IndexerListAdapter {
             // There is no partition for this data
             return;
         }
-
         Partition partition = getPartition(partitionIndex);
         if (partition instanceof DirectoryPartition) {
             ((DirectoryPartition)partition).setStatus(DirectoryPartition.STATUS_LOADED);

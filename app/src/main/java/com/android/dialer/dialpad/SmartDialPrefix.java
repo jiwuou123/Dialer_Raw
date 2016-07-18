@@ -65,7 +65,7 @@ public class SmartDialPrefix {
     private static Set<String> sCountryCodes = null;
 
     /** Dialpad mapping. */
-    private static final SmartDialMap mMap = new LatinSmartDialMap();
+    private static final SmartDialMap mMap = new LatinAndChineseSmartDialMap();
 
     private static boolean sNanpInitialized = false;
 

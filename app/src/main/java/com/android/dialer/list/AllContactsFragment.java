@@ -128,6 +128,7 @@ public class AllContactsFragment extends ContactEntryListFragment<ContactEntryLi
     @Override
     protected ContactEntryListAdapter createListAdapter() {
         final DefaultContactListAdapter adapter = new DefaultContactListAdapter(getActivity()) {
+            //getView封装方法调用对应
             @Override
             protected void bindView(View itemView, int partition, Cursor cursor, int position) {
                 super.bindView(itemView, partition, cursor, position);
