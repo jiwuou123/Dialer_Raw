@@ -257,7 +257,7 @@ public class SmartDialSearchFragment extends SearchFragment
         getActivity().getWindow().setAttributes(lp);
     }
     public boolean popupWindowIsShowing(){
-        return addContactPopupWindow.isShowing();
+        return addContactPopupWindow!=null&&addContactPopupWindow.isShowing();
     }
     public void popupWindowDismiss(){
          addContactPopupWindow.dismiss();
