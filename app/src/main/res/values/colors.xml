@@ -96,8 +96,7 @@
     <!-- Color for answered or outgoing call icons. -->
     <color name="answered_call">@color/dialer_green_highlight_color</color>
 
-    <!-- Color for icons in the actionbar -->
-    <color name="actionbar_icon_color">#ffffff</color>
+
 
     <color name="dialer_dialpad_touch_tint">#330288d1</color>
 
@@ -114,6 +113,8 @@
     <color name="dialer_theme_color">#0288d1</color>
     <color name="dialpad_primary_text_color">@color/dialer_theme_color</color>
     <color name="focus_color">#44ff0000</color>
+    <color name="dialpad_key_number_color">#cc000000</color>
+    <color name="dialpad_fab_ic_call_color">#737373</color>
     <!-- In-call UI background color. -->
     <color name="incall_background_color">@color/dialer_theme_color</color>
     <color name="incall_accent_color">#ffffff</color>
@@ -159,7 +160,33 @@
     <!-- Background color for status bar. For portrait this will be ignored. -->
     <color name="statusbar_background_color">@color/dialer_theme_color</color>
 
+    <color name="bbk_actionbar_background_color">#f7f7f7</color>
+
     <color name="translucent_shadow">#33999999</color>
+
+    <!-- Color for icons in the actionbar -->
+    <color name="actionbar_icon_color">#ffffff</color>
+
+    <!-- actionbar title text clolor  -->
+    <color name="bbk_actionbar_icon_color">#464646</color>
+    <color name="bbk_miss_call_color">#f43737</color>
+    <color name="bbk_call_color">#313131</color>
+    <color name="bbk_search_append_list_item_color">#2073ff</color>
+    <color name="bbk_call_log_secondary_text_color">#8c8c8c</color>
+    <color name="bbk_tab_text_color">#464646</color>
+    <color name="bbk_tab_text_color_alph">#80464646</color>
+    <color name="bbk_tab_text_delete_color">#f13738</color>
+    <color name="bbk_tab_text_delete_color_alph">#80f13738</color>
+    <color name="ccc_color">#cccccc</color>
+    <color name="bbk_actionbar__editer_text_color">#ff16b900</color>
+
+    <!-- color for all calls select popupwindow -->
+    <color name="popupwindow_background_color">#b0000000</color>
+    <color name="popupwindow_item_background_color">#ffffff</color>
+    <color name="popupwindow_item_text_color">#464646</color>
+    <color name="popupwindow_item_selected_color">#ff16b900</color>
+    <color name="popupwindow_divider_color">#636363</color>
+
 
     <!-- 70% opacity, black. -->
     <color name="glowpad_background_color">#b3000000</color>

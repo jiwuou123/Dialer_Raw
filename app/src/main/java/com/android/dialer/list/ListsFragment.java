@@ -48,6 +48,7 @@ import java.util.ArrayList;
 public class ListsFragment extends Fragment
         implements ViewPager.OnPageChangeListener, CallLogQueryHandler.Listener {
 
+
     private static final boolean DEBUG = DialtactsActivity.DEBUG;
     private static final String TAG = "ListsFragment";
 
@@ -118,6 +119,7 @@ public class ListsFragment extends Fragment
                 case TAB_INDEX_RECENTS:
                     mRecentsFragment = new CallLogFragment(CallLogQueryHandler.CALL_TYPE_ALL,
                             MAX_RECENTS_ENTRIES, System.currentTimeMillis() - OLDEST_RECENTS_DATE);
+
                     return mRecentsFragment;
                 case TAB_INDEX_ALL_CONTACTS:
                     mAllContactsFragment = new AllContactsFragment();
@@ -356,6 +358,11 @@ public class ListsFragment extends Fragment
             return mViewPagerAdapter.getCount() - 1 - position;
         }
         return position;
+    }
+
+    @Override
+    public void onCallsDeleted() {
+
     }
 
     public void sendScreenViewForCurrentPosition() {

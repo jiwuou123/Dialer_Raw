@@ -31,4 +31,7 @@
     <integer name="reveal_animation_duration">333</integer>
     <integer name="shrink_animation_duration">333</integer>
     <integer name="video_animation_duration">257</integer>
+     <!-- PopupWindow animation constants -->
+    <integer name="popupwindow_slide_in_duration">400</integer>
+    <integer name="popupwindow_slide_out_duration">400</integer>
 </resources>

@@ -51,6 +51,8 @@
          [CHAR LIMIT=30] -->
     <string name="call_detail_menu_report">Report inaccurate number</string>
 
+
+
     <!-- Menu item used to copy a number from the call log to the dialer so it can be edited before calling it -->
     <string name="recentCalls_editNumberBeforeCall">Edit number before call</string>
 
@@ -1258,4 +1260,33 @@
     <!-- Description of the "camera off" icon displayed when the device's camera is disabled during
          a video call. [CHAR LIMIT=NONE] -->
     <string name="camera_off_description">Camera off</string>
+
+    <!-- bbk liupengfei 6.0 strings must be translate into english-->
+    <string name="all_calls">"ALL CALLS"</string>
+    <string name="ip_call">"IP CALL"</string>
+    <string name="before_call_editer">"EDITER BEFORE CALL"</string>
+    <string name="cope_this">"COPY"</string>
+    <string name="editer_message">"MESSAGE"</string>
+    <string name="editer_delete">"DELETE("<xliff:g id="count">%d</xliff:g>")"</string>
+    <string name="block_this_number">"ADD IN BLACK"</string>
+    <string name="remove_this_number_in_blacklist">"REMOVE  IN BLACK"</string>
+    <string name="remove_this_number_in_blacklist_success">"REMOVE SUCCESS!"</string>
+    <string name="remove_this_number_in_blacklist_fail">"REMOVE FAIL !"</string>
+    <string name="block_this_number_success">"ADD SUCCESS!"</string>
+    <string name="block_this_number_fail">"ADD FAIL!"</string>
+    <string name="add_new_contacts">"CREATE NEW CONTACTS"</string>
+    <string name="add_new_exits_contacts">"ADD NEW EXITS CONTACTS"</string>
+    <string name="cansel">"CANSLE"</string>
+    <string name="unkown_location">"UNKOWN LOCATION"</string>
+    <string name="call_log_pm">"PM "</string>
+    <string name="call_log_am">"AM "</string>
+    <string name="call_delete_select_all">"CANSEL ALL"</string>
+    <string name="call_delete_cansel_all">"SELECT ALL"</string>
+    <string name="call_detail_editer">"EDITER"</string>
+    <string name="copy_success">"the  text copy success"</string>
+    <string name="importent_number_is_empty">"phone number is empty!"</string>
+    <string name="no_sim_card">"NO SIM CARD!"</string>
+    <string name="multiple_delete_title">"Delete"</string>
+    <string name="multiple_delete_content">"is delete？"</string>
+    <string name="call_log_missed">"CALL LOG MISSED"</string>
 </resources>

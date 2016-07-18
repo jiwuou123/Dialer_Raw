@@ -28,13 +28,17 @@
         android:layout_weight="1"
         android:orientation="horizontal">
         <Space style="@style/DialpadSpaceStyle" />
+
         <include layout="@layout/dialpad_key_one" />
+
         <include layout="@layout/dialpad_key"
             android:id="@+id/two"
             style="@style/DialpadKeyButtonStyle" />
+
         <include layout="@layout/dialpad_key"
             android:id="@+id/three"
             style="@style/DialpadKeyButtonStyle" />
+
         <Space style="@style/DialpadSpaceStyle" />
     </LinearLayout>
 
@@ -44,9 +48,11 @@
         android:layout_weight="1"
         android:orientation="horizontal">
         <Space style="@style/DialpadSpaceStyle" />
+
         <include layout="@layout/dialpad_key"
             android:id="@+id/four"
             style="@style/DialpadKeyButtonStyle" />
+
         <include layout="@layout/dialpad_key"
             android:id="@+id/five"
             style="@style/DialpadKeyButtonStyle" />
