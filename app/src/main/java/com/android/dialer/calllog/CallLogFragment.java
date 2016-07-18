@@ -324,6 +324,7 @@ public class CallLogFragment extends Fragment implements CallLogQueryHandler.Lis
         mRecyclerView.setAdapter(mAdapter);
 
         fetchCalls();
+        Log.d(TAG, " ---  onCreateView --- ");
         return view;
     }
 
@@ -359,6 +360,7 @@ public class CallLogFragment extends Fragment implements CallLogQueryHandler.Lis
         mHasReadCallLogPermission = hasReadCallLogPermission;
         refreshData();
         mAdapter.startCache();
+        Log.d(TAG, "  ---  onResume()  --- ");
     }
 
     @Override
@@ -368,6 +370,7 @@ public class CallLogFragment extends Fragment implements CallLogQueryHandler.Lis
         }
         mAdapter.pauseCache();
         super.onPause();
+        Log.d(TAG, "  --- onPause() --- ");
     }
 
     @Override
@@ -375,6 +378,7 @@ public class CallLogFragment extends Fragment implements CallLogQueryHandler.Lis
         updateOnTransition(false /* onEntry */);
 
         super.onStop();
+        Log.d(TAG, "  --- onStop() --- ");
     }
 
     @Override
@@ -390,6 +394,7 @@ public class CallLogFragment extends Fragment implements CallLogQueryHandler.Lis
         getActivity().getContentResolver().unregisterContentObserver(mContactsObserver);
         getActivity().getContentResolver().unregisterContentObserver(mVoicemailStatusObserver);
         super.onDestroy();
+        Log.d(TAG, "  --- onDestroy() --- ");
     }
 
     @Override
@@ -404,12 +409,14 @@ public class CallLogFragment extends Fragment implements CallLogQueryHandler.Lis
         if (mVoicemailPlaybackPresenter != null) {
             mVoicemailPlaybackPresenter.onSaveInstanceState(outState);
         }
+        Log.d(TAG, "  --- onSaveInstanceState --- ");
     }
 
     @Override
     public void fetchCalls() {
         mCallLogQueryHandler.fetchCalls(mCallTypeFilter, mDateLimit);
     }
+
 
     private void updateEmptyMessage(int filterType) {
         final Context context = getActivity();
