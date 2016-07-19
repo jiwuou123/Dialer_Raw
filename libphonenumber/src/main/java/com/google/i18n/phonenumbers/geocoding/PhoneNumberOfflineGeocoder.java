@@ -16,12 +16,15 @@
 
 package com.google.i18n.phonenumbers.geocoding;
 
+import android.content.Context;
+
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.PhoneNumberUtil.PhoneNumberType;
 import com.google.i18n.phonenumbers.Phonenumber.PhoneNumber;
 import com.google.i18n.phonenumbers.prefixmapper.PrefixFileReader;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
@@ -43,6 +46,10 @@ public class PhoneNumberOfflineGeocoder {
     prefixFileReader = new PrefixFileReader(phonePrefixDataDirectory);
   }
 
+  PhoneNumberOfflineGeocoder(String phonePrefixDataDirectory, Context ctx) throws IOException {
+    prefixFileReader = new PrefixFileReader(phonePrefixDataDirectory, ctx);
+  }
+
   /**
    * Gets a {@link PhoneNumberOfflineGeocoder} instance to carry out international phone number
    * geocoding.
@@ -55,6 +62,13 @@ public class PhoneNumberOfflineGeocoder {
   public static synchronized PhoneNumberOfflineGeocoder getInstance() {
     if (instance == null) {
       instance = new PhoneNumberOfflineGeocoder(MAPPING_DATA_DIRECTORY);
+    }
+    return instance;
+  }
+
+  public static synchronized PhoneNumberOfflineGeocoder getInstance(Context ctx) throws IOException {
+    if (instance == null) {
+      instance = new PhoneNumberOfflineGeocoder(MAPPING_DATA_DIRECTORY, ctx);
     }
     return instance;
   }
@@ -137,6 +151,36 @@ public class PhoneNumberOfflineGeocoder {
         ? areaDescription : getCountryNameForNumber(number, languageCode);
   }
 
+  public String getDescriptionForValidNumber(PhoneNumber number, Locale languageCode, Context ctx) {
+    String langStr = languageCode.getLanguage();
+    String scriptStr = "";  // No script is specified
+    String regionStr = languageCode.getCountry();
+
+    String areaDescription;
+    String mobileToken = PhoneNumberUtil.getCountryMobileToken(number.getCountryCode());
+    String nationalNumber = phoneUtil.getNationalSignificantNumber(number);
+    if (!mobileToken.equals("") && nationalNumber.startsWith(mobileToken)) {
+      // In some countries, eg. Argentina, mobile numbers have a mobile token before the national
+      // destination code, this should be removed before geocoding.
+      nationalNumber = nationalNumber.substring(mobileToken.length());
+      String region = phoneUtil.getRegionCodeForCountryCode(number.getCountryCode());
+      PhoneNumber copiedNumber;
+      try {
+        copiedNumber = phoneUtil.parse(nationalNumber, region);
+      } catch (NumberParseException e) {
+        // If this happens, just reuse what we had.
+        copiedNumber = number;
+      }
+      areaDescription = prefixFileReader.getDescriptionForNumber(copiedNumber, langStr, scriptStr,
+              regionStr, ctx);
+    } else {
+      areaDescription = prefixFileReader.getDescriptionForNumber(number, langStr, scriptStr,
+              regionStr, ctx);
+    }
+    return (areaDescription.length() > 0)
+            ? areaDescription : getCountryNameForNumber(number, languageCode);
+  }
+
   /**
    * As per {@link #getDescriptionForValidNumber(PhoneNumber, Locale)} but also considers the
    * region of the user. If the phone number is from the same region as the user, only a lower-level
@@ -173,6 +217,21 @@ public class PhoneNumberOfflineGeocoder {
     // way for each language.
   }
 
+  public String getDescriptionForValidNumber(PhoneNumber number, Locale languageCode,
+                                             String userRegion,Context ctx) {
+    // If the user region matches the number's region, then we just show the lower-level
+    // description, if one exists - if no description exists, we will show the region(country) name
+    // for the number.
+    String regionCode = phoneUtil.getRegionCodeForNumber(number);
+    if (userRegion.equals(regionCode)) {
+      return getDescriptionForValidNumber(number, languageCode, ctx);
+    }
+    // Otherwise, we just show the region(country) name for now.
+    return getRegionDisplayName(regionCode, languageCode);
+    // TODO: Concatenate the lower-level and country-name information in an appropriate
+    // way for each language.
+  }
+
   /**
    * As per {@link #getDescriptionForValidNumber(PhoneNumber, Locale)} but explicitly checks
    * the validity of the number passed in.
@@ -190,6 +249,16 @@ public class PhoneNumberOfflineGeocoder {
       return getCountryNameForNumber(number, languageCode);
     }
     return getDescriptionForValidNumber(number, languageCode);
+  }
+
+  public String getDescriptionForNumber(PhoneNumber number, Locale languageCode, Context ctx) {
+    PhoneNumberType numberType = phoneUtil.getNumberType(number);
+    if (numberType == PhoneNumberType.UNKNOWN) {
+      return "";
+    } else if (!canBeGeocoded(numberType)) {
+      return getCountryNameForNumber(number, languageCode);
+    }
+    return getDescriptionForValidNumber(number, languageCode, ctx);
   }
 
   /**

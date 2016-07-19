@@ -36,6 +36,8 @@ import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber.PhoneNumber;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Locale;
 import com.android.dialer.R;
 /**
@@ -461,15 +463,11 @@ public class CallerInfo {
      * @param fallbackNumber if this CallerInfo's phoneNumber field is empty,
      *        this specifies a fallback number to use instead.
      */
-    public void updateGeoDescription(Context context, String fallbackNumber) {
+    public void updateGeoDescription(Context context, String fallbackNumber){
         String number = TextUtils.isEmpty(phoneNumber) ? fallbackNumber : phoneNumber;
         geoDescription = getGeoDescription(context, number);
     }
 
-    /**
-     * @return a geographical description string for the specified number.
-     * @see com.android.i18n.phonenumbers.PhoneNumberOfflineGeocoder
-     */
     private static String getGeoDescription(Context context, String number) {
         Log.v(TAG, "getGeoDescription('" + number + "')...");
 
@@ -501,6 +499,43 @@ public class CallerInfo {
 
         return null;
     }
+
+    /**
+     * @return a geographical description string for the specified number.
+     * @see com.android.i18n.phonenumbers.PhoneNumberOfflineGeocoder
+     */
+    public static String getGeoDescriptionByContext(Context context, String number) throws IOException {
+        Log.v(TAG, "getGeoDescription('" + number + "')...");
+
+        if (TextUtils.isEmpty(number)) {
+            return null;
+        }
+
+        PhoneNumberUtil util = PhoneNumberUtil.getInstance();
+        PhoneNumberOfflineGeocoder geocoder = PhoneNumberOfflineGeocoder.getInstance(context);
+
+        Locale locale = context.getResources().getConfiguration().locale;
+        String countryIso = TelephonyManagerUtils.getCurrentCountryIso(context, locale);
+        PhoneNumber pn = null;
+        try {
+            Log.v(TAG, "parsing '" + number
+                    + "' for countryIso '" + countryIso + "'...");
+            pn = util.parse(number, countryIso, context);
+            Log.v(TAG, "- parsed number: " + pn);
+        } catch (NumberParseException e) {
+            Log.v(TAG, "getGeoDescription: NumberParseException for incoming number '" +
+                    number + "'");
+        }
+
+        if (pn != null) {
+            String description = geocoder.getDescriptionForNumber(pn, locale, context);
+            Log.v(TAG, "- got description: '" + description + "'");
+            return description;
+        }
+
+        return null;
+    }
+
 
     /**
      * @return a string debug representation of this instance.
