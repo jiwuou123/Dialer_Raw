@@ -888,12 +888,12 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
 
 //        ft.commit();
 
-        if (animate) {
-//            mFloatingActionButtonController.scaleOut();
-        } else {
-//            mFloatingActionButtonController.setVisible(false);
-            maybeEnterSearchUi();
-        }
+//        if (animate) {
+////            mFloatingActionButtonController.scaleOut();
+//        } else {
+////            mFloatingActionButtonController.setVisible(false);
+//            maybeEnterSearchUi();
+//        }
         if (!isInSearchUi() && TextUtils.isEmpty(mSearchQuery)) {
             if(getCallLogFragment() == null){
                 mCalllogList  = new CallLogFragment(CallLogQueryHandler.CALL_TYPE_ALL);
