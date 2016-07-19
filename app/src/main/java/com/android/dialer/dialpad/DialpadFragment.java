@@ -79,6 +79,7 @@ import com.android.dialer.NeededForReflection;
 import com.android.dialer.R;
 import com.android.dialer.SpecialCharSequenceMgr;
 import com.android.dialer.calllog.PhoneAccountUtils;
+import com.android.dialer.m1000systemdialog.RoundAlertDialog;
 import com.android.dialer.util.DialerUtils;
 import com.android.dialer.util.IntentUtil;
 import com.android.phone.common.CallLogAsync;
@@ -160,7 +161,7 @@ public class DialpadFragment extends Fragment
     private static final String EMPTY_NUMBER = "";
     private static final char PAUSE = ',';
     private static final char WAIT = ';';
-
+    RoundAlertDialog mDeletedialog;
     /** The length of DTMF tones in milliseconds */
     private static final int TONE_LENGTH_MS = 150;
     private static final int TONE_LENGTH_INFINITE = -1;
@@ -1002,9 +1003,29 @@ public class DialpadFragment extends Fragment
                             dialogFragment.show(getFragmentManager(),
                                     "voicemail_request_during_airplane_mode");
                         } else {
-                            DialogFragment dialogFragment = ErrorDialogFragment.newInstance(
-                                    R.string.dialog_voicemail_not_ready_message);
-                            dialogFragment.show(getFragmentManager(), "voicemail_not_ready");
+//                            DialogFragment dialogFragment = ErrorDialogFragment.newInstance(
+//                                    R.string.dialog_voicemail_not_ready_message);
+//                            dialogFragment.show(getFragmentManager(), "voicemail_not_ready");
+                            RoundAlertDialog.Builder customBuilder = new RoundAlertDialog.Builder(getActivity());
+
+                            mDeletedialog = customBuilder.create();
+                            customBuilder.setMessage(R.string.set_yyxx_tip)
+                                    .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            mDeletedialog.dismiss();
+                                        }
+                                    })
+                                    .setPositiveButton(R.string.set_yyxx,
+                                            new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    Intent callSettingsIntent = new Intent(TelecomManager.ACTION_SHOW_CALL_SETTINGS);
+                                                    callSettingsIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                                    startActivity(callSettingsIntent);
+                                                    mDeletedialog.dismiss();
+                                                }
+                                            });
+                            mDeletedialog = customBuilder.create();
+                            mDeletedialog.show();
                         }
                     }
                     return true;

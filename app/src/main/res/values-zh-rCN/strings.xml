@@ -386,5 +386,13 @@
     <string name="multiple_delete_title">"删除"</string>
     <string name="multiple_delete_content">"是否删除所选记录？"</string>
     <string name="call_log_missed">未接来电</string>
+    
+    <!--plus new-->
+    <string name="set_yyxx_tip">"缺少语音信箱号码，是否设置？"</string>
+    <string name="set_yyxx">"设置"</string>
+    <string name="emergency_call_title">"紧急呼叫"</string>
+    <string name="emergency_input_empty">"输入号码为空，请重新输入！"</string>
+    <string name="emergency_input_wrong_start">"电话未播出，因为"</string>
+    <string name="emergency_input_wrong_end">"不是紧急呼叫号码！"</string>
 
 </resources>

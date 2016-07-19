@@ -255,4 +255,9 @@
     <string name="send_and_call_button" msgid="7459507823002185202">"发送记事并拨打电话"</string>
     <string name="call_subject_limit" msgid="4746194916585506281">"<xliff:g id="COUNT">%1$s</xliff:g> / <xliff:g id="LIMIT">%2$s</xliff:g>"</string>
     <string name="call_subject_type_and_number" msgid="517676698821671164">"<xliff:g id="TYPE">%1$s</xliff:g> • <xliff:g id="NUMBER">%2$s</xliff:g>"</string>
+
+    <!-- call_detail_add <-->
+    <string name="send_contact">发送联系人</string>
+    <string name="add_to_the_personal_collection">添加到个人收藏</string>
+    <string name="block_contact">阻止联系人</string>
 </resources>

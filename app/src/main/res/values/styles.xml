@@ -15,6 +15,13 @@
   ~ limitations under the License
   -->
 <resources>
+    <style name="RoundAlertDialog" parent="android:Theme.Dialog">
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
     <style name="DialtactsTheme"
            parent="android:Theme.Material.Light">
         <item name="android:textColorPrimary">@color/dialtacts_primary_text_color</item>
@@ -429,7 +436,17 @@
         <item name="android:gravity">center_vertical</item>
         <item name="android:background">?android:attr/selectableItemBackground</item>
     </style>
-
+    <style name="CallDetailContactTextStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/call_log_action_height</item>
+        <item name="android:textColor">?attr/call_log_primary_text_color</item>
+        <item name="android:textSize">@dimen/bbk_tab_text_size</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:fontFamily">"sans-serif-medium"</item>
+        <item name="android:focusable">true</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:importantForAccessibility">no</item>
+    </style>
     <style name="DialpadSearchPopupWindowAnim">
         <item name="android:windowEnterAnimation">@anim/dialpad_search_popup_enter</item>
         <item name="android:windowExitAnimation">@anim/dialpad_search_popup_exit</item>

@@ -141,15 +141,15 @@ public class CallDetailActivity extends Activity
                 }
             }
 
-            mCallButton.setVisibility(canPlaceCallsTo ? View.VISIBLE : View.GONE);
+//            mCallButton.setVisibility(canPlaceCallsTo ? View.VISIBLE : View.GONE);
 
-            String accountLabel = PhoneAccountUtils.getAccountLabel(mContext, accountHandle);
-            if (!TextUtils.isEmpty(accountLabel)) {
-                mAccountLabel.setText(accountLabel);
-                mAccountLabel.setVisibility(View.VISIBLE);
-            } else {
-                mAccountLabel.setVisibility(View.GONE);
-            }
+//            String accountLabel = PhoneAccountUtils.getAccountLabel(mContext, accountHandle);
+//            if (!TextUtils.isEmpty(accountLabel)) {
+//                mAccountLabel.setText(accountLabel);
+//                mAccountLabel.setVisibility(View.VISIBLE);
+//            } else {
+//                mAccountLabel.setVisibility(View.GONE);
+//            }
 
             mHasEditNumberBeforeCallOption =
                     canPlaceCallsTo && !isSipNumber && !mIsVoicemailNumber;
@@ -205,8 +205,8 @@ public class CallDetailActivity extends Activity
     private QuickContactBadge mQuickContactBadge;
     private TextView mCallerName;
     private TextView mCallerNumber;
-    private TextView mAccountLabel;
-    private View mCallButton;
+//    private TextView mAccountLabel;
+//    private View mCallButton;
     private ContactInfoHelper mContactInfoHelper;
 
     protected String mNumber;
@@ -231,7 +231,7 @@ public class CallDetailActivity extends Activity
 
         mContext = this;
 
-        setContentView(R.layout.call_detail);
+        setContentView(R.layout.call_detail_instead);
 
         mInflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
         mResources = getResources();
@@ -245,17 +245,17 @@ public class CallDetailActivity extends Activity
         mQuickContactBadge.setPrioritizedMimeType(Phone.CONTENT_ITEM_TYPE);
         mCallerName = (TextView) findViewById(R.id.caller_name);
         mCallerNumber = (TextView) findViewById(R.id.caller_number);
-        mAccountLabel = (TextView) findViewById(R.id.phone_account_label);
+//        mAccountLabel = (TextView) findViewById(R.id.phone_account_label);
         mDefaultCountryIso = GeoUtil.getCurrentCountryIso(this);
         mContactPhotoManager = ContactPhotoManager.getInstance(this);
 
-        mCallButton = (View) findViewById(R.id.call_back_button);
-        mCallButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mContext.startActivity(IntentUtil.getCallIntent(mNumber));
-            }
-        });
+//        mCallButton = (View) findViewById(R.id.call_back_button);
+//        mCallButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                mContext.startActivity(IntentUtil.getCallIntent(mNumber));
+//            }
+//        });
 
         mContactInfoHelper = new ContactInfoHelper(this, GeoUtil.getCurrentCountryIso(this));
         getActionBar().setDisplayHomeAsUpEnabled(true);

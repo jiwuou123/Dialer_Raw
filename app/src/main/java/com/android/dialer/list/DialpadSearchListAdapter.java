@@ -61,19 +61,27 @@ public class DialpadSearchListAdapter extends DialerPhoneNumberListAdapter{
         }
     }
 
-
+    @Override
     public Uri getDataUri(int position) {
         Cursor cursor = ((Cursor)getItem(position));
         if (cursor != null) {
-                long id = cursor.getLong(DialerSearchHelper.DialerSearchColumn.CONTACT_ID_INDEX);
-            if(id<=0)
+            if(cursor.getLong(DialerSearchHelper.DialerSearchColumn.CALL_LOG_ID_INDEX)>0)
                 return null;
-            return ContentUris.withAppendedId(ContactsContract.Data.CONTENT_URI, id);
+            else {
+                long id = cursor.getLong(DialerSearchHelper.DialerSearchColumn.DATA_ID_INDEX);
+                if(id<=0)
+                    return null;
+                return ContentUris.withAppendedId(ContactsContract.Data.CONTENT_URI, id);
+            }
         } else {
             return null;
         }
     }
-
+    @Override
+    public String getLookupKey(int position) {
+        final Cursor item = (Cursor)getItem(position);
+        return item != null ? item.getString(DialerSearchHelper.DialerSearchColumn.CONTACT_NAME_LOOKUP_INDEX) : null;
+    }
 
     public Uri getContactUri(int position) {
         int partitionIndex = getPartitionForPosition(position);
@@ -92,7 +100,6 @@ public class DialpadSearchListAdapter extends DialerPhoneNumberListAdapter{
         }
         return uri;
     }
-
     /**
      * 监听器
      * @param moreFetcher

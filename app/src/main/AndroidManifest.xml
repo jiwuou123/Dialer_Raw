@@ -71,6 +71,22 @@
         <meta-data android:name="com.google.android.backup.api_key"
             android:value="AEdPqrEAAAAIBXgtCEKQ6W0PXVnW-ZVia2KmlV2AxsTw3GjAeQ" />
 
+        <!--emergency call activity-->
+        <!--<activity android:name=".EmergencyCallActivity"-->
+            <!--android:theme="@android:style/Theme.Black.NoTitleBar"-->
+            <!--android:launchMode="singleTask">-->
+
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN" />-->
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
+
+
+
+        <!--</activity>-->
+
+
+
         <!-- The entrance point for Phone UI.
              stateAlwaysHidden is set to suppress keyboard show up on
              dialpad screen. -->

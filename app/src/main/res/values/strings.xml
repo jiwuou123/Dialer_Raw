@@ -1289,4 +1289,8 @@
     <string name="multiple_delete_title">"Delete"</string>
     <string name="multiple_delete_content">"is delete？"</string>
     <string name="call_log_missed">"CALL LOG MISSED"</string>
+
+    <string name="send_contact">Send Contact</string>
+    <string name="add_to_the_personal_collection">Add To The Personal Collection</string>
+    <string name="block_contact">Block Contact</string>
 </resources>

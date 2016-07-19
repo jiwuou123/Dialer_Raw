@@ -34,7 +34,6 @@ import com.android.dialer.util.AsyncTaskExecutor;
 import com.android.dialer.util.AsyncTaskExecutors;
 import com.android.dialer.util.PhoneNumberUtil;
 import com.android.dialer.util.TelecomUtil;
-
 import com.google.common.annotations.VisibleForTesting;
 
 public class CallLogAsyncTaskUtil {
@@ -61,7 +60,8 @@ public class CallLogAsyncTaskUtil {
             CallLog.Calls.PHONE_ACCOUNT_ID,
             CallLog.Calls.FEATURES,
             CallLog.Calls.DATA_USAGE,
-            CallLog.Calls.TRANSCRIPTION
+            CallLog.Calls.TRANSCRIPTION,
+            CallLog.Calls.CACHED_LOOKUP_URI
         };
 
         static final int DATE_COLUMN_INDEX = 0;
@@ -76,6 +76,7 @@ public class CallLogAsyncTaskUtil {
         static final int FEATURES = 9;
         static final int DATA_USAGE = 10;
         static final int TRANSCRIPTION_COLUMN_INDEX = 11;
+        static final int CACHED_LOOKUP_URI_INDEX = 12;
     }
 
     public interface CallLogAsyncTaskListener {
@@ -133,7 +134,6 @@ public class CallLogAsyncTaskUtil {
     private static PhoneCallDetails getPhoneCallDetailsForUri(Context context, Uri callUri) {
         Cursor cursor = context.getContentResolver().query(
                 callUri, CallDetailQuery.CALL_LOG_PROJECTION, null, null, null);
-
         try {
             if (cursor == null || !cursor.moveToFirst()) {
                 throw new IllegalArgumentException("Cannot find content: " + callUri);
@@ -181,7 +181,10 @@ public class CallLogAsyncTaskUtil {
 
             details.countryIso = !TextUtils.isEmpty(countryIso) ? countryIso
                     : GeoUtil.getCurrentCountryIso(context);
-
+            String lookUpUri = cursor.getString(CallDetailQuery.CACHED_LOOKUP_URI_INDEX);
+            Cursor cursor1 = context.getContentResolver().query(
+                    Uri.parse(lookUpUri), null, null, null, null);
+            Log.d(TAG,"ColumnCount->"+cursor1.getColumnCount());
             if (!cursor.isNull(CallDetailQuery.DATA_USAGE)) {
                 details.dataUsage = cursor.getLong(CallDetailQuery.DATA_USAGE);
             }

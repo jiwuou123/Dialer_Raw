@@ -677,7 +677,7 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
     protected void onRestart() {
         super.onRestart();
         mIsRestarting = true;
-        Log.e(TAG,"  ----- onRestart() ----- "+ " mIsDialpadShown is:  " + mIsDialpadShown);
+        Log.e(TAG, "  ----- onRestart() ----- " + " mIsDialpadShown is:  " + mIsDialpadShown);
     }
 
     @Override
@@ -689,7 +689,7 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
         if (mSlideOut.hasStarted() && !mSlideOut.hasEnded()) {
             commitDialpadFragmentHide();
         }
-        Log.e(TAG,"  ----- onPause() ----- "+ " mIsDialpadShown is:  " + mIsDialpadShown);
+        Log.e(TAG, "  ----- onPause() ----- " + " mIsDialpadShown is:  " + mIsDialpadShown);
         super.onPause();
     }
 
@@ -1107,7 +1107,7 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
             }
 
         }
-        Log.e(TAG, " --- displayFragment(Intent intent) --- " +" mIsDialpadShown  is " + mIsDialpadShown);
+        Log.e(TAG, " --- displayFragment(Intent intent) --- " + " mIsDialpadShown  is " + mIsDialpadShown);
     }
 
     @Override
@@ -1206,9 +1206,7 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
         // DialtactsActivity will provide the options menu
         fragment.setHasOptionsMenu(false);
         fragment.setShowEmptyListForNullQuery(true);
-        if (!smartDialSearch) {
-            fragment.setQueryString(query, false /* delaySelection */);
-        }
+        fragment.setQueryString(query, false /* delaySelection */);
         transaction.commitAllowingStateLoss();
 //        transaction.commit();
 
