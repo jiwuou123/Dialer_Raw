@@ -173,6 +173,7 @@
                   android:label="@string/callDetailTitle"
                   android:theme="@style/CallDetailActivityTheme"
                   android:icon="@mipmap/ic_launcher_phone"
+                  android:launchMode="singleTop"
                   android:parentActivityName="com.android.dialer.calllog.CallLogActivity"
             >
             <intent-filter>
@@ -180,6 +181,14 @@
                 <category android:name="android.intent.category.DEFAULT"/>
                 <data android:mimeType="vnd.android.cursor.item/calls"/>
             </intent-filter>
+        </activity>
+
+        <activity android:name="com.android.dialer.CallTotalDetailActivity"
+            android:theme="@style/CallDetailActivityTheme"
+            android:icon="@mipmap/ic_launcher_phone"
+            android:parentActivityName="com.android.dialer.CallDetailActivity"
+            >
+
         </activity>
 
         <activity android:name="com.android.contacts.common.test.FragmentTestActivity">

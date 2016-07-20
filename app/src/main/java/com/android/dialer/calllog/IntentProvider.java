@@ -16,20 +16,18 @@
 
 package com.android.dialer.calllog;
 
-import android.content.ContentValues;
 import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.provider.CallLog.Calls;
 import android.provider.ContactsContract;
 import android.telecom.PhoneAccountHandle;
 
 import com.android.contacts.common.model.Contact;
 import com.android.contacts.common.model.ContactLoader;
 import com.android.dialer.CallDetailActivity;
-import com.android.dialer.DialtactsActivity;
-import com.android.dialer.PhoneCallDetails;
+import com.android.dialer.CallTotalDetailActivity;
 import com.android.dialer.util.IntentUtil;
 import com.android.dialer.util.TelecomUtil;
 
@@ -123,7 +121,28 @@ public abstract class IntentProvider {
             }
         };
     }
+    public static IntentProvider getCallTotalDetailIntentProvider(
+            final Uri u, final long[] extraIds, final String voicemailUri) {
+        return new IntentProvider() {
+            @Override
+            public Intent getIntent(Context context) {
+                Intent intent = new Intent(context, CallTotalDetailActivity.class);
+                // Check if the first item is a voicemail.
+                if (voicemailUri != null) {
+                    intent.putExtra(CallTotalDetailActivity.EXTRA_VOICEMAIL_URI,
+                            Uri.parse(voicemailUri));
+                }
 
+                if (extraIds != null && extraIds.length > 0) {
+                    intent.putExtra(CallTotalDetailActivity.EXTRA_CALL_LOG_IDS, extraIds);
+                } else {
+                    // If there is a single item, use the direct URI for it.
+                    intent.setData(u);
+                }
+                return intent;
+            }
+        };
+    }
     /**
      * Retrieves an add contact intent for the given contact and phone call details.
      */

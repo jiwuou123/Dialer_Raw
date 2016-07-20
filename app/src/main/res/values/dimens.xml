@@ -316,4 +316,6 @@
     <!-->new <-->
     <dimen name="dialpad_search_list_item_height">56dp</dimen>
     <dimen name="dialpad_search_list_item_padding">8dp</dimen>
+    <!--呼入和未接通之间的距离-->
+    <dimen name="between_huru_and_weijietong">10dp</dimen>
 </resources>

@@ -129,6 +129,7 @@
     </style>
 
     <style name="CallDetailActivityTheme" parent="DialtactsThemeWithoutActionBarOverlay">
+        <item name="android:actionBarStyle">@style/DialtactsActionBarWithoutTitleStyle</item>
         <item name="android:windowBackground">@color/background_dialer_call_log</item>
         <!-- CallLog -->
         <item name="call_log_primary_background_color">#F7F7F7</item>
