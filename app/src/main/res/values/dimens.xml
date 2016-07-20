@@ -321,4 +321,6 @@
 
     <dimen name="call_detail_text_size">16sp</dimen>
     <dimen name="call_detail_text_min_size">12sp</dimen>
+    <!--呼入和未接通之间的距离-->
+    <dimen name="between_huru_and_weijietong">10dp</dimen>
 </resources>
