@@ -41,7 +41,6 @@
         android:textSize="16sp"
         android:layout_marginTop="4dp"
         android:textColor="#ff16b900"
-        android:layout_marginRight="-32px"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:maxLines="1"

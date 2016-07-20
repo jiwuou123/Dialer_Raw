@@ -1,6 +1,7 @@
 package com.android.dialer.calllog;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,10 +22,12 @@ public class CallDetailPhoneNumberAdapter extends BaseAdapter{
     private final LayoutInflater mLayoutInflater;
     private final PhoneCallDetails.PhoneNumberEntity[] phoneNumberEntities;
     private CallDetailCallback callDetailCallback;
-    public CallDetailPhoneNumberAdapter(Context context, PhoneCallDetails.PhoneNumberEntity[] phoneNumberEntities) {
+    private String currentPhoneNumber;
+    public CallDetailPhoneNumberAdapter(Context context, PhoneCallDetails.PhoneNumberEntity[] phoneNumberEntities,String currentPhoneNumber) {
         mContext = context;
         mLayoutInflater = LayoutInflater.from(context);
         this.phoneNumberEntities = phoneNumberEntities;
+        this.currentPhoneNumber = currentPhoneNumber;
     }
 
     public void setCallDetailCallback(CallDetailCallback callDetailCallback) {
@@ -73,7 +76,10 @@ public class CallDetailPhoneNumberAdapter extends BaseAdapter{
         String location = phoneNumberEntities[position].location;
         if(!TextUtils.isEmpty(location))
             viewHolder.location.setText(location);
-        viewHolder.phoneNumber.setText(phoneNumberEntities[position].phoneNumber);
+        String phoneNumber = phoneNumberEntities[position].phoneNumber;
+        if(phoneNumber.equals(currentPhoneNumber))
+            viewHolder.phoneNumber.setTextColor(Color.GREEN);
+        viewHolder.phoneNumber.setText(phoneNumber);
         return convertView;
     }
 

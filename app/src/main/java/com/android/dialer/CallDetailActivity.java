@@ -47,6 +47,7 @@ import com.android.dialer.calllog.CallLogAsyncTaskUtil;
 import com.android.dialer.calllog.CallLogAsyncTaskUtil.CallLogAsyncTaskListener;
 import com.android.dialer.calllog.CallTypeHelper;
 import com.android.dialer.calllog.ContactInfoHelper;
+import com.android.dialer.calllog.IntentProvider;
 import com.android.dialer.util.DialerUtils;
 import com.android.dialer.util.IntentUtil;
 import com.android.dialer.util.PhoneNumberUtil;
@@ -120,20 +121,16 @@ public class CallDetailActivity extends Activity implements View.OnClickListener
 
             if (!TextUtils.isEmpty(firstDetails.name)) {
                 mCallerName.setText(firstDetails.name);
-//                mCallerNumber.setText(callLocationOrType + " " + displayNumberStr);
-            }else {
-
+                mCallerNumber.setText(callLocationOrType + " " + displayNumberStr);
+            } else {
+                mCallerName.setText(displayNumberStr);
+                if (!TextUtils.isEmpty(callLocationOrType)) {
+                    mCallerNumber.setText(callLocationOrType);
+                    mCallerNumber.setVisibility(View.VISIBLE);
+                } else {
+                    mCallerNumber.setVisibility(View.GONE);
+                }
             }
-
-//            mCallButton.setVisibility(canPlaceCallsTo ? View.VISIBLE : View.GONE);
-
-//            String accountLabel = PhoneAccountUtils.getAccountLabel(mContext, accountHandle);
-//            if (!TextUtils.isEmpty(accountLabel)) {
-//                mAccountLabel.setText(accountLabel);
-//                mAccountLabel.setVisibility(View.VISIBLE);
-//            } else {
-//                mAccountLabel.setVisibility(View.GONE);
-//            }
 
             mHasEditNumberBeforeCallOption =
                     canPlaceCallsTo && !isSipNumber && !mIsVoicemailNumber;
@@ -154,7 +151,7 @@ public class CallDetailActivity extends Activity implements View.OnClickListener
             }
             if(firstDetails.phoneNumbers!=null){
                 contactPhoneNumbers.setVisibility(View.VISIBLE);
-                CallDetailPhoneNumberAdapter adater = new CallDetailPhoneNumberAdapter(mContext,firstDetails.phoneNumbers);
+                CallDetailPhoneNumberAdapter adater = new CallDetailPhoneNumberAdapter(mContext,firstDetails.phoneNumbers,displayNumber.toString());
                 contactPhoneNumbers.setAdapter(adater);
                 adater.setCallDetailCallback(CallDetailActivity.this);
                 View view =  findViewById(R.id.call_detail_exist_contact);
@@ -169,8 +166,6 @@ public class CallDetailActivity extends Activity implements View.OnClickListener
                     setCallNotExistItemListener();
                 }
             }
-
-
             String lookupKey = contactUri == null ? null
                     : ContactInfoHelper.getLookupKeyFromUri(contactUri);
 
@@ -233,7 +228,7 @@ public class CallDetailActivity extends Activity implements View.OnClickListener
     private CallTypeHelper mCallTypeHelper;
     private QuickContactBadge mQuickContactBadge;
     private TextView mCallerName;
-//    private TextView mCallerNumber;
+    private TextView mCallerNumber;
 //    private TextView mAccountLabel;
 //    private View mCallButton;
     private ContactInfoHelper mContactInfoHelper;
@@ -273,7 +268,7 @@ public class CallDetailActivity extends Activity implements View.OnClickListener
         mQuickContactBadge.setOverlay(null);
         mQuickContactBadge.setPrioritizedMimeType(Phone.CONTENT_ITEM_TYPE);
         mCallerName = (TextView) findViewById(R.id.caller_name);
-//        mCallerNumber = (TextView) findViewById(R.id.caller_number);
+        mCallerNumber = (TextView) findViewById(R.id.caller_number);
 //        mAccountLabel = (TextView) findViewById(R.id.phone_account_label);
         mDefaultCountryIso = GeoUtil.getCurrentCountryIso(this);
         mContactPhotoManager = ContactPhotoManager.getInstance(this);
@@ -297,7 +292,7 @@ public class CallDetailActivity extends Activity implements View.OnClickListener
     private boolean hasVoicemail() {
         return mVoicemailUri != null;
     }
-
+    private IntentProvider toTotalDetailsIntent = null;
     /**
      * Returns the list of URIs to show.
      * <p>
@@ -310,6 +305,7 @@ public class CallDetailActivity extends Activity implements View.OnClickListener
         final Uri uri = getIntent().getData();
         if (uri != null) {
             // If there is a data on the intent, it takes precedence over the extra.
+            toTotalDetailsIntent = IntentProvider.getCallTotalDetailIntentProvider(uri, null, null);
             return new Uri[]{ uri };
         }
         final long[] ids = getIntent().getLongArrayExtra(EXTRA_CALL_LOG_IDS);
@@ -319,6 +315,7 @@ public class CallDetailActivity extends Activity implements View.OnClickListener
             uris[index] = ContentUris.withAppendedId(
                     TelecomUtil.getCallLogUri(CallDetailActivity.this), ids[index]);
         }
+        toTotalDetailsIntent = IntentProvider.getCallTotalDetailIntentProvider(uri,ids, null);
         return uris;
     }
 
@@ -402,7 +399,13 @@ public class CallDetailActivity extends Activity implements View.OnClickListener
             return;
         switch (v.getId()){
             case R.id.call_detail_more_call_log:
-
+                if (toTotalDetailsIntent != null) {
+                    intent = toTotalDetailsIntent.getIntent(mContext);
+                    // See IntentProvider.getCallDetailIntentProvider() for why this may be null.
+                    if (intent != null) {
+                        DialerUtils.startActivityWithErrorToast(mContext, intent);
+                    }
+                }
                 break;
             case R.id.send_contact:
                 //TODO 发送联系人 提供了联系人 cantactId与号码
