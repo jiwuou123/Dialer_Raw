@@ -968,7 +968,7 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
             }
         }
 
-        Log.e(TAG," hideDialpadFragment  mIsDialpadShown "+ mIsDialpadShown);
+        Log.e(TAG, " hideDialpadFragment  mIsDialpadShown " + mIsDialpadShown);
 
     }
 
@@ -1187,6 +1187,7 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
         if (fragment == null) {
             if (smartDialSearch) {
                 fragment = new SmartDialSearchFragment();
+                transaction.add(R.id.dialtacts_frame, fragment, tag);
             } else {
                 fragment = new RegularSearchFragment();
                 fragment.setOnTouchListener(new View.OnTouchListener() {
@@ -1199,7 +1200,7 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
                     }
                 });
             }
-            transaction.add(R.id.dialtacts_frame, fragment, tag);
+
         } else {
             transaction.show(fragment);
         }
@@ -1215,6 +1216,29 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
 //        }
 //        mListsFragment.setUserVisibleHint(false);
     }
+
+    /**
+     * Hides the search fragment
+     */
+    private void exitSartDialpadFragment() {
+        // See related bug in enterSearchUI();
+        if (getFragmentManager().isDestroyed() || mStateSaved) {
+            return;
+        }
+        setNotInSearchUi();
+        final FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        if (mSmartDialSearchFragment != null) {
+            transaction.remove(mSmartDialSearchFragment);
+        }
+        if (mRegularSearchFragment != null) {
+            transaction.remove(mRegularSearchFragment);
+        }
+        transaction.commit();
+
+        addCallLogFragmentInList();
+    }
+
+
 
     /**
      * Hides the search fragment
@@ -1335,7 +1359,8 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
         mSearchViewShow = false;
         getActionBar().show();
         mDialpadFragment.hideSearchView();
-        maybeExitSearchUi();
+        //maybeExitSearchUi();
+        exitSartDialpadFragment();
     }
     private void showSearchFragment(){
         final FragmentTransaction transaction = getFragmentManager().beginTransaction();
@@ -1387,6 +1412,7 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
 //                mSearchQuery = query;
                 enterSearchUi(false /* isSmartDial */, query, true);
             }
+
             showSearchFragment();
         }
         if (mSmartDialSearchFragment != null) {

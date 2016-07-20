@@ -23,18 +23,23 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.CallLog;
+import android.provider.ContactsContract;
 import android.provider.VoicemailContract.Voicemails;
 import android.telecom.PhoneAccountHandle;
 import android.text.TextUtils;
 import android.util.Log;
 
 import com.android.contacts.common.GeoUtil;
+import com.android.contacts.common.model.Contact;
 import com.android.dialer.PhoneCallDetails;
 import com.android.dialer.util.AsyncTaskExecutor;
 import com.android.dialer.util.AsyncTaskExecutors;
 import com.android.dialer.util.PhoneNumberUtil;
 import com.android.dialer.util.TelecomUtil;
+import com.android.incallui.CallerInfo;
 import com.google.common.annotations.VisibleForTesting;
+
+import java.io.IOException;
 
 public class CallLogAsyncTaskUtil {
     private static String TAG = CallLogAsyncTaskUtil.class.getSimpleName();
@@ -61,7 +66,7 @@ public class CallLogAsyncTaskUtil {
             CallLog.Calls.FEATURES,
             CallLog.Calls.DATA_USAGE,
             CallLog.Calls.TRANSCRIPTION,
-            CallLog.Calls.CACHED_LOOKUP_URI
+            "raw_contact_id"
         };
 
         static final int DATE_COLUMN_INDEX = 0;
@@ -76,7 +81,7 @@ public class CallLogAsyncTaskUtil {
         static final int FEATURES = 9;
         static final int DATA_USAGE = 10;
         static final int TRANSCRIPTION_COLUMN_INDEX = 11;
-        static final int CACHED_LOOKUP_URI_INDEX = 12;
+        static final int RAW_CONTACT_ID_INDEX = 12;
     }
 
     public interface CallLogAsyncTaskListener {
@@ -111,6 +116,9 @@ public class CallLogAsyncTaskUtil {
                                 details[index] =
                                         getPhoneCallDetailsForUri(context, callUris[index]);
                             }
+                            if(numCalls>0){
+                                getPhoneNumbers(details[0], context);
+                            }
                             return details;
                         } catch (IllegalArgumentException e) {
                             // Something went wrong reading in our primary data.
@@ -126,6 +134,30 @@ public class CallLogAsyncTaskUtil {
                         }
                     }
                 });
+    }
+
+    private static void getPhoneNumbers(PhoneCallDetails details, Context context) {
+        Cursor c = context.getContentResolver().query(ContactsContract.Data.CONTENT_URI,
+                new String[] {ContactsContract.Data._ID, ContactsContract.CommonDataKinds.Phone.NUMBER},
+                ContactsContract.Data.CONTACT_ID + "=?" + " AND "
+                        + ContactsContract.Data.MIMETYPE + "='" + ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE + "'",
+                new String[] {String.valueOf(details.contactId)}, null);
+        if(c.moveToFirst()){
+            details.phoneNumbers = new PhoneCallDetails.PhoneNumberEntity[c.getCount()];
+            int i = 0;
+            do{
+                details.phoneNumbers[i] = new PhoneCallDetails.PhoneNumberEntity();
+                details.phoneNumbers[i].phoneNumber = c.getString(1);
+                try {
+                    details.phoneNumbers[i].location = CallerInfo.getGeoDescriptionByContext(context,details.phoneNumbers[i].phoneNumber.replaceAll(" ",""));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                i++;
+            }while (c.moveToNext());
+        }
+        if(c!=null)
+            c.close();
     }
 
     /**
@@ -181,13 +213,7 @@ public class CallLogAsyncTaskUtil {
 
             details.countryIso = !TextUtils.isEmpty(countryIso) ? countryIso
                     : GeoUtil.getCurrentCountryIso(context);
-            String lookUpUri = cursor.getString(CallDetailQuery.CACHED_LOOKUP_URI_INDEX);
-            Cursor cursor1 = context.getContentResolver().query(
-                    Uri.parse(lookUpUri), null, null, null, null);
-            Log.d(TAG,"ColumnCount->"+cursor1.getColumnCount());
-            if (!cursor.isNull(CallDetailQuery.DATA_USAGE)) {
-                details.dataUsage = cursor.getLong(CallDetailQuery.DATA_USAGE);
-            }
+            details.contactId = cursor.getString(CallDetailQuery.RAW_CONTACT_ID_INDEX);
 
             return details;
         } finally {

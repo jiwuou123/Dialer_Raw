@@ -443,6 +443,7 @@
         <item name="android:textSize">@dimen/bbk_tab_text_size</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:fontFamily">"sans-serif-medium"</item>
+        <item name="android:background">?android:attr/selectableItemBackground</item>
         <item name="android:focusable">true</item>
         <item name="android:singleLine">true</item>
         <item name="android:importantForAccessibility">no</item>

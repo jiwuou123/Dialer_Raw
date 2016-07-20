@@ -16,30 +16,23 @@
 
 package com.android.dialer;
 
+import android.app.ActionBar;
 import android.app.Activity;
-import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.PowerManager;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
-import android.provider.VoicemailContract.Voicemails;
-import android.telecom.PhoneAccount;
 import android.telecom.PhoneAccountHandle;
-import android.telephony.TelephonyManager;
 import android.text.BidiFormatter;
 import android.text.TextDirectionHeuristics;
 import android.text.TextUtils;
-import android.util.Log;
-import android.view.KeyEvent;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.LinearLayout;
+import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.QuickContactBadge;
 import android.widget.TextView;
@@ -47,23 +40,17 @@ import android.widget.Toast;
 
 import com.android.contacts.common.ContactPhotoManager;
 import com.android.contacts.common.ContactPhotoManager.DefaultImageRequest;
-import com.android.contacts.common.util.PermissionsUtil;
 import com.android.contacts.common.GeoUtil;
-import com.android.contacts.common.CallUtil;
+import com.android.dialer.calllog.CallDetailPhoneNumberAdapter;
 import com.android.dialer.calllog.CallDetailHistoryAdapter;
-import com.android.dialer.calllog.CallLogAsyncTaskUtil.CallLogAsyncTaskListener;
 import com.android.dialer.calllog.CallLogAsyncTaskUtil;
+import com.android.dialer.calllog.CallLogAsyncTaskUtil.CallLogAsyncTaskListener;
 import com.android.dialer.calllog.CallTypeHelper;
-import com.android.dialer.calllog.ContactInfo;
 import com.android.dialer.calllog.ContactInfoHelper;
-import com.android.dialer.calllog.PhoneAccountUtils;
-import com.android.dialer.calllog.PhoneNumberDisplayUtil;
 import com.android.dialer.util.DialerUtils;
 import com.android.dialer.util.IntentUtil;
 import com.android.dialer.util.PhoneNumberUtil;
 import com.android.dialer.util.TelecomUtil;
-
-import java.util.List;
 
 /**
  * Displays the details of a specific call log entry.
@@ -71,8 +58,7 @@ import java.util.List;
  * This activity can be either started with the URI of a single call log entry, or with the
  * {@link #EXTRA_CALL_LOG_IDS} extra to specify a group of call log entries.
  */
-public class CallDetailActivity extends Activity
-        implements MenuItem.OnMenuItemClickListener {
+public class CallDetailActivity extends Activity implements View.OnClickListener,CallDetailPhoneNumberAdapter.CallDetailCallback {
     private static final String TAG = "CallDetail";
 
      /** A long array extra containing ids of call log entries to display. */
@@ -84,7 +70,10 @@ public class CallDetailActivity extends Activity
 
     public static final String VOICEMAIL_FRAGMENT_TAG = "voicemail_fragment";
 
+    private PhoneCallDetails[] detail;
+
     private CallLogAsyncTaskListener mCallLogAsyncTaskListener = new CallLogAsyncTaskListener() {
+
         @Override
         public void onDeleteCall() {
             finish();
@@ -97,6 +86,7 @@ public class CallDetailActivity extends Activity
 
         @Override
         public void onGetCallDetails(PhoneCallDetails[] details) {
+            detail = details;
             if (details == null) {
                 // Somewhere went wrong: we're going to bail out and show error to users.
                 Toast.makeText(mContext, R.string.toast_call_detail_error,
@@ -130,15 +120,9 @@ public class CallDetailActivity extends Activity
 
             if (!TextUtils.isEmpty(firstDetails.name)) {
                 mCallerName.setText(firstDetails.name);
-                mCallerNumber.setText(callLocationOrType + " " + displayNumberStr);
-            } else {
-                mCallerName.setText(displayNumberStr);
-                if (!TextUtils.isEmpty(callLocationOrType)) {
-                    mCallerNumber.setText(callLocationOrType);
-                    mCallerNumber.setVisibility(View.VISIBLE);
-                } else {
-                    mCallerNumber.setVisibility(View.GONE);
-                }
+//                mCallerNumber.setText(callLocationOrType + " " + displayNumberStr);
+            }else {
+
             }
 
 //            mCallButton.setVisibility(canPlaceCallsTo ? View.VISIBLE : View.GONE);
@@ -160,9 +144,36 @@ public class CallDetailActivity extends Activity
             ListView historyList = (ListView) findViewById(R.id.history);
             historyList.setAdapter(
                     new CallDetailHistoryAdapter(mContext, mInflater, mCallTypeHelper, details));
+            ListView contactPhoneNumbers = (ListView) findViewById(R.id.contact_phone_numbers);
+            if(details.length>=5){
+                View view = findViewById(R.id.call_detail_more_call_log_item);
+                if(view!=null){
+                    view.setVisibility(View.VISIBLE);
+                    setCallDetailListener();
+                }
+            }
+            if(firstDetails.phoneNumbers!=null){
+                contactPhoneNumbers.setVisibility(View.VISIBLE);
+                CallDetailPhoneNumberAdapter adater = new CallDetailPhoneNumberAdapter(mContext,firstDetails.phoneNumbers);
+                contactPhoneNumbers.setAdapter(adater);
+                adater.setCallDetailCallback(CallDetailActivity.this);
+                View view =  findViewById(R.id.call_detail_exist_contact);
+                if(view !=null){
+                    view.setVisibility(View.VISIBLE);
+                    setCallExistItemListener();
+                }
+            }else {
+                View view = findViewById(R.id.call_detail_no_exist_contact);
+                if(view !=null){
+                    view.setVisibility(View.VISIBLE);
+                    setCallNotExistItemListener();
+                }
+            }
+
 
             String lookupKey = contactUri == null ? null
                     : ContactInfoHelper.getLookupKeyFromUri(contactUri);
+
 
             final boolean isBusiness = mContactInfoHelper.isBusiness(firstDetails.sourceType);
 
@@ -200,11 +211,29 @@ public class CallDetailActivity extends Activity
         }
     };
 
+    private void setCallNotExistItemListener() {
+        findViewById(R.id.call_contact).setOnClickListener(this);
+        findViewById(R.id.send_message).setOnClickListener(this);
+        findViewById(R.id.add_new_contacts).setOnClickListener(this);
+        findViewById(R.id.add_new_exits_contacts).setOnClickListener(this);
+        findViewById(R.id.block_contact).setOnClickListener(this);
+    }
+
+    private void setCallExistItemListener() {
+        findViewById(R.id.send_contact).setOnClickListener(this);
+        findViewById(R.id.add_to_the_personal_collection).setOnClickListener(this);
+        findViewById(R.id.block_contact).setOnClickListener(this);
+    }
+
+    private void setCallDetailListener() {
+        findViewById(R.id.call_detail_more_call_log).setOnClickListener(this);
+    }
+
     private Context mContext;
     private CallTypeHelper mCallTypeHelper;
     private QuickContactBadge mQuickContactBadge;
     private TextView mCallerName;
-    private TextView mCallerNumber;
+//    private TextView mCallerNumber;
 //    private TextView mAccountLabel;
 //    private View mCallButton;
     private ContactInfoHelper mContactInfoHelper;
@@ -244,22 +273,12 @@ public class CallDetailActivity extends Activity
         mQuickContactBadge.setOverlay(null);
         mQuickContactBadge.setPrioritizedMimeType(Phone.CONTENT_ITEM_TYPE);
         mCallerName = (TextView) findViewById(R.id.caller_name);
-        mCallerNumber = (TextView) findViewById(R.id.caller_number);
+//        mCallerNumber = (TextView) findViewById(R.id.caller_number);
 //        mAccountLabel = (TextView) findViewById(R.id.phone_account_label);
         mDefaultCountryIso = GeoUtil.getCurrentCountryIso(this);
         mContactPhotoManager = ContactPhotoManager.getInstance(this);
-
-//        mCallButton = (View) findViewById(R.id.call_back_button);
-//        mCallButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                mContext.startActivity(IntentUtil.getCallIntent(mNumber));
-//            }
-//        });
-
         mContactInfoHelper = new ContactInfoHelper(this, GeoUtil.getCurrentCountryIso(this));
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-
+        addTextToActionBar();
         if (getIntent().getBooleanExtra(EXTRA_FROM_NOTIFICATION, false)) {
             closeSystemDialogs();
         }
@@ -318,57 +337,122 @@ public class CallDetailActivity extends Activity
                 false /* darkTheme */, true /* isCircular */, request);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.call_details_options, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        // This action deletes all elements in the group from the call log.
-        // We don't have this action for voicemails, because you can just use the trash button.
-        menu.findItem(R.id.menu_remove_from_call_log)
-                .setVisible(!hasVoicemail())
-                .setOnMenuItemClickListener(this);
-        menu.findItem(R.id.menu_edit_number_before_call)
-                .setVisible(mHasEditNumberBeforeCallOption)
-                .setOnMenuItemClickListener(this);
-        menu.findItem(R.id.menu_trash)
-                .setVisible(hasVoicemail())
-                .setOnMenuItemClickListener(this);
-        menu.findItem(R.id.menu_report)
-                .setVisible(mHasReportMenuOption)
-                .setOnMenuItemClickListener(this);
-        return super.onPrepareOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onMenuItemClick(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_remove_from_call_log:
-                final StringBuilder callIds = new StringBuilder();
-                for (Uri callUri : getCallLogEntryUris()) {
-                    if (callIds.length() != 0) {
-                        callIds.append(",");
-                    }
-                    callIds.append(ContentUris.parseId(callUri));
-                }
-                CallLogAsyncTaskUtil.deleteCalls(
-                        this, callIds.toString(), mCallLogAsyncTaskListener);
-                break;
-            case R.id.menu_edit_number_before_call:
-                startActivity(new Intent(Intent.ACTION_DIAL, CallUtil.getCallUri(mNumber)));
-                break;
-            case R.id.menu_trash:
-                CallLogAsyncTaskUtil.deleteVoicemail(
-                        this, mVoicemailUri, mCallLogAsyncTaskListener);
-                break;
-        }
-        return true;
-    }
-
     private void closeSystemDialogs() {
         sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
+    }
+
+    /**
+     * 自适应Actionbar
+     */
+    public void addTextToActionBar()
+    {
+        ActionBar mActionbar = getActionBar();
+//        LayoutParams layout = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT,Gravity.CENTER);
+//        mActionbar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+//        mActionbar.setCustomView(getLayoutInflater().inflate(R.layout.call_detail_actionbar_view,null),layout);
+        mActionbar.setDisplayShowCustomEnabled( true );
+
+        // Inflate the custom view
+        LayoutInflater inflater = LayoutInflater.from( this );
+        View header = inflater.inflate( R.layout.call_detail_actionbar_view, null );
+
+        // Magic happens to center it.
+
+        DisplayMetrics dm = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(dm);
+        getActionBar().setHomeAsUpIndicator(R.drawable.ic_menu_back);
+//        tv.measure( 0, 0 );
+//        int tvSize = tv.getMeasuredWidth();
+        int leftSpace = 0;
+        try
+        {
+            View homeButton = findViewById( android.R.id.home );
+            final ViewGroup holder = (ViewGroup) homeButton.getParent();
+
+            View firstChild =  holder.getChildAt( 0 );
+            View secondChild =  holder.getChildAt( 1 );
+
+            leftSpace = firstChild.getWidth()+secondChild.getWidth();
+        }
+        catch ( Exception ignored )
+        {}
+
+        mActionbar.setCustomView( header );
+
+        if ( null != header )
+        {
+            ActionBar.LayoutParams params = (ActionBar.LayoutParams) header.getLayoutParams();
+
+            if ( null != params )
+            {
+                int leftMargin = leftSpace;
+
+                params.leftMargin = 0 >= leftMargin ? 0 : leftMargin;
+            }
+            mActionbar.setCustomView(header,params);
+        }
+
+    }
+
+    @Override
+    public void onClick(View v) {
+        String number = detail[0].displayNumber;
+        Intent intent = null;
+        if(TextUtils.isEmpty(number))
+            return;
+        switch (v.getId()){
+            case R.id.call_detail_more_call_log:
+
+                break;
+            case R.id.send_contact:
+                //TODO 发送联系人 提供了联系人 cantactId与号码
+                break;
+            case R.id.add_to_the_personal_collection:
+                break;
+            case R.id.block_contact:
+                //TODO 阻止联系人
+                break;
+            case R.id.call_contact:
+                callContact(number);
+                break;
+            case R.id.send_message:
+                sendMessage(number);
+                break;
+            case R.id.add_new_contacts:
+                intent = IntentUtil.getNewContactIntent(number);
+                DialerUtils.startActivityWithErrorToast(this, intent);
+                break;
+            case R.id.add_new_exits_contacts:
+                intent = IntentUtil.getAddToExistingContactIntent(number);
+                DialerUtils.startActivityWithErrorToast(this,intent,
+                            R.string.add_contact_not_available);
+                break;
+        }
+    }
+
+    private void callContact(String number) {
+        Intent intent;
+        intent = IntentUtil.getCallIntent(number);
+        DialerUtils.startActivityWithErrorToast(this, intent);
+    }
+
+    private void sendMessage(String number) {
+        Intent intent;
+        intent = IntentUtil.getSendSmsIntent(number);
+        DialerUtils.startActivityWithErrorToast(this, intent);
+    }
+
+    @Override
+    public void call(View v, int position) {
+        String number = detail[0].displayNumber;
+        if(!TextUtils.isEmpty(number))
+            callContact(number);
+    }
+
+    @Override
+    public void senMessage(View v, int position) {
+        String number = detail[0].displayNumber;
+        if(!TextUtils.isEmpty(number))
+            sendMessage(number);
     }
 }

@@ -13,7 +13,12 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+<LinearLayout
     android:id="@+id/call_detail"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -24,8 +29,10 @@
     android:paddingRight="@dimen/call_detail_horizontal_margin"
     android:background="@color/background_dialer_call_log" >
 
-    <!-- Caller information "card" -->
-
+    <!--<Toolbar-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="?attr/actionBarSize"-->
+        <!--android:id="@+id/toolbar"></Toolbar>-->
         <QuickContactBadge
             android:id="@+id/quick_contact_photo"
             android:layout_width="@dimen/contact_detail_photo_size"
@@ -34,19 +41,11 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="@dimen/call_detail_horizontal_margin"
             android:focusable="true" />
-
-        <!--<LinearLayout-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:orientation="vertical"-->
-            <!--android:layout_gravity="center_horizontal"-->
-            <!--&gt;-->
-
             <TextView
                 android:id="@+id/caller_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="?attr/call_log_primary_text_color"
+                android:textColor="@android:color/primary_text_light"
                 android:textSize="@dimen/call_log_primary_text_size"
                 android:layout_marginTop="5dp"
                 android:layout_gravity="center_horizontal"
@@ -58,80 +57,43 @@
                 android:id="@+id/caller_number"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="?attr/call_log_secondary_text_color"
+                android:textColor="@android:color/secondary_text_light"
                 android:textSize="@dimen/call_log_secondary_text_size"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="1dp"
                 android:visibility="gone"
                 android:singleLine="true" />
-
-            <!--<TextView-->
-                <!--android:id="@+id/phone_account_label"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:textColor="?attr/call_log_secondary_text_color"-->
-                <!--android:textSize="@dimen/call_log_secondary_text_size"-->
-                <!--android:layout_gravity="center_horizontal"-->
-                <!--android:singleLine="true"-->
-                <!--android:visibility="gone" />-->
-
-        <!--<ImageView-->
-            <!--android:id="@+id/call_back_button"-->
-            <!--android:layout_width="@dimen/call_log_list_item_primary_action_dimen"-->
-            <!--android:layout_height="@dimen/call_log_list_item_primary_action_dimen"-->
-            <!--android:layout_marginEnd="16dp"-->
-            <!--android:background="?android:attr/selectableItemBackgroundBorderless"-->
-            <!--android:src="@drawable/ic_call_24dp"-->
-            <!--android:scaleType="center"-->
-            <!--android:layout_gravity="center_horizontal"-->
-            <!--android:tint="@color/call_log_list_item_primary_action_icon_tint"-->
-            <!--android:contentDescription="@string/description_call_log_call_action"-->
-            <!--android:visibility="gone" />-->
-
-    <!--</LinearLayout>-->
-
-    <!--
-      The list view is under everything.
-      It contains a first header element which is hidden under the controls UI.
-      When scrolling, the controls move up until the name bar hits the top.
-      -->
-    <ListView
+    <com.android.dialer.widget.StretchListView
         android:id="@+id/history"
         android:layout_marginTop="@dimen/call_detail_vertical_margin"
         android:layout_width="match_parent"
         android:dividerHeight="@dimen/call_detail_vertical_margin"
         android:layout_marginBottom="@dimen/call_detail_vertical_margin"
         android:layout_height="wrap_content" />
-    <ListView
+
+    <ViewStub
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:id="@+id/call_detail_more_call_log_item"
+        android:layout="@layout/call_detail_more_call_log_item"/>
+    <com.android.dialer.widget.StretchListView
         android:id="@+id/contact_phone_numbers"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-    <View
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        />
+    <ViewStub
         android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="@android:color/darker_gray"></View>
-    <TextView
-        android:id="@+id/send_contact"
-        style="@style/CallDetailContactTextStyle"
-        android:text="@string/send_contact"/>
-    <View
+        android:layout_height="wrap_content"
+        android:id="@+id/call_detail_exist_contact"
+        android:visibility="gone"
+        android:layout="@layout/call_detail_exist_contact"/>
+    <ViewStub
         android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="@android:color/darker_gray"></View>
-    <TextView
-        android:id="@+id/add_to_the_personal_collection"
-        style="@style/CallDetailContactTextStyle"
-        android:text="@string/add_to_the_personal_collection"/>
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="@android:color/darker_gray"></View>
-    <TextView
-        android:id="@+id/block_contact"
-        style="@style/CallDetailContactTextStyle"
-        android:text="@string/block_contact"/>
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="@android:color/darker_gray"></View>
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:id="@+id/call_detail_no_exist_contact"
+        android:layout="@layout/call_detail_no_exist_contact"/>
 </LinearLayout>
+</ScrollView>

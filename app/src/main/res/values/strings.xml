@@ -1293,4 +1293,9 @@
     <string name="send_contact">Send Contact</string>
     <string name="add_to_the_personal_collection">Add To The Personal Collection</string>
     <string name="block_contact">Block Contact</string>
+    <string name="call_contact">Call</string>
+    <string name="send_message">Send Message</string>
+    <string name="call_detail_more_call_log_item">ShowMore</string>
+    <string name="block_call">BlockCall</string>
+
 </resources>

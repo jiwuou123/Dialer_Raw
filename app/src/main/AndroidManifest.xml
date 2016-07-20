@@ -170,7 +170,7 @@
         </activity>
 
         <activity android:name="com.android.dialer.CallDetailActivity"
-                  android:label="@string/callDetailTitle"
+                  android:label=""
                   android:theme="@style/CallDetailActivityTheme"
                   android:icon="@mipmap/ic_launcher_phone"
                   android:parentActivityName="com.android.dialer.calllog.CallLogActivity"

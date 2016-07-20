@@ -260,4 +260,7 @@
     <string name="send_contact">发送联系人</string>
     <string name="add_to_the_personal_collection">添加到个人收藏</string>
     <string name="block_contact">阻止联系人</string>
+
+    <string name="call_contact">呼叫</string>
+    <string name="send_message">发送信息</string>
 </resources>

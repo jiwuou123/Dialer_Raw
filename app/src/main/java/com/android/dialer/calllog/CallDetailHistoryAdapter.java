@@ -69,7 +69,7 @@ public class CallDetailHistoryAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return mPhoneCallDetails.length;
+        return mPhoneCallDetails.length>=5?5:mPhoneCallDetails.length;
     }
 
     @Override
@@ -125,10 +125,9 @@ public class CallDetailHistoryAdapter extends BaseAdapter {
                 ? mLayoutInflater.inflate(R.layout.call_detail_history_item, parent, false)
                 : convertView;
 
-//        PhoneCallDetails details = mPhoneCallDetails[position - 1];
         PhoneCallDetails details = mPhoneCallDetails[position];
-        CallTypeIconsView callTypeIconView =
-                (CallTypeIconsView) result.findViewById(R.id.call_type_icon);
+//        CallTypeIconsView callTypeIconView =
+//                (CallTypeIconsView) result.findViewById(R.id.call_type_icon);
         TextView callTypeTextView = (TextView) result.findViewById(R.id.call_type_text);
         TextView dateView = (TextView) result.findViewById(R.id.date);
         TextView durationView = (TextView) result.findViewById(R.id.duration);
@@ -137,14 +136,13 @@ public class CallDetailHistoryAdapter extends BaseAdapter {
         boolean isVideoCall = (details.features & Calls.FEATURES_VIDEO) == Calls.FEATURES_VIDEO
                 && CallUtil.isVideoEnabled(mContext);
 
-        callTypeIconView.clear();
-        callTypeIconView.add(callType);
-        callTypeIconView.setShowVideo(isVideoCall);
+//        callTypeIconView.clear();
+//        callTypeIconView.add(callType);
+//        callTypeIconView.setShowVideo(isVideoCall);
         callTypeTextView.setText(mCallTypeHelper.getCallTypeText(callType, isVideoCall));
         // Set the date.
-        CharSequence dateValue = DateUtils.formatDateRange(mContext, details.date, details.date,
-                DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE |
-                DateUtils.FORMAT_SHOW_WEEKDAY | DateUtils.FORMAT_SHOW_YEAR);
+        CharSequence dateValue = DateUtils.formatDateRange(mContext,details.date, details.date,
+                DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_SHOW_YEAR);
         dateView.setText(dateValue);
         // Set the duration
         if (Calls.VOICEMAIL_TYPE == callType || CallTypeHelper.isMissedCallType(callType)) {
@@ -160,7 +158,8 @@ public class CallDetailHistoryAdapter extends BaseAdapter {
     private CharSequence formatDuration(long elapsedSeconds) {
         long minutes = 0;
         long seconds = 0;
-
+        if(elapsedSeconds == 0)
+            return mContext.getString(R.string.block_call);
         if (elapsedSeconds >= 60) {
             minutes = elapsedSeconds / 60;
             elapsedSeconds -= minutes * 60;

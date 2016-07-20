@@ -15,9 +15,6 @@
  */
 package com.android.dialer.list;
 
-import static android.Manifest.permission.CALL_PHONE;
-import static android.provider.ContactsContract.QuickContact.EXTRA_PRIORITIZED_MIMETYPE;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.content.Loader;
@@ -27,34 +24,27 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
-import android.support.v4.content.ContextCompat;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.view.animation.AnimationSet;
-import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.android.contacts.common.list.ContactEntryListAdapter;
 import com.android.contacts.common.list.PhoneNumberListAdapter;
 import com.android.contacts.common.util.PermissionsUtil;
+import com.android.dialer.R;
 import com.android.dialer.calllog.IntentProvider;
 import com.android.dialer.database.DialerSearchHelper;
 import com.android.dialer.dialpad.DialpadSearchCursorLoader;
 import com.android.dialer.dialpad.SmartDialCursorLoader;
-import com.android.dialer.R;
 import com.android.dialer.util.DialerUtils;
 import com.android.dialer.util.IntentUtil;
 import com.android.dialer.widget.EmptyContentView;
-import com.google.common.eventbus.Subscribe;
 
-import java.util.ArrayList;
-import java.util.Observer;
+import static android.Manifest.permission.CALL_PHONE;
 
 /**
  * Implements a fragment to load and display SmartDial search results.

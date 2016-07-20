@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+    <!--<ImageButton-->
+        <!--android:id="@+id/call_detail_action_back"-->
+        <!--style="?android:attr/actionButtonStyle"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+
+        <!--android:layout_marginTop="4dp"-->
+        <!--android:layout_alignParentLeft="true"-->
+        <!--android:layout_centerVertical="true"-->
+        <!--android:maxLines="1"-->
+        <!--android:src="@drawable/ic_back_arrow"-->
+        <!--android:tint="@android:color/background_dark"-->
+        <!--android:background="@android:color/transparent"-->
+        <!--/>-->
+    <RelativeLayout
+    android:layout_width="220dp"
+    android:layout_height="match_parent"
+    android:layout_marginRight="0dp"
+    android:background="@android:color/transparent"
+        >
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="@string/callDetailTitle"
+        android:maxLines="1"
+        android:textColor="@color/bbk_actionbar_icon_color"
+        android:textSize="@dimen/bbk_tab_text_size"/>
+        </RelativeLayout>
+    <Button
+        android:id="@+id/call_detail_action_editer"
+        style="?android:attr/actionButtonStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ellipsize="none"
+        android:textSize="16sp"
+        android:layout_marginTop="4dp"
+        android:textColor="#ff16b900"
+        android:layout_marginRight="-32px"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:maxLines="1"
+        android:text="@string/call_detail_editer"
+        android:textAppearance="?android:attr/textAppearanceMedium"/>
+</RelativeLayout>

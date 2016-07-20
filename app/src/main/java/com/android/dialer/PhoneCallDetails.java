@@ -95,7 +95,8 @@ public class PhoneCallDetails {
      * to {@code true}.
      */
     public boolean isRead = true;
-
+    public String contactId;
+    public PhoneNumberEntity[] phoneNumbers;
     /**
      * Constructor with required fields for the details of a call with a number associated with a
      * contact.
@@ -116,5 +117,10 @@ public class PhoneCallDetails {
                 this.numberPresentation,
                 this.formattedNumber,
                 this.isVoicemail).toString();
+    }
+
+    public static class PhoneNumberEntity {
+        public String phoneNumber;
+        public String location;
     }
 }

@@ -89,8 +89,8 @@
     <string name="dialer_useDtmfDialpad" msgid="1707548397435075040">"使用按键式键盘"</string>
     <string name="dialer_returnToInCallScreen" msgid="3719386377550913067">"返回正在进行的通话"</string>
     <string name="dialer_addAnotherCall" msgid="4205688819890074468">"添加通话"</string>
-    <string name="type_incoming" msgid="6502076603836088532">"来电"</string>
-    <string name="type_outgoing" msgid="343108709599392641">"外拨电话"</string>
+    <string name="type_incoming" msgid="6502076603836088532">"呼入"</string>
+    <string name="type_outgoing" msgid="343108709599392641">"呼出"</string>
     <string name="type_missed" msgid="2720502601640509542">"未接电话"</string>
     <string name="type_incoming_video" msgid="82323391702796181">"视频通话来电"</string>
     <string name="type_outgoing_video" msgid="2858140021680755266">"拨出的视频通话"</string>
@@ -394,5 +394,8 @@
     <string name="emergency_input_empty">"输入号码为空，请重新输入！"</string>
     <string name="emergency_input_wrong_start">"电话未播出，因为"</string>
     <string name="emergency_input_wrong_end">"不是紧急呼叫号码！"</string>
+    <string name="call_detail_more_call_log_item">"更多通话记录"</string>
+    <string name="block_call">"未接通"</string>
+
 
 </resources>
