@@ -22,11 +22,7 @@ import android.database.Cursor;
 import android.database.DataSetObserver;
 import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.util.SparseIntArray;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 
 import com.android.contacts.common.testing.NeededForTesting;
 
@@ -163,6 +159,10 @@ abstract class GroupingListAdapter extends RecyclerView.Adapter {
     @NeededForTesting
     public Cursor getCursor() {
         return mCursor;
+    }
+
+    public void setCursor(Cursor c){
+        mCursor = c;
     }
 
     /**

@@ -5,7 +5,7 @@ android {
     buildToolsVersion "23.0.2"
 
     defaultConfig {
-        applicationId "com.android.newdialer"
+        applicationId "com.android.newdialer2"
         minSdkVersion 23
         targetSdkVersion 23
         versionCode 1
