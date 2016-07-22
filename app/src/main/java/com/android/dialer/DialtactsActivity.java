@@ -92,7 +92,6 @@ import com.android.dialer.list.RegularSearchFragment;
 import com.android.dialer.list.SearchFragment;
 import com.android.dialer.list.SmartDialSearchFragment;
 import com.android.dialer.list.SpeedDialFragment;
-import com.android.dialer.settings.DialerSettingsActivity;
 import com.android.dialer.util.DialerUtils;
 import com.android.dialer.util.IntentUtil;
 import com.android.dialer.widget.ActionBarController;
@@ -737,8 +736,8 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
     }
 
     protected void handleMenuSettings() {
-        final Intent intent = new Intent(this, DialerSettingsActivity.class);
-        startActivity(intent);
+//        final Intent intent = new Intent(this, DialerSettingsActivity.class);
+//        startActivity(intent);
     }
 
     @Override

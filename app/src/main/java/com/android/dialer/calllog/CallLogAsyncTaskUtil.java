@@ -30,7 +30,6 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.android.contacts.common.GeoUtil;
-import com.android.contacts.common.model.Contact;
 import com.android.dialer.PhoneCallDetails;
 import com.android.dialer.util.AsyncTaskExecutor;
 import com.android.dialer.util.AsyncTaskExecutors;
@@ -149,7 +148,7 @@ public class CallLogAsyncTaskUtil {
                 details.phoneNumbers[i] = new PhoneCallDetails.PhoneNumberEntity();
                 details.phoneNumbers[i].phoneNumber = c.getString(1);
                 try {
-                    details.phoneNumbers[i].location = CallerInfo.getGeoDescriptionByContext(context,details.phoneNumbers[i].phoneNumber.replaceAll(" ",""));
+                    details.phoneNumbers[i].location = CallerInfo.getGeoDescriptionByContext(context, details.phoneNumbers[i].phoneNumber.replaceAll(" ", ""));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
