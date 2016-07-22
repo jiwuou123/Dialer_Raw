@@ -16,6 +16,8 @@
 
 package com.google.i18n.phonenumbers;
 
+import android.content.Context;
+
 import com.google.i18n.phonenumbers.Phonemetadata.NumberFormat;
 import com.google.i18n.phonenumbers.Phonemetadata.PhoneMetadata;
 import com.google.i18n.phonenumbers.Phonemetadata.PhoneMetadataCollection;
@@ -25,7 +27,6 @@ import com.google.i18n.phonenumbers.Phonenumber.PhoneNumber.CountryCodeSource;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.ObjectInput;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -617,6 +618,70 @@ public class PhoneNumberUtil {
     String fileName = filePrefix + "_" +
         (isNonGeoRegion ? String.valueOf(countryCallingCode) : regionCode);
     InputStream source = metadataLoader.loadMetadata(fileName);
+    if (source == null) {
+      logger.log(Level.SEVERE, "missing metadata: " + fileName);
+      throw new IllegalStateException("missing metadata: " + fileName);
+    }
+    ObjectInputStream in = null;
+    try {
+      in = new ObjectInputStream(source);
+      PhoneMetadataCollection metadataCollection = loadMetadataAndCloseInput(in);
+      List<PhoneMetadata> metadataList = metadataCollection.getMetadataList();
+      if (metadataList.isEmpty()) {
+        logger.log(Level.SEVERE, "empty metadata: " + fileName);
+        throw new IllegalStateException("empty metadata: " + fileName);
+      }
+      if (metadataList.size() > 1) {
+        logger.log(Level.WARNING, "invalid metadata (too many entries): " + fileName);
+      }
+      PhoneMetadata metadata = metadataList.get(0);
+      if (isNonGeoRegion) {
+        countryCodeToNonGeographicalMetadataMap.put(countryCallingCode, metadata);
+      } else {
+        regionToMetadataMap.put(regionCode, metadata);
+      }
+    } catch (IOException e) {
+      logger.log(Level.SEVERE, "cannot load/parse metadata: " + fileName, e);
+      throw new RuntimeException("cannot load/parse metadata: " + fileName, e);
+    }
+  }
+
+  void loadMetadataFromFile(String filePrefix, String regionCode, int countryCallingCode,
+                            MetadataLoader metadataLoader, Context ctx) {
+    boolean isNonGeoRegion = REGION_CODE_FOR_NON_GEO_ENTITY.equals(regionCode);
+    String fileName = filePrefix + "_" +
+            (isNonGeoRegion ? String.valueOf(countryCallingCode) : regionCode);
+
+    InputStream source = null;
+
+
+    if (fileName.contains("ShortNumberMetadataProto_CN")){
+      try {
+        source = ctx.getResources().getAssets().open("ShortNumberMetadataProto_CN");
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    }else if (fileName.contains("ShortNumberMetadataProto_US")){
+      try {
+        source = ctx.getResources().getAssets().open("ShortNumberMetadataProto_US");
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    }else if (fileName.contains("PhoneNumberMetadataProto_CN")){
+      try {
+        source = ctx.getResources().getAssets().open("PhoneNumberMetadataProto_CN");
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    }else if (fileName.contains("PhoneNumberMetadataProto_US")){
+      try {
+        source = ctx.getResources().getAssets().open("PhoneNumberMetadataProto_US");
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    }
+
+
     if (source == null) {
       logger.log(Level.SEVERE, "missing metadata: " + fileName);
       throw new IllegalStateException("missing metadata: " + fileName);
@@ -1251,6 +1316,13 @@ public class PhoneNumberUtil {
     return REGION_CODE_FOR_NON_GEO_ENTITY.equals(regionCode)
         ? getMetadataForNonGeographicalRegion(countryCallingCode)
         : getMetadataForRegion(regionCode);
+  }
+
+  private PhoneMetadata getMetadataForRegionOrCallingCode(
+          int countryCallingCode, String regionCode, Context ctx) {
+    return REGION_CODE_FOR_NON_GEO_ENTITY.equals(regionCode)
+            ? getMetadataForNonGeographicalRegion(countryCallingCode, ctx)
+            : getMetadataForRegion(regionCode, ctx);
   }
 
   /**
@@ -2049,6 +2121,20 @@ public class PhoneNumberUtil {
     return regionToMetadataMap.get(regionCode);
   }
 
+  PhoneMetadata getMetadataForRegion(String regionCode, Context ctx) {
+    if (!isValidRegionCode(regionCode)) {
+      return null;
+    }
+    synchronized (regionToMetadataMap) {
+      if (!regionToMetadataMap.containsKey(regionCode)) {
+        // The regionCode here will be valid and won't be '001', so we don't need to worry about
+        // what to pass in for the country calling code.
+        loadMetadataFromFile(currentFilePrefix, regionCode, 0, metadataLoader, ctx);
+      }
+    }
+    return regionToMetadataMap.get(regionCode);
+  }
+
   PhoneMetadata getMetadataForNonGeographicalRegion(int countryCallingCode) {
     synchronized (countryCodeToNonGeographicalMetadataMap) {
       if (!countryCallingCodeToRegionCodeMap.containsKey(countryCallingCode)) {
@@ -2057,6 +2143,21 @@ public class PhoneNumberUtil {
       if (!countryCodeToNonGeographicalMetadataMap.containsKey(countryCallingCode)) {
         loadMetadataFromFile(
             currentFilePrefix, REGION_CODE_FOR_NON_GEO_ENTITY, countryCallingCode, metadataLoader);
+      }
+    }
+    return countryCodeToNonGeographicalMetadataMap.get(countryCallingCode);
+  }
+
+
+
+  PhoneMetadata getMetadataForNonGeographicalRegion(int countryCallingCode, Context ctx) {
+    synchronized (countryCodeToNonGeographicalMetadataMap) {
+      if (!countryCallingCodeToRegionCodeMap.containsKey(countryCallingCode)) {
+        return null;
+      }
+      if (!countryCodeToNonGeographicalMetadataMap.containsKey(countryCallingCode)) {
+        loadMetadataFromFile(
+                currentFilePrefix, REGION_CODE_FOR_NON_GEO_ENTITY, countryCallingCode, metadataLoader, ctx);
       }
     }
     return countryCodeToNonGeographicalMetadataMap.get(countryCallingCode);
@@ -2334,7 +2435,7 @@ public class PhoneNumberUtil {
    */
   private boolean isShorterThanPossibleNormalNumber(PhoneMetadata regionMetadata, String number) {
     Pattern possibleNumberPattern = regexCache.getPatternForRegex(
-        regionMetadata.getGeneralDesc().getPossibleNumberPattern());
+            regionMetadata.getGeneralDesc().getPossibleNumberPattern());
     return testNumberLengthAgainstPattern(possibleNumberPattern, number) ==
         ValidationResult.TOO_SHORT;
   }
@@ -2757,6 +2858,13 @@ public class PhoneNumberUtil {
     return phoneNumber;
   }
 
+  public PhoneNumber parse(String numberToParse, String defaultRegion, Context ctx)
+          throws NumberParseException {
+    PhoneNumber phoneNumber = new PhoneNumber();
+    parse(numberToParse, defaultRegion, phoneNumber, ctx);
+    return phoneNumber;
+  }
+
   /**
    * Same as {@link #parse(String, String)}, but accepts mutable PhoneNumber as a parameter to
    * decrease object creation when invoked many times.
@@ -2764,6 +2872,11 @@ public class PhoneNumberUtil {
   public void parse(String numberToParse, String defaultRegion, PhoneNumber phoneNumber)
       throws NumberParseException {
     parseHelper(numberToParse, defaultRegion, false, true, phoneNumber);
+  }
+
+  public void parse(String numberToParse, String defaultRegion, PhoneNumber phoneNumber, Context ctx)
+          throws NumberParseException {
+    parseHelper(numberToParse, defaultRegion, false, true, phoneNumber, ctx);
   }
 
   /**
@@ -2973,6 +3086,118 @@ public class PhoneNumberUtil {
     if (lengthOfNationalNumber > MAX_LENGTH_FOR_NSN) {
       throw new NumberParseException(NumberParseException.ErrorType.TOO_LONG,
                                      "The string supplied is too long to be a phone number.");
+    }
+    setItalianLeadingZerosForPhoneNumber(normalizedNationalNumber.toString(), phoneNumber);
+    phoneNumber.setNationalNumber(Long.parseLong(normalizedNationalNumber.toString()));
+  }
+
+  private void parseHelper(String numberToParse, String defaultRegion, boolean keepRawInput,
+                           boolean checkRegion, PhoneNumber phoneNumber, Context ctx)
+          throws NumberParseException {
+    if (numberToParse == null) {
+      throw new NumberParseException(NumberParseException.ErrorType.NOT_A_NUMBER,
+              "The phone number supplied was null.");
+    } else if (numberToParse.length() > MAX_INPUT_STRING_LENGTH) {
+      throw new NumberParseException(NumberParseException.ErrorType.TOO_LONG,
+              "The string supplied was too long to parse.");
+    }
+
+    StringBuilder nationalNumber = new StringBuilder();
+    buildNationalNumberForParsing(numberToParse, nationalNumber);
+
+    if (!isViablePhoneNumber(nationalNumber.toString())) {
+      throw new NumberParseException(NumberParseException.ErrorType.NOT_A_NUMBER,
+              "The string supplied did not seem to be a phone number.");
+    }
+
+    // Check the region supplied is valid, or that the extracted number starts with some sort of +
+    // sign so the number's region can be determined.
+    if (checkRegion && !checkRegionForParsing(nationalNumber.toString(), defaultRegion)) {
+      throw new NumberParseException(NumberParseException.ErrorType.INVALID_COUNTRY_CODE,
+              "Missing or invalid default region.");
+    }
+
+    if (keepRawInput) {
+      phoneNumber.setRawInput(numberToParse);
+    }
+    // Attempt to parse extension first, since it doesn't require region-specific data and we want
+    // to have the non-normalised number here.
+    String extension = maybeStripExtension(nationalNumber);
+    if (extension.length() > 0) {
+      phoneNumber.setExtension(extension);
+    }
+
+    PhoneMetadata regionMetadata = getMetadataForRegion(defaultRegion, ctx);
+    // Check to see if the number is given in international format so we know whether this number is
+    // from the default region or not.
+    StringBuilder normalizedNationalNumber = new StringBuilder();
+    int countryCode = 0;
+    try {
+      // TODO: This method should really just take in the string buffer that has already
+      // been created, and just remove the prefix, rather than taking in a string and then
+      // outputting a string buffer.
+      countryCode = maybeExtractCountryCode(nationalNumber.toString(), regionMetadata,
+              normalizedNationalNumber, keepRawInput, phoneNumber);
+    } catch (NumberParseException e) {
+      Matcher matcher = PLUS_CHARS_PATTERN.matcher(nationalNumber.toString());
+      if (e.getErrorType() == NumberParseException.ErrorType.INVALID_COUNTRY_CODE &&
+              matcher.lookingAt()) {
+        // Strip the plus-char, and try again.
+        countryCode = maybeExtractCountryCode(nationalNumber.substring(matcher.end()),
+                regionMetadata, normalizedNationalNumber,
+                keepRawInput, phoneNumber);
+        if (countryCode == 0) {
+          throw new NumberParseException(NumberParseException.ErrorType.INVALID_COUNTRY_CODE,
+                  "Could not interpret numbers after plus-sign.");
+        }
+      } else {
+        throw new NumberParseException(e.getErrorType(), e.getMessage());
+      }
+    }
+    if (countryCode != 0) {
+      String phoneNumberRegion = getRegionCodeForCountryCode(countryCode);
+      if (!phoneNumberRegion.equals(defaultRegion)) {
+        // Metadata cannot be null because the country calling code is valid.
+        regionMetadata = getMetadataForRegionOrCallingCode(countryCode, phoneNumberRegion, ctx);
+      }
+    } else {
+      // If no extracted country calling code, use the region supplied instead. The national number
+      // is just the normalized version of the number we were given to parse.
+      normalize(nationalNumber);
+      normalizedNationalNumber.append(nationalNumber);
+      if (defaultRegion != null) {
+        countryCode = regionMetadata.getCountryCode();
+        phoneNumber.setCountryCode(countryCode);
+      } else if (keepRawInput) {
+        phoneNumber.clearCountryCodeSource();
+      }
+    }
+    if (normalizedNationalNumber.length() < MIN_LENGTH_FOR_NSN) {
+      throw new NumberParseException(NumberParseException.ErrorType.TOO_SHORT_NSN,
+              "The string supplied is too short to be a phone number.");
+    }
+    if (regionMetadata != null) {
+      StringBuilder carrierCode = new StringBuilder();
+      StringBuilder potentialNationalNumber = new StringBuilder(normalizedNationalNumber);
+      maybeStripNationalPrefixAndCarrierCode(potentialNationalNumber, regionMetadata, carrierCode);
+      // We require that the NSN remaining after stripping the national prefix and carrier code be
+      // of a possible length for the region. Otherwise, we don't do the stripping, since the
+      // original number could be a valid short number.
+      if (!isShorterThanPossibleNormalNumber(regionMetadata, potentialNationalNumber.toString())) {
+        normalizedNationalNumber = potentialNationalNumber;
+        if (keepRawInput) {
+          phoneNumber.setPreferredDomesticCarrierCode(carrierCode.toString());
+        }
+      }
+    }
+    int lengthOfNationalNumber = normalizedNationalNumber.length();
+    if (lengthOfNationalNumber < MIN_LENGTH_FOR_NSN) {
+      throw new NumberParseException(NumberParseException.ErrorType.TOO_SHORT_NSN,
+              "The string supplied is too short to be a phone number.");
+    }
+    if (lengthOfNationalNumber > MAX_LENGTH_FOR_NSN) {
+      throw new NumberParseException(NumberParseException.ErrorType.TOO_LONG,
+              "The string supplied is too long to be a phone number.");
     }
     setItalianLeadingZerosForPhoneNumber(normalizedNationalNumber.toString(), phoneNumber);
     phoneNumber.setNationalNumber(Long.parseLong(normalizedNationalNumber.toString()));

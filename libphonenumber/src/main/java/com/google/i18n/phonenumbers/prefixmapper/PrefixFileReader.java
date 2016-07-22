@@ -16,6 +16,8 @@
 
 package com.google.i18n.phonenumbers.prefixmapper;
 
+import android.content.Context;
+
 import com.google.i18n.phonenumbers.Phonenumber.PhoneNumber;
 
 import java.io.IOException;
@@ -48,9 +50,32 @@ public class PrefixFileReader {
     loadMappingFileProvider();
   }
 
+  public PrefixFileReader(String phonePrefixDataDirectory, Context ctx) throws IOException {
+    this.phonePrefixDataDirectory = phonePrefixDataDirectory;
+    loadMappingFileProvider(ctx);
+  }
+
   private void loadMappingFileProvider() {
     InputStream source =
         PrefixFileReader.class.getResourceAsStream(phonePrefixDataDirectory + "config");
+
+
+    ObjectInputStream in = null;
+    try {
+      in = new ObjectInputStream(source);
+      mappingFileProvider.readExternal(in);
+    } catch (IOException e) {
+      LOGGER.log(Level.WARNING, e.toString());
+    } finally {
+      close(in);
+    }
+  }
+
+  private void loadMappingFileProvider(Context ctx) throws IOException {
+
+
+    InputStream source = ctx.getResources().getAssets().open("data/config");
+
     ObjectInputStream in = null;
     try {
       in = new ObjectInputStream(source);
@@ -74,9 +99,45 @@ public class PrefixFileReader {
     return availablePhonePrefixMaps.get(fileName);
   }
 
+  private PhonePrefixMap getPhonePrefixDescriptions(
+          int prefixMapKey, String language, String script, String region, Context ctx) {
+    String fileName = mappingFileProvider.getFileName(prefixMapKey, language, script, region);
+    if (fileName.length() == 0) {
+      return null;
+    }
+    if (!availablePhonePrefixMaps.containsKey(fileName)) {
+      loadPhonePrefixMapFromFile(fileName, ctx);
+    }
+    return availablePhonePrefixMaps.get(fileName);
+  }
+
+  private void loadPhonePrefixMapFromFile(String fileName, Context ctx) {
+//    InputStream source =
+//            PrefixFileReader.class.getResourceAsStream(phonePrefixDataDirectory + fileName);
+    InputStream source = null;
+    try {
+      source = ctx.getResources().getAssets().open("data/"+fileName);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
+    ObjectInputStream in = null;
+    try {
+      in = new ObjectInputStream(source);
+      PhonePrefixMap map = new PhonePrefixMap();
+      map.readExternal(in);
+      availablePhonePrefixMaps.put(fileName, map);
+    } catch (IOException e) {
+      LOGGER.log(Level.WARNING, e.toString());
+    } finally {
+      close(in);
+    }
+  }
   private void loadPhonePrefixMapFromFile(String fileName) {
     InputStream source =
         PrefixFileReader.class.getResourceAsStream(phonePrefixDataDirectory + fileName);
+
+
     ObjectInputStream in = null;
     try {
       in = new ObjectInputStream(source);
@@ -125,6 +186,28 @@ public class PrefixFileReader {
     // When a location is not available in the requested language, fall back to English.
     if ((description == null || description.length() == 0) && mayFallBackToEnglish(lang)) {
       PhonePrefixMap defaultMap = getPhonePrefixDescriptions(phonePrefix, "en", "", "");
+      if (defaultMap == null) {
+        return "";
+      }
+      description = defaultMap.lookup(number);
+    }
+    return description != null ? description : "";
+  }
+
+  public String getDescriptionForNumber(
+          PhoneNumber number, String lang, String script, String region, Context ctx) {
+    int countryCallingCode = number.getCountryCode();
+    // As the NANPA data is split into multiple files covering 3-digit areas, use a phone number
+    // prefix of 4 digits for NANPA instead, e.g. 1650.
+    int phonePrefix = (countryCallingCode != 1) ?
+            countryCallingCode : (1000 + (int) (number.getNationalNumber() / 10000000));
+    PhonePrefixMap phonePrefixDescriptions =
+            getPhonePrefixDescriptions(phonePrefix, lang, script, region, ctx);
+    String description = (phonePrefixDescriptions != null) ?
+            phonePrefixDescriptions.lookup(number) : null;
+    // When a location is not available in the requested language, fall back to English.
+    if ((description == null || description.length() == 0) && mayFallBackToEnglish(lang)) {
+      PhonePrefixMap defaultMap = getPhonePrefixDescriptions(phonePrefix, "en", "", "", ctx);
       if (defaultMap == null) {
         return "";
       }
