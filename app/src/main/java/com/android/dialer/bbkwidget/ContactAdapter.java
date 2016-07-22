@@ -37,14 +37,15 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-//import com.jiang.android.indexrecyclerview.adapter.expandRecyclerviewadapter.StickyRecyclerHeadersAdapter;
-//import com.jiang.android.indexrecyclerview.model.ContactModel;
+import com.android.dialer.R;
 
 import java.util.ArrayList;
 import java.util.List;
 
+//import com.jiang.android.indexrecyclerview.adapter.expandRecyclerviewadapter.StickyRecyclerHeadersAdapter;
+//import com.jiang.android.indexrecyclerview.model.ContactModel;
+
 /**
- *
  * 根据当前权限进行判断相关的滑动逻辑
  */
 public class ContactAdapter extends RecyclerView.Adapter {
@@ -53,7 +54,7 @@ public class ContactAdapter extends RecyclerView.Adapter {
      */
     private List<SwipeItemLayout> mOpenedSil = new ArrayList<>();
 
-//    private List<ContactModel.MembersEntity> mLists;
+    //    private List<ContactModel.MembersEntity> mLists;
     private List<Integer> mLists;
 
     private Context mContext;
@@ -70,92 +71,52 @@ public class ContactAdapter extends RecyclerView.Adapter {
     public ContactAdapter(Context ct, List<Integer> mLists) {
         this.mLists = mLists;
         mContext = ct;
-//        mPermission = permission;
-//        this.addAll(mLists);
-        this.createrID = createrID;
-//        if (createrID.equals(CREATER)) {
-//            isCreator = true;
-//        } else {
-//            isCreator = false;
-//        }
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_contact, parent, false);
-        return new MyViewHolder(view);
+//        View view = LayoutInflater.from(parent.getContext())
+//                .inflate(R.layout.item_contact, parent, false);
+//        return new MyViewHolder(view);
+        return null;
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         MyViewHolder viewHolder = (MyViewHolder) holder;
         SwipeItemLayout swipeRoot = viewHolder.mRoot;
-//        if (true) {
-//            swipeRoot.setSwipeAble(false);
-//        } else if (isCreator) {
-//            swipeRoot.setSwipeAble(true);
-//            swipeRoot.setDelegate(new SwipeItemLayout.SwipeItemLayoutDelegate() {
-//                @Override
-//                public void onSwipeItemLayoutOpened(SwipeItemLayout swipeItemLayout) {
-//                    closeOpenedSwipeItemLayoutWithAnim();
-//                    mOpenedSil.add(swipeItemLayout);
-//                }
-//
-//                @Override
-//                public void onSwipeItemLayoutClosed(SwipeItemLayout swipeItemLayout) {
-//                    mOpenedSil.remove(swipeItemLayout);
-//                }
-//
-//                @Override
-//                public void onSwipeItemLayoutStartOpen(SwipeItemLayout swipeItemLayout) {
-//                    closeOpenedSwipeItemLayoutWithAnim();
-//                }
-//            });
-//            viewHolder.mDelete.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//
-////                    ((MainActivity) mContext).deleteUser(position);
-//                    removeRecycleItem(position);
-//                }
-//            });
-//        } else {
-//            if (true) {
-//                if (position != 0) {
-//                    if (true) {
 
-                        swipeRoot.setSwipeAble(true);
-                        swipeRoot.setDelegate(new SwipeItemLayout.SwipeItemLayoutDelegate() {
-                            @Override
-                            public void onSwipeItemLayoutOpened(SwipeItemLayout swipeItemLayout) {
-                                closeOpenedSwipeItemLayoutWithAnim();
-//                               closeOpenedSwipeItemLayout();
-                                mOpenedSil.add(swipeItemLayout);
-                                Log.e(TAG, " ++++++++++++++  ");
-                            }
 
-                            @Override
-                            public void onSwipeItemLayoutClosed(SwipeItemLayout swipeItemLayout) {
-                                mOpenedSil.remove(swipeItemLayout);
-                                Log.e(TAG , " --- mOpenedSil.remove --- ");
-                            }
+        swipeRoot.setSwipeAble(true);
+        swipeRoot.setDelegate(new SwipeItemLayout.SwipeItemLayoutDelegate() {
+            @Override
+            public void onSwipeItemLayoutOpened(SwipeItemLayout swipeItemLayout) {
+                closeOpenedSwipeItemLayoutWithAnim();
+                mOpenedSil.add(swipeItemLayout);
+                Log.e(TAG, " ++++++++++++++  ");
+            }
 
-                            @Override
-                            public void onSwipeItemLayoutStartOpen(SwipeItemLayout swipeItemLayout) {
-                                closeOpenedSwipeItemLayoutWithAnim();
-                                Log.e(TAG, "  StartOpen ");
-                            }
-                        });
-                        viewHolder.mDelete.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
+            @Override
+            public void onSwipeItemLayoutClosed(SwipeItemLayout swipeItemLayout) {
+                mOpenedSil.remove(swipeItemLayout);
+                Log.e(TAG, " --- mOpenedSil.remove --- ");
+            }
+
+            @Override
+            public void onSwipeItemLayoutStartOpen(SwipeItemLayout swipeItemLayout) {
+                closeOpenedSwipeItemLayoutWithAnim();
+                Log.e(TAG, "  StartOpen ");
+            }
+        });
+        viewHolder.mDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
 //                                ((MainActivity) mContext).deleteUser(position);
-                                removeRecycleItem(position);
-                                closeOpenedSwipeItemLayout();
-                            }
-                        });
+                removeRecycleItem(position);
+                closeOpenedSwipeItemLayout();
+            }
+        });
 
         TextView textView = viewHolder.mName;
         textView.setText("第" + String.valueOf(mLists.get(position)) + "个");
@@ -169,14 +130,14 @@ public class ContactAdapter extends RecyclerView.Adapter {
     }
 
 
-
-        public void removeRecycleItem(int position) {
+    public void removeRecycleItem(int position) {
         mLists.remove(position);
         notifyDataSetChanged();
-        if (mLists.size() == 0){
-            Toast.makeText(mContext," 已经没数据咯！！！" , Toast.LENGTH_SHORT).show();
+        if (mLists.size() == 0) {
+            Toast.makeText(mContext, " 已经没数据咯！！！", Toast.LENGTH_SHORT).show();
         }
     }
+
     public void closeOpenedSwipeItemLayoutWithAnim() {
 
         for (SwipeItemLayout sil : mOpenedSil) {
@@ -184,7 +145,8 @@ public class ContactAdapter extends RecyclerView.Adapter {
         }
         mOpenedSil.clear();
     }
-    public void closeOpenedSwipeItemLayout(){
+
+    public void closeOpenedSwipeItemLayout() {
         for (SwipeItemLayout sil : mOpenedSil) {
 
             sil.close();

@@ -162,6 +162,12 @@
 
     <dimen name="call_log_list_item_primary_action_dimen">36dp</dimen>
 
+    <!-- Dimensions for bbk call log item -->
+    <dimen name="dialpad_detial_width">36dp</dimen>
+    <dimen name="dialpad_detial_height">36dp</dimen>
+    <dimen name="bbk_call_log_secondary_text_size">12sp</dimen>
+
+
     <!-- Dimensions for promo cards -->
     <dimen name="promo_card_icon_size">24dp</dimen>
     <dimen name="promo_card_start_padding">16dp</dimen>

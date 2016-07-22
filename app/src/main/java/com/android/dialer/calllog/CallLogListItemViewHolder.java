@@ -30,6 +30,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.view.ViewTreeObserver;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.QuickContactBadge;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -66,9 +68,16 @@ public final class CallLogListItemViewHolder extends RecyclerView.ViewHolder
     /** The text of the header for a day grouping. */
     public final TextView dayGroupHeader;
     /** The view containing the details for the call log row, including the action buttons. */
-    public final CardView callLogEntryView;
+//    public final CardView callLogEntryView;
+    public final LinearLayout callLogEntryView;
     /** The actionable view which places a call to the number corresponding to the call log row. */
     public final ImageView primaryActionButtonView;
+
+    public final TextView deleteTextView;
+
+    public final ImageView detailsImg;
+
+    public final ImageView multipleDeleteImg;
 
     /** The view containing call log item actions.  Null until the ViewStub is inflated. */
     public View actionsView;
@@ -147,6 +156,8 @@ public final class CallLogListItemViewHolder extends RecyclerView.ViewHolder
     private View.OnClickListener mExpandCollapseListener;
     private boolean mVoicemailPrimaryActionButtonClicked;
 
+
+
     private CallLogListItemViewHolder(
             Context context,
             View.OnClickListener expandCollapseListener,
@@ -157,9 +168,12 @@ public final class CallLogListItemViewHolder extends RecyclerView.ViewHolder
             QuickContactBadge quickContactView,
             View primaryActionView,
             PhoneCallDetailsViews phoneCallDetailsViews,
-            CardView callLogEntryView,
+            LinearLayout callLogEntryView,
             TextView dayGroupHeader,
-            ImageView primaryActionButtonView) {
+            ImageView primaryActionButtonView,
+            TextView deleteTextView,
+            ImageView detailsImg,
+            ImageView multipleDeleteImg) {
         super(rootView);
 
         mContext = context;
@@ -175,6 +189,10 @@ public final class CallLogListItemViewHolder extends RecyclerView.ViewHolder
         this.callLogEntryView = callLogEntryView;
         this.dayGroupHeader = dayGroupHeader;
         this.primaryActionButtonView = primaryActionButtonView;
+        this.deleteTextView = deleteTextView;
+        this.detailsImg = detailsImg;
+        this.multipleDeleteImg = multipleDeleteImg;
+
 
         Resources resources = mContext.getResources();
         mPhotoSize = mContext.getResources().getDimensionPixelSize(R.dimen.contact_photo_size);
@@ -185,8 +203,11 @@ public final class CallLogListItemViewHolder extends RecyclerView.ViewHolder
 
         quickContactView.setPrioritizedMimeType(Phone.CONTENT_ITEM_TYPE);
 
+
         primaryActionButtonView.setOnClickListener(this);
         primaryActionView.setOnClickListener(mExpandCollapseListener);
+
+
     }
 
     public static CallLogListItemViewHolder create(
@@ -207,9 +228,12 @@ public final class CallLogListItemViewHolder extends RecyclerView.ViewHolder
                 (QuickContactBadge) view.findViewById(R.id.quick_contact_photo),
                 view.findViewById(R.id.primary_action_view),
                 PhoneCallDetailsViews.fromView(view),
-                (CardView) view.findViewById(R.id.call_log_row),
+                (LinearLayout) view.findViewById(R.id.call_log_row),
                 (TextView) view.findViewById(R.id.call_log_day_group_label),
-                (ImageView) view.findViewById(R.id.primary_action_button));
+                (ImageView) view.findViewById(R.id.primary_action_button),
+                (TextView)view.findViewById(R.id.call_log__delete),
+                (ImageView) view.findViewById(R.id.details_action_img),
+                (ImageView)view.findViewById(R.id.multiple_delete_img));
     }
 
     /**
@@ -217,7 +241,7 @@ public final class CallLogListItemViewHolder extends RecyclerView.ViewHolder
      * inflated during initial binding, so click handlers, tags and accessibility text must be set
      * here, if necessary.
      *
-     * @param callLogItem The call log list item view.
+     *  The call log list item view.
      */
     public void inflateActionViewStub() {
         ViewStub stub = (ViewStub) rootView.findViewById(R.id.call_log_entry_actions_stub);
@@ -286,6 +310,7 @@ public final class CallLogListItemViewHolder extends RecyclerView.ViewHolder
                 primaryActionButtonView.setVisibility(View.GONE);
             }
         }
+        primaryActionButtonView.setVisibility(View.GONE);
     }
 
     /**
@@ -374,6 +399,10 @@ public final class CallLogListItemViewHolder extends RecyclerView.ViewHolder
         }
 
         updatePrimaryActionButton(show);
+
+        detailsImg.setTag(IntentProvider.getCallDetailIntentProvider(rowId, callIds, null));
+        detailsImg.setOnClickListener(this);
+
     }
 
     public void expandVoicemailTranscriptionView(boolean isExpanded) {
@@ -452,8 +481,11 @@ public final class CallLogListItemViewHolder extends RecyclerView.ViewHolder
                 new QuickContactBadge(context),
                 new View(context),
                 PhoneCallDetailsViews.createForTest(context),
-                new CardView(context),
+                new LinearLayout(context),
                 new TextView(context),
+                new ImageView(context),
+                new TextView(context),
+                new ImageView(context),
                 new ImageView(context));
         viewHolder.detailsButtonView = new TextView(context);
         viewHolder.actionsView = new View(context);

@@ -17,7 +17,10 @@ import android.view.View;
 import android.view.ViewParent;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+
+import com.android.dialer.R;
 
 import java.lang.reflect.Method;
 
@@ -59,6 +62,9 @@ public class SwipeItemLayout extends RelativeLayout {
     private GestureDetectorCompat mGestureDetectorCompat;
     private OnLongClickListener mOnLongClickListener;
     private OnClickListener mOnClickListener;
+
+    private MarginLayoutParams mGroupTextViewLp;
+    private View mGroupTextView;
     /**
      * 是否可滑动
      */
@@ -126,14 +132,16 @@ public class SwipeItemLayout extends RelativeLayout {
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        if (getChildCount() != 2) {
-            throw new IllegalStateException(SwipeItemLayout.class.getSimpleName() + "必须有且只有两个子控件");
-        }
-        mTopView = getChildAt(1);
-        mBottomView = getChildAt(0);
+//        if (getChildCount() != 2) {
+//            throw new IllegalStateException(SwipeItemLayout.class.getSimpleName() + "必须有且只有两个子控件");
+//        }
+        mTopView = getChildAt(2);
+        mBottomView = getChildAt(1);
+        mGroupTextView = getChildAt(0);
         // 避免底部视图被隐藏时还能获取焦点被点击
         mBottomView.setVisibility(INVISIBLE);
 
+        mGroupTextViewLp = (MarginLayoutParams) mGroupTextView.getLayoutParams();
         mTopLp = (MarginLayoutParams) mTopView.getLayoutParams();
         mBottomLp = (MarginLayoutParams) mBottomView.getLayoutParams();
         mTopLeft = getPaddingLeft() + mTopLp.leftMargin;
@@ -334,14 +342,21 @@ public class SwipeItemLayout extends RelativeLayout {
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         mDragRange = mBottomView.getMeasuredWidth() + mBottomLp.leftMargin + mBottomLp.rightMargin;
 
-        int topTop = getPaddingTop() + mTopLp.topMargin;
+        int groupTop = getPaddingTop() + mGroupTextViewLp.topMargin;
+        int groupBottom = groupTop + mGroupTextView.getMeasuredHeight();
+        int groupLeft = getPaddingLeft() + mGroupTextViewLp.leftMargin;
+        int groupRight = groupLeft + mGroupTextView.getMeasuredWidth();
+
+        int topTop = getPaddingTop() + mTopLp.topMargin  + mGroupTextViewLp.topMargin + mGroupTextView.getMeasuredHeight();
         int topBottom = topTop + mTopView.getMeasuredHeight();
         int topRight = mTopLeft + mTopView.getMeasuredWidth();
 
-        int bottomTop = getPaddingTop() + mBottomLp.topMargin;
+        int bottomTop = getPaddingTop() + mBottomLp.topMargin + mGroupTextViewLp.topMargin + mGroupTextView.getMeasuredHeight();
         int bottomBottom = bottomTop + mBottomView.getMeasuredHeight();
         int bottomLeft;
         int bottomRight;
+
+
 
         if (mSwipeDirection == SwipeDirection.Left) {
             // 向左滑动
@@ -386,6 +401,7 @@ public class SwipeItemLayout extends RelativeLayout {
             }
         }
 
+        mGroupTextView.layout(groupLeft,groupTop,groupRight,groupBottom);
         mBottomView.layout(bottomLeft, bottomTop, bottomRight, bottomBottom);
         mTopView.layout(mTopLeft, topTop, topRight, topBottom);
     }
@@ -464,7 +480,7 @@ public class SwipeItemLayout extends RelativeLayout {
      * @param isOpen 1表示打开，0表示关闭
      */
     private void smoothSlideTo(int isOpen) {
-        if (mDragHelper.smoothSlideViewTo(mTopView, getCloseOrOpenTopViewFinalLeft(isOpen), getPaddingTop() + mTopLp.topMargin)) {
+        if (mDragHelper.smoothSlideViewTo(mTopView, getCloseOrOpenTopViewFinalLeft(isOpen), getPaddingTop() + mTopLp.topMargin + mGroupTextViewLp.topMargin + mGroupTextView.getMeasuredHeight())) {
             ViewCompat.postInvalidateOnAnimation(this);
         }
     }
@@ -544,7 +560,7 @@ public class SwipeItemLayout extends RelativeLayout {
         @Override
         public int clampViewPositionVertical(View child, int top, int dy) {
             // 这里要返回控件的getPaddingTop() + mTopLp.topMargin，否则有margin和padding快速滑动松手时会上下跳动
-            return getPaddingTop() + mTopLp.topMargin;
+            return getPaddingTop() + mTopLp.topMargin+ mGroupTextViewLp.topMargin + mGroupTextView.getMeasuredHeight();
         }
 
         @Override
@@ -627,7 +643,7 @@ public class SwipeItemLayout extends RelativeLayout {
                     finalLeft += mDragRange;
                 }
             }
-            mDragHelper.settleCapturedViewAt(finalLeft, getPaddingTop() + mTopLp.topMargin);
+            mDragHelper.settleCapturedViewAt(finalLeft, getPaddingTop() + mTopLp.topMargin + mGroupTextViewLp.topMargin + mGroupTextView.getMeasuredHeight());
 
             // 要执行下面的代码，不然不会自动收缩完毕或展开完毕
             ViewCompat.postInvalidateOnAnimation(SwipeItemLayout.this);

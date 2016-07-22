@@ -5,4 +5,5 @@ package com.android.dialer.bbk;
  */
 
 public interface SelectedCallLogImpl {
+    void selectCallLogToDelete(int count);
 }

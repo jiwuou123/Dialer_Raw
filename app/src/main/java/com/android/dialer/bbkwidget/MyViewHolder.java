@@ -11,9 +11,9 @@ public class MyViewHolder extends android.support.v7.widget.RecyclerView.ViewHol
 
     public MyViewHolder(View itemView) {
         super(itemView);
-        mName = (TextView) itemView.findViewById(R.id.item_contact_title);
-        mRoot = (SwipeItemLayout) itemView.findViewById(R.id.item_contact_swipe_root);
-        mDelete = (TextView) itemView.findViewById(R.id.item_contact_delete);
+//        mName = (TextView) itemView.findViewById(R.id.item_contact_title);
+//        mRoot = (SwipeItemLayout) itemView.findViewById(R.id.item_contact_swipe_root);
+//        mDelete = (TextView) itemView.findViewById(R.id.item_contact_delete);
 
 
     }

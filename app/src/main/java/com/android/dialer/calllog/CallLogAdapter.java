@@ -16,6 +16,7 @@
 
 package com.android.dialer.calllog;
 
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -48,18 +49,26 @@ import android.view.accessibility.AccessibilityEvent;
 import com.android.contacts.common.CallUtil;
 import com.android.contacts.common.ClipboardUtils;
 import com.android.contacts.common.util.PermissionsUtil;
+import com.android.dialer.CallDetailActivity;
 import com.android.dialer.DialtactsActivity;
 import com.android.dialer.PhoneCallDetails;
 import com.android.dialer.R;
+import com.android.dialer.bbk.SelectedCallLogImpl;
+import com.android.dialer.bbkwidget.SwipeItemLayout;
 import com.android.dialer.contactinfo.ContactInfoCache;
 import com.android.dialer.contactinfo.ContactInfoCache.OnContactInfoChangedListener;
 import com.android.dialer.util.DialerUtils;
 import com.android.dialer.util.PhoneNumberUtil;
+import com.android.dialer.util.TelecomUtil;
 import com.android.dialer.voicemail.VoicemailPlaybackPresenter;
 
 import com.google.common.annotations.VisibleForTesting;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+
+import static com.android.dialer.CallDetailActivity.EXTRA_CALL_LOG_IDS;
 
 /**
  * Adapter class to fill in data for the Call Log.
@@ -137,6 +146,17 @@ public class CallLogAdapter extends GroupingListAdapter
 
     /** Helper to group call log entries. */
     private final CallLogGroupBuilder mCallLogGroupBuilder;
+
+    private List<SwipeItemLayout> mOpenedSil = new ArrayList<>();
+    private final static String TAG  = "CallLogAdapter";
+
+    private boolean isMultipleDelete = false;
+//    private int multipleDeleteCount = 0;
+    private boolean isAllSelectLog;
+    private final ArrayList<Integer> mSelectedCallLogIdList = new ArrayList<Integer>();
+    private final ArrayList<String> mSelectedCallLogIdListNumber = new ArrayList<String>();
+    private int mSelectedItemCount = 0;
+    private Cursor mCursor;
 
     /**
      * The OnClickListener used to expand or collapse the action buttons of a call log entry.
@@ -260,7 +280,8 @@ public class CallLogAdapter extends GroupingListAdapter
             notifyItemChanged(mCurrentlyExpandedPosition);
         }
         // Show the actions for the clicked list item.
-        viewHolder.showActions(true);
+//        viewHolder.showActions(true);
+        viewHolder.showActions(false);
         mCurrentlyExpandedPosition = viewHolder.getAdapterPosition();
         mCurrentlyExpandedRowId = viewHolder.rowId;
     }
@@ -401,7 +422,8 @@ public class CallLogAdapter extends GroupingListAdapter
      */
     private ViewHolder createCallLogEntryViewHolder(ViewGroup parent) {
         LayoutInflater inflater = LayoutInflater.from(mContext);
-        View view = inflater.inflate(R.layout.call_log_list_item, parent, false);
+//        View view = inflater.inflate(R.layout.call_log_list_item, parent, false);
+        View view = inflater.inflate(R.layout.call_log_list_item_bbk, parent, false);
         CallLogListItemViewHolder viewHolder = CallLogListItemViewHolder.create(
                 view,
                 mContext,
@@ -409,6 +431,7 @@ public class CallLogAdapter extends GroupingListAdapter
                 mTelecomCallLogCache,
                 mCallLogListItemHelper,
                 mVoicemailPlaybackPresenter);
+
 
         viewHolder.callLogEntryView.setTag(viewHolder);
         viewHolder.callLogEntryView.setAccessibilityDelegate(mAccessibilityDelegate);
@@ -424,7 +447,7 @@ public class CallLogAdapter extends GroupingListAdapter
      * TODO: This gets called 20-30 times when Dialer starts up for a single call log entry and
      * should not. It invokes cross-process methods and the repeat execution can get costly.
      *
-     * @param ViewHolder The view corresponding to this entry.
+     * @param viewHolder The view corresponding to this entry.
      * @param position The position of the entry.
      */
     public void onBindViewHolder(ViewHolder viewHolder, int position) {
@@ -464,13 +487,29 @@ public class CallLogAdapter extends GroupingListAdapter
      * @param position The position of the list item.
      */
 
-    private void bindCallLogListViewHolder(ViewHolder viewHolder, int position) {
+    private void bindCallLogListViewHolder(final ViewHolder viewHolder, final int position) {
         Cursor c = (Cursor) getItem(position);
         if (c == null) {
             return;
         }
 
         int count = getGroupSize(position);
+
+        boolean selectState = false;
+        if (mSelectedCallLogIdList.size() > 0) {
+            int cursorPosition = c.getPosition();
+            for (int i = 0; i < getGroupSize(cursorPosition); i++) {
+                if (!c.moveToPosition(cursorPosition + i)) {
+                    continue;
+                }
+                if (mSelectedCallLogIdList.contains(c.getInt(CallLogQuery.ID))) {
+                    selectState = true;
+                    break;
+                }
+            }
+            c.moveToPosition(cursorPosition);
+        }
+
 
         final String number = c.getString(CallLogQuery.NUMBER);
         final int numberPresentation = c.getInt(CallLogQuery.NUMBER_PRESENTATION);
@@ -521,7 +560,9 @@ public class CallLogAdapter extends GroupingListAdapter
             details.objectId = info.objectId;
         }
 
-        CallLogListItemViewHolder views = (CallLogListItemViewHolder) viewHolder;
+        final CallLogListItemViewHolder views = (CallLogListItemViewHolder) viewHolder;
+        SwipeItemLayout swipeRoot = (SwipeItemLayout) views.rootView;
+
         views.info = info;
         views.rowId = c.getLong(CallLogQuery.ID);
         // Store values used when the actions ViewStub is inflated on expansion.
@@ -537,14 +578,22 @@ public class CallLogAdapter extends GroupingListAdapter
         views.primaryActionView.setVisibility(View.VISIBLE);
 
         // Check if the day group has changed and display a header if necessary.
-        int currentGroup = getDayGroupForCall(views.rowId);
-        int previousGroup = getPreviousDayGroup(c);
-        if (currentGroup != previousGroup) {
+//        int currentGroup = getDayGroupForCall(views.rowId);
+//        int previousGroup = getPreviousDayGroup(c);
+//        if (currentGroup != previousGroup) {
+//            views.dayGroupHeader.setVisibility(View.VISIBLE);
+//            views.dayGroupHeader.setText(getGroupDescription(currentGroup));
+//        } else {
+//            views.dayGroupHeader.setVisibility(View.GONE);
+//        }
+        if ( 0 == position) {
             views.dayGroupHeader.setVisibility(View.VISIBLE);
-            views.dayGroupHeader.setText(getGroupDescription(currentGroup));
+
         } else {
             views.dayGroupHeader.setVisibility(View.GONE);
         }
+
+
 
         mCallLogListItemHelper.setPhoneCallDetails(views, details);
 
@@ -554,7 +603,8 @@ public class CallLogAdapter extends GroupingListAdapter
             mCurrentlyExpandedPosition = position;
         }
 
-        views.showActions(mCurrentlyExpandedPosition == position);
+//        views.showActions(mCurrentlyExpandedPosition == position);
+        views.showActions(false);
 
         String nameForDefaultImage = null;
         if (TextUtils.isEmpty(info.name)) {
@@ -565,7 +615,120 @@ public class CallLogAdapter extends GroupingListAdapter
         views.setPhoto(info.photoId, info.photoUri, info.lookupUri, nameForDefaultImage,
                 isVoicemailNumber, mContactInfoHelper.isBusiness(info.sourceType));
 
+
         mCallLogListItemHelper.setPhoneCallDetails(views, details);
+
+        views.multipleDeleteImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!v.isSelected()){
+                    v.setSelected(true);
+                } else {
+                    v.setSelected(false);
+                }
+                changeSelectedStatusToMap(position);
+                mSelectCallLogImpl.selectCallLogToDelete(mSelectedItemCount);
+
+            }
+        });
+
+
+        if (!isMultipleDelete){
+            views.detailsImg.setVisibility(View.VISIBLE);
+            views.multipleDeleteImg.setVisibility(View.GONE);
+            swipeRoot.setSwipeAble(true);
+            swipeRoot.setDelegate(new SwipeItemLayout.SwipeItemLayoutDelegate() {
+                @Override
+                public void onSwipeItemLayoutOpened(SwipeItemLayout swipeItemLayout) {
+                    closeOpenedSwipeItemLayoutWithAnim();
+                    mOpenedSil.add(swipeItemLayout);
+                    Log.e(TAG, " ++++++++++++++  ");
+                }
+
+                @Override
+                public void onSwipeItemLayoutClosed(SwipeItemLayout swipeItemLayout) {
+                    mOpenedSil.remove(swipeItemLayout);
+                    Log.e(TAG, " --- mOpenedSil.remove --- ");
+                }
+
+                @Override
+                public void onSwipeItemLayoutStartOpen(SwipeItemLayout swipeItemLayout) {
+                    closeOpenedSwipeItemLayoutWithAnim();
+                    Log.e(TAG, "  StartOpen ");
+                }
+            });
+            views.deleteTextView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    Log.d(TAG, " deleteTextView --- ");
+                    final StringBuilder callIds = new StringBuilder();
+                    for (Uri callUri : getCallLogEntryUris(views)) {
+                        if (callIds.length() != 0) {
+                            callIds.append(",");
+                        }
+                        callIds.append(ContentUris.parseId(callUri));
+                    }
+                    CallLogAsyncTaskUtil.deleteCalls(
+                            mContext, callIds.toString(), null);
+                    closeOpenedSwipeItemLayout();
+                }
+            });
+        } else {
+            swipeRoot.setSwipeAble(false);
+            views.multipleDeleteImg.setVisibility(View.VISIBLE);
+            views.detailsImg.setVisibility(View.GONE);
+
+            if (isAllSelectLog){
+                views.multipleDeleteImg.setSelected(true);
+                Log.d(TAG, " ----  isAllSelectLog  true ----  ");
+
+            } else {
+                views.multipleDeleteImg.setSelected(false);
+
+                Log.d(TAG, " ----  isAllSelectLog  false ----  ");
+            }
+            views.multipleDeleteImg.setSelected(selectState);
+            mSelectCallLogImpl.selectCallLogToDelete(mSelectedItemCount);
+
+        }
+
+
+    }
+
+    public void setEditItem(boolean editItem) {
+        isMultipleDelete = editItem;
+    }
+
+    public void setAllSelectLog(boolean allSelectLogItem) {
+        isAllSelectLog = allSelectLogItem;
+    }
+
+
+    /**
+     * Returns the list of URIs to show.
+     * <p>
+     * There are two ways the URIs can be provided to the activity: as the data on the intent, or as
+     * a list of ids in the call log added as an extra on the URI.
+     * <p>
+     * If both are available, the data on the intent takes precedence.
+     */
+    private Uri[] getCallLogEntryUris(CallLogListItemViewHolder viewHolder) {
+//        final Uri uri = getIntent().getData();
+        final Uri uri = ContentUris.withAppendedId(TelecomUtil.getCallLogUri(mContext),
+                viewHolder.rowId);
+        if (uri != null) {
+            // If there is a data on the intent, it takes precedence over the extra.
+            return new Uri[]{ uri };
+        }
+        final long[] ids = viewHolder.callIds;
+        final int numIds = ids == null ? 0 : ids.length;
+        final Uri[] uris = new Uri[numIds];
+        for (int index = 0; index < numIds; ++index) {
+            uris[index] = ContentUris.withAppendedId(
+                    TelecomUtil.getCallLogUri(mContext), ids[index]);
+        }
+        return uris;
     }
 
     @Override
@@ -756,6 +919,17 @@ public class CallLogAdapter extends GroupingListAdapter
     }
 
     /**
+     * get selected items count
+     *
+     * @return the count of selected
+     */
+    public int getSelectedItemCount() {
+        Log.d(TAG,"getSelectedItemCount()");
+        /// M: Fix CR ALPS01569024. Use the call log id to identify the select item.
+        return mSelectedItemCount;
+    }
+
+    /**
      * Determines if the voicemail promo card should be shown or not.  The voicemail promo card will
      * be shown as the first item in the voicemail tab.
      */
@@ -786,5 +960,227 @@ public class CallLogAdapter extends GroupingListAdapter
 
         PromoCardViewHolder viewHolder = PromoCardViewHolder.create(view);
         return viewHolder;
+    }
+
+    public void closeOpenedSwipeItemLayoutWithAnim() {
+
+        for (SwipeItemLayout sil : mOpenedSil) {
+            sil.closeWithAnim();
+        }
+        mOpenedSil.clear();
+    }
+
+    public void closeOpenedSwipeItemLayout() {
+        for (SwipeItemLayout sil : mOpenedSil) {
+
+            sil.close();
+        }
+        mOpenedSil.clear();
+    }
+
+    private SelectedCallLogImpl mSelectCallLogImpl;
+
+    public void setmSelectCallLogImpl(SelectedCallLogImpl mSelectCallLogImpl) {
+        this.mSelectCallLogImpl = mSelectCallLogImpl;
+    }
+
+
+
+
+    /**
+     * Reconcile the selected call log ids with the ids in the new cursor.
+     */
+    private boolean reconcileSeletetedItems(Cursor newCursor) {
+        if (mSelectedCallLogIdList.isEmpty()) {
+            return false;
+        }
+        if (newCursor == null || newCursor.getCount() <= 0) {
+            mSelectedCallLogIdList.clear();
+            mSelectedItemCount = 0;
+            return true;
+        }
+        ArrayList<Integer> idList = new ArrayList<Integer>();
+        ArrayList<Integer> groupIdList = new ArrayList<Integer>();
+        int newSelectedItemCount = 0;
+        for (int i = 0; i < getItemCount(); ++i) {
+            int count = 0;
+            Cursor cursor = (Cursor) getItem(i);
+            if (cursor == null) {
+                continue;
+            }
+            int position = cursor.getPosition();
+            if (isGroupHeader(i)) {
+                count = getGroupSize(i);
+            } else {
+                count = 1;
+            }
+            boolean haveSelectedCallLog = false;
+            groupIdList.clear();
+            for (int j = 0; j < count; j++) {
+                if (!mCursor.moveToPosition(position + j)) {
+                    continue;
+                }
+                int id = mCursor.getInt(CallLogQuery.ID);
+                groupIdList.add(id);
+                if (!haveSelectedCallLog && mSelectedCallLogIdList.contains(id)) {
+                    haveSelectedCallLog = true;
+                }
+            }
+            if (haveSelectedCallLog) {
+                newSelectedItemCount++;
+                idList.addAll(groupIdList);
+            }
+        }
+        mSelectedCallLogIdList.clear();
+        mSelectedCallLogIdList.addAll(idList);
+        mSelectedItemCount = newSelectedItemCount;
+        return true;
+    }
+
+    public ArrayList<Integer> getSelectedCallLogIds() {
+        return new ArrayList<Integer>(mSelectedCallLogIdList);
+    }
+    public ArrayList<String> getSelectedCallLogNumber(){
+        return  new ArrayList<String>(mSelectedCallLogIdListNumber);
+    }
+    /**
+     * Set the id list of selected call log.
+     */
+    public void setSelectedCallLogIds(ArrayList<Integer> idList) {
+        mSelectedCallLogIdList.clear();
+        mSelectedCallLogIdList.addAll(idList);
+    }
+
+    /**
+     * @param cursor cursor
+     */
+    public void changeCursor(Cursor cursor) {
+        Log.d(TAG,"changeCursor(), cursor = " + cursor);
+        if (null != cursor) {
+            Log.d(TAG,"cursor count = " + cursor.getCount());
+        }
+        if (mCursor != cursor) {
+            mCursor = cursor;
+        }
+        super.changeCursor(cursor);
+
+        /** M: Fix CR ALPS01569024. Reconcile the selected call log ids
+         *  with the ids in the new cursor. @{ */
+        reconcileSeletetedItems(cursor);
+        if (mSelectCallLogImpl != null) {
+            mSelectCallLogImpl.selectCallLogToDelete(
+                    mSelectedItemCount);
+        }
+        /** @} */
+    }
+
+    /**
+     * select all items
+     *
+     * @return the selected items numbers
+     */
+    public int selectAllItems() {
+        Log.d(TAG,"selectAllItems()");
+        /** M: Fix CR ALPS01569024. Use the call log id to identify the select item. @{ */
+        mSelectedItemCount = getItemCount();
+        mSelectedCallLogIdList.clear();
+        mCursor.moveToPosition(-1);
+        while (mCursor.moveToNext()) {
+            mSelectedCallLogIdList.add(mCursor.getInt(CallLogQuery.ID));
+            mSelectedCallLogIdListNumber.add(mCursor.getString(CallLogQuery.NUMBER));
+        }
+        return mSelectedItemCount;
+        /** @} */
+    }
+    /**
+     * unselect all items
+     */
+    public void unSelectAllItems() {
+        Log.d(TAG,"unSelectAllItems()");
+        /** M: Fix CR ALPS01569024. Use the call log id to identify the select item. @{ */
+        mSelectedItemCount = 0;
+        mSelectedCallLogIdList.clear();
+        mSelectedCallLogIdListNumber.clear();
+        /** @} */
+    }
+    /**
+     * get delete filter
+     *
+     * @return the delete selection
+     */
+    public String getDeleteFilter() {
+        Log.d(TAG,"getDeleteFilter()");
+        StringBuilder where = new StringBuilder("_id in ");
+        where.append("(");
+        /** M: Fix CR ALPS01569024. Use the call log id to identify the select item. @{ */
+        if (mSelectedCallLogIdList.size() > 0) {
+            boolean isFirst = true;
+            for (int id : mSelectedCallLogIdList) {
+                if (isFirst) {
+                    isFirst = false;
+                } else {
+                    where.append(",");
+                }
+                where.append("\'");
+                where.append(id);
+                where.append("\'");
+                Log.d(TAG," call log id :" + id);
+            }
+        } else {
+            where.append(-1);
+        }
+        /** @} */
+
+        where.append(")");
+        Log.d(TAG,"getDeleteFilter() where ==  " + where.toString());
+        return where.toString();
+    }
+    /**
+     * change selected status to map
+     *
+     * @param listPosition position to change
+     * @return int
+     */
+    public int changeSelectedStatusToMap(final int listPosition) {
+        Log.d(TAG,"changeSelectedStatusToMap()");
+        int count = 0;
+        if (isGroupHeader(listPosition)) {
+            count = getGroupSize(listPosition);
+        } else {
+            count = 1;
+        }
+
+        /** M: Fix CR ALPS01569024. Use the call log id to identify the select item. @{ */
+        Cursor cursor = (Cursor) getItem(listPosition);
+        if (cursor == null) {
+            return mSelectedItemCount;
+        }
+        int position = cursor.getPosition();
+        int firstId = cursor.getInt(CallLogQuery.ID);
+        boolean shouldSelected = false;
+        if (mSelectedCallLogIdList.contains(firstId)) {
+            shouldSelected = false;
+            mSelectedItemCount--;
+        } else {
+            shouldSelected = true;
+            mSelectedItemCount++;
+        }
+        for (int i = 0; i < count; i++) {
+            if (!cursor.moveToPosition(position + i)) {
+                continue;
+            }
+            int id = cursor.getInt(CallLogQuery.ID);
+            String num = mCursor.getString(CallLogQuery.NUMBER);
+            if (shouldSelected) {
+                mSelectedCallLogIdList.add(id);
+                mSelectedCallLogIdListNumber.add(num);
+            } else {
+                mSelectedCallLogIdList.remove((Integer) id);
+                mSelectedCallLogIdListNumber.remove(num);
+            }
+        }
+        cursor.moveToPosition(position);
+        return mSelectedItemCount;
+        /** @} */
     }
 }

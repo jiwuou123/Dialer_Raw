@@ -442,6 +442,10 @@
         <item name="android:windowExitAnimation">@anim/dialpad_search_popup_exit</item>
     </style>
 
+    <style name="CustomCheckboxTheme" parent="@android:style/Widget.CompoundButton.CheckBox">
+        <!--<item name="android:button">@drawable/bbk_multiple_select_style</item>-->
+    </style>
+
     <style name="PopupWindowAinm" parent="android:Animation">
         <item name="android:windowEnterAnimation">@anim/popupwindows_slide_in_top</item>
         <item name="android:windowExitAnimation">@anim/popupwindows_slide_out_top</item>

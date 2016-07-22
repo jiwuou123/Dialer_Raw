@@ -36,11 +36,13 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.ViewConfiguration;
 
+import com.android.dialer.calllog.CallLogAdapter;
+
 import java.util.List;
 
 
 /**
- * Created by jiang on 15/12/23.
+ *
  * 判断当前recyclerview的滑动事件，判断需不需要让划出来的按钮回去
  */
 public class TouchableRecyclerView extends RecyclerView {
@@ -140,7 +142,7 @@ public class TouchableRecyclerView extends RecyclerView {
 
     public void closeAllOpenedItem() {
         if (getAdapter() != null)
-            ((ContactAdapter) getAdapter()).closeOpenedSwipeItemLayoutWithAnim();
+            ((CallLogAdapter) getAdapter()).closeOpenedSwipeItemLayoutWithAnim();
     }
 
 }

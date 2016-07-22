@@ -88,11 +88,13 @@ public class CallDetailActivity extends Activity
         @Override
         public void onDeleteCall() {
             finish();
+            Log.d(TAG, " ----   onDeleteCall() ---- ");
         }
 
         @Override
         public void onDeleteVoicemail() {
             finish();
+            Log.d(TAG, " ----  onDeleteVoicemail() ---- ");
         }
 
         @Override
@@ -181,6 +183,7 @@ public class CallDetailActivity extends Activity
             loadContactPhotos(
                     contactUri, photoUri, nameForDefaultImage, lookupKey, contactType);
             findViewById(R.id.call_detail).setVisibility(View.VISIBLE);
+            Log.d(TAG, " ---  onGetCallDetails  ----");
         }
 
         /**
@@ -191,6 +194,7 @@ public class CallDetailActivity extends Activity
          * @return The phone number type or location.
          */
         private CharSequence getNumberTypeOrLocation(PhoneCallDetails details) {
+            Log.d(TAG, " ---   getNumberTypeOrLocation  --- ");
             if (!TextUtils.isEmpty(details.name)) {
                 return Phone.getTypeLabel(mResources, details.numberType,
                         details.numberLabel);
