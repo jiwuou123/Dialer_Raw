@@ -399,6 +399,7 @@
     <string name="call_history">"通话记录"</string>
     <string name="reject_call">"拒接"</string>
     <string name="call_not_connect">"未接通"</string>
+    <string name="common_tip">"提示"</string>
 
 
 </resources>

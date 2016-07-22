@@ -39,7 +39,6 @@ import android.os.Trace;
 import android.provider.Contacts.People;
 import android.provider.Contacts.Phones;
 import android.provider.Contacts.PhonesColumns;
-import android.provider.ContactsContract;
 import android.provider.Settings;
 import android.telecom.PhoneAccount;
 import android.telecom.PhoneAccountHandle;
@@ -84,7 +83,6 @@ import com.android.dialer.util.DialerUtils;
 import com.android.dialer.util.IntentUtil;
 import com.android.phone.common.CallLogAsync;
 import com.android.phone.common.HapticFeedback;
-import com.android.phone.common.animation.AnimUtils;
 import com.android.phone.common.dialpad.DialpadKeyButton;
 import com.android.phone.common.dialpad.DialpadView;
 import com.google.common.annotations.VisibleForTesting;
@@ -1009,7 +1007,7 @@ public class DialpadFragment extends Fragment
                             RoundAlertDialog.Builder customBuilder = new RoundAlertDialog.Builder(getActivity());
 
                             mDeletedialog = customBuilder.create();
-                            customBuilder.setMessage(R.string.set_yyxx_tip)
+                            customBuilder.setMessage(R.string.set_yyxx_tip).setTitle(R.string.common_tip)
                                     .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int which) {
                                             mDeletedialog.dismiss();
