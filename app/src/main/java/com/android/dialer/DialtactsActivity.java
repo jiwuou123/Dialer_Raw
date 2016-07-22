@@ -986,16 +986,16 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
     }
 
     private void updateSearchFragmentPosition() {
-        SearchFragment fragment = null;
-        if (mSmartDialSearchFragment != null && mSmartDialSearchFragment.isVisible()) {
-            fragment = mSmartDialSearchFragment;
-        } else if (mRegularSearchFragment != null && mRegularSearchFragment.isVisible()) {
-            fragment = mRegularSearchFragment;
-        }
-        if (fragment != null && fragment.isVisible()) {
-//            fragment.updatePosition(true /* animate */);
-            fragment.updatePosition(false /* animate */);
-        }
+//        SearchFragment fragment = null;
+//        if (mSmartDialSearchFragment != null && mSmartDialSearchFragment.isVisible()) {
+//            fragment = mSmartDialSearchFragment;
+//        } else if (mRegularSearchFragment != null && mRegularSearchFragment.isVisible()) {
+//            fragment = mRegularSearchFragment;
+//        }
+//        if (fragment != null && fragment.isVisible()) {
+////            fragment.updatePosition(true /* animate */);
+//            fragment.updatePosition(false /* animate */);
+//        }
     }
 
     @Override

@@ -20,6 +20,8 @@
     android:orientation="vertical"
     android:layout_alignParentStart="true"
     android:layout_alignParentTop="true"
+    android:paddingLeft="@dimen/call_total_padding_left"
+    android:paddingRight="@dimen/call_total_padding_right"
     android:background="@color/background_dialer_call_log" >
 
 

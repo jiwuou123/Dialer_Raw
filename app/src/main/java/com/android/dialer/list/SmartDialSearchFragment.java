@@ -16,6 +16,7 @@
 package com.android.dialer.list;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
@@ -28,13 +29,17 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.android.contacts.common.list.ContactEntryListAdapter;
 import com.android.contacts.common.list.PhoneNumberListAdapter;
+import com.android.contacts.common.list.PhoneNumberPickerFragment;
 import com.android.contacts.common.util.PermissionsUtil;
+import com.android.contacts.common.util.ViewUtil;
 import com.android.dialer.R;
 import com.android.dialer.calllog.IntentProvider;
 import com.android.dialer.database.DialerSearchHelper;
@@ -81,9 +86,24 @@ public class SmartDialSearchFragment extends SearchFragment
     protected void onCreateView(LayoutInflater inflater, ViewGroup container) {
         super.onCreateView(inflater, container);
         getListView().setDividerHeight(1);
-        int padding = (int) getResources().getDimension(R.dimen.dialpad_search_list_item_padding);
-        getView().setPadding(padding,padding,padding,padding);
     }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        int paddingLeft = (int) getResources().getDimension(R.dimen.dialpad_search_list_item_padding_left);
+        int paddingRight = (int) getResources().getDimension(R.dimen.dialpad_search_list_item_padding_right);
+        ListView listView = getListView();
+        getListView().setPadding(paddingLeft,listView.getPaddingTop(),paddingRight,listView.getPaddingBottom());
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        getListView().setBackgroundColor(Color.WHITE);
+
+    }
+
 
     /**
      * Creates a SmartDialCursorLoader object to load query results.
@@ -125,7 +145,8 @@ public class SmartDialSearchFragment extends SearchFragment
         return adapter.getDataUri(position);
     }
 
-    @Override
+
+        @Override
     protected void setupEmptyView() {
         if (mEmptyView != null && getActivity() != null) {
             if (!PermissionsUtil.hasPermission(getActivity(), CALL_PHONE)) {
@@ -159,6 +180,11 @@ public class SmartDialSearchFragment extends SearchFragment
         }
     }
 
+    @Override
+    protected View inflateView(LayoutInflater inflater, ViewGroup container) {
+        return inflater.inflate(R.layout.smart_source_contact_list_content, null);
+    }
+
     public boolean isShowingPermissionRequest() {
         return mEmptyView != null && mEmptyView.isShowingContent();
     }
@@ -185,7 +211,7 @@ public class SmartDialSearchFragment extends SearchFragment
 //                cursor.moveToFirst();
                 Cursor cursor = (Cursor) adapter.getItem(position);
                 String showNumber = cursor!=null?cursor.getString(DialerSearchHelper.DialerSearchColumn.SEARCH_PHONE_NUMBER_INDEX):getQueryString();
-                showPopupWindow(showNumber);
+                showPopupDialog(showNumber);
 //                number = TextUtils.isEmpty(mAddToContactNumber) ?
 //                        adapter.getFormattedQueryString() : mAddToContactNumber;
 //                intent = IntentUtil.getNewContactIntent(number);
@@ -193,31 +219,31 @@ public class SmartDialSearchFragment extends SearchFragment
                 break;
         }
     }
-    private void initPopupWindow(){
-        View contentView = LayoutInflater.from(getContext()).inflate(R.layout.dialpad_search_add_contact,null);
-        contentView.setOnClickListener(this);
-        addContactPopupWindow = new PopupWindow(contentView, WindowManager.LayoutParams.MATCH_PARENT,
-                WindowManager.LayoutParams.WRAP_CONTENT);
-        popupWindowTitle = (TextView) contentView.findViewById(R.id.contact_phone_number);
-        contentView.findViewById(R.id.create_new_contact_action).setOnClickListener(this);
-        contentView.findViewById(R.id.add_to_existing_contact_action).setOnClickListener(this);
-//        addContactPopupWindow.setContentView(contentView);
-        addContactPopupWindow.setBackgroundDrawable(new ColorDrawable(Color.WHITE));
-        addContactPopupWindow.setOutsideTouchable(true);
-        addContactPopupWindow.setAnimationStyle(R.style.DialpadSearchPopupWindowAnim);
-        addContactPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
-            @Override
-            public void onDismiss() {
-                backgroundAlpha(1f);
-            }
-        });
+
+    private Dialog popupDialog;
+    private void initPopupDialog(){
+        popupDialog = new Dialog(getContext(), R.style.Theme_Light_Dialog);
+        View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.dialpad_search_add_contact,null);
+        //获得dialog的window窗口
+        Window window = popupDialog.getWindow();
+        //设置dialog在屏幕底部
+        window.setGravity(Gravity.BOTTOM);
+        window.setWindowAnimations(R.style.DialpadSearchPopupWindowAnim);
+        window.getDecorView().setPadding(0, 0, 0, 0);
+        android.view.WindowManager.LayoutParams lp = window.getAttributes();
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        window.setAttributes(lp);
+        popupDialog.setContentView(dialogView);
+        popupWindowTitle = (TextView) dialogView.findViewById(R.id.contact_phone_number);
+        dialogView.findViewById(R.id.create_new_contact_action).setOnClickListener(this);
+        dialogView.findViewById(R.id.add_to_existing_contact_action).setOnClickListener(this);
     }
-    private void showPopupWindow(String text){
-        if(addContactPopupWindow==null)
-            initPopupWindow();
+    private void showPopupDialog(String text){
+        if(popupDialog==null)
+            initPopupDialog();
         popupWindowTitle.setText(text);
-        backgroundAlpha(0.5f);
-        addContactPopupWindow.showAtLocation(getActivity().getWindow().findViewById(android.R.id.content), Gravity.BOTTOM,0,0);
+        popupDialog.show();
     }
     @Override
     public void onClick(View v) {
@@ -240,16 +266,10 @@ public class SmartDialSearchFragment extends SearchFragment
         }
     }
 
-    public void backgroundAlpha(float bgAlpha)
-    {
-        WindowManager.LayoutParams lp = getActivity().getWindow().getAttributes();
-        lp.alpha = bgAlpha; //0.0-1.0
-        getActivity().getWindow().setAttributes(lp);
-    }
     public boolean popupWindowIsShowing(){
-        return addContactPopupWindow!=null&&addContactPopupWindow.isShowing();
+        return popupDialog!=null&&popupDialog.isShowing();
     }
     public void popupWindowDismiss(){
-         addContactPopupWindow.dismiss();
+         popupDialog.dismiss();
     }
 }

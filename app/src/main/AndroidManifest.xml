@@ -54,6 +54,7 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.BROADCAST_STICKY" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.VIBRATE" />
     <!-- This tells the activity manager to not delay any of our activity
      start requests, even if they happen immediately after the user
      presses home. -->
@@ -321,5 +322,7 @@
                 <action android:name="android.telecom.InCallService"/>
             </intent-filter>
         </service>
+
+        <service android:name=".calllog.ContactSaveService"></service>
     </application>
 </manifest>

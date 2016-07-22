@@ -66,7 +66,8 @@ public class CallLogAsyncTaskUtil {
             CallLog.Calls.FEATURES,
             CallLog.Calls.DATA_USAGE,
             CallLog.Calls.TRANSCRIPTION,
-            "raw_contact_id"
+            "raw_contact_id",
+                CallLog.Calls.CACHED_LOOKUP_URI,
         };
 
         static final int DATE_COLUMN_INDEX = 0;
@@ -82,6 +83,7 @@ public class CallLogAsyncTaskUtil {
         static final int DATA_USAGE = 10;
         static final int TRANSCRIPTION_COLUMN_INDEX = 11;
         static final int RAW_CONTACT_ID_INDEX = 12;
+        static final int CACHED_LOOKUP_URI_INDEX = 13;
     }
 
     public interface CallLogAsyncTaskListener {
@@ -138,12 +140,13 @@ public class CallLogAsyncTaskUtil {
 
     private static void getPhoneNumbers(PhoneCallDetails details, Context context) {
         Cursor c = context.getContentResolver().query(ContactsContract.Data.CONTENT_URI,
-                new String[] {ContactsContract.Data._ID, ContactsContract.CommonDataKinds.Phone.NUMBER},
+                new String[] {ContactsContract.Data._ID, ContactsContract.CommonDataKinds.Phone.NUMBER,ContactsContract.CommonDataKinds.Phone.STARRED},
                 ContactsContract.Data.CONTACT_ID + "=?" + " AND "
                         + ContactsContract.Data.MIMETYPE + "='" + ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE + "'",
                 new String[] {String.valueOf(details.contactId)}, null);
         if(c.moveToFirst()){
             details.phoneNumbers = new PhoneCallDetails.PhoneNumberEntity[c.getCount()];
+            details.isStarred = c.getInt(2) == 1?true:false;
             int i = 0;
             do{
                 details.phoneNumbers[i] = new PhoneCallDetails.PhoneNumberEntity();
@@ -201,6 +204,7 @@ public class CallLogAsyncTaskUtil {
             details.photoUri = info.photoUri;
             details.sourceType = info.sourceType;
             details.objectId = info.objectId;
+            details.lookUpKey = info.lookupKey;
 
             details.callTypes = new int[] {
                 cursor.getInt(CallDetailQuery.CALL_TYPE_COLUMN_INDEX)
@@ -213,7 +217,7 @@ public class CallLogAsyncTaskUtil {
 
             details.countryIso = !TextUtils.isEmpty(countryIso) ? countryIso
                     : GeoUtil.getCurrentCountryIso(context);
-            details.contactId = cursor.getString(CallDetailQuery.RAW_CONTACT_ID_INDEX);
+            details.contactId = cursor.getLong(CallDetailQuery.RAW_CONTACT_ID_INDEX);
 
             return details;
         } finally {

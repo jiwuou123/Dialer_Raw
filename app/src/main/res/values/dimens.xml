@@ -40,7 +40,7 @@
     <dimen name="contact_photo_size">40dp</dimen>
     <dimen name="contact_detail_photo_size">64dp</dimen>
     <dimen name="call_detail_button_spacing">2dip</dimen>
-    <dimen name="call_detail_horizontal_margin">16dp</dimen>
+
     <dimen name="call_detail_vertical_margin">16dp</dimen>
     <dimen name="call_detail_top_margin">36dp</dimen>
     <dimen name="call_detail_bottom_margin">32dp</dimen>
@@ -60,6 +60,7 @@
     <dimen name="contact_tile_divider_width">1dp</dimen>
     <dimen name="contact_tile_info_button_height_and_width">36dp</dimen>
     <item name="contact_tile_height_to_width_ratio" type="dimen">76%</item>
+
     <dimen name="contact_tile_text_side_padding">12dp</dimen>
     <dimen name="contact_tile_text_bottom_padding">9dp</dimen>
     <dimen name="favorites_row_top_padding">2dp</dimen>
@@ -315,12 +316,31 @@
 
     <dimen name="conference_call_manager_padding_top">64dp</dimen>
     <dimen name="conference_call_manager_button_dimension">46dp</dimen>
-    <!-->new <-->
-    <dimen name="dialpad_search_list_item_height">56dp</dimen>
-    <dimen name="dialpad_search_list_item_padding">8dp</dimen>
+
 
     <dimen name="call_detail_text_size">16sp</dimen>
     <dimen name="call_detail_text_min_size">12sp</dimen>
     <!--呼入和未接通之间的距离-->
     <dimen name="between_huru_and_weijietong">10dp</dimen>
+    <dimen name="call_detail_primary_text_size">18sp</dimen>
+    <!--拨号匹配界面相关尺寸-->
+    <dimen name="dialpad_search_list_item_height">56dp</dimen>
+    <dimen name="dialpad_search_list_item_padding_left">19.3dp</dimen>
+    <dimen name="dialpad_search_list_item_padding_right">20dp</dimen>
+    <dimen name="phone_number_primary_text_size" >17.3sp</dimen>
+    <dimen name="phone_number_secondary_text_size" >10.3sp</dimen>
+    <dimen name="secondary_call_info_margin">6.6dp</dimen>
+    <dimen name="call_detail_history_line_padding">10dp</dimen>
+    <dimen name="call_detail_horizontal_margin">13dp</dimen>
+    <dimen name="call_detail_horizontal_text_margin">15dp</dimen>
+    <dimen name="call_detail_quick_contact_badge_margin_top">11.6dp</dimen>
+    <dimen name="call_detail_text_inner_padding">2dp</dimen>
+    <dimen name="call_detail_item_text_size">13sp</dimen>
+    <dimen name="call_detail_item_height">44.6dp</dimen>
+    <dimen name="call_detail_phone_number_item_padding">15dp</dimen>
+    <dimen name="call_detail_history_item_padding_top">14dp</dimen>
+    <dimen name="call_detail_caller_name_margin_top">9dp</dimen>
+    <dimen name="call_detail_exist_contact_layout_margin_top">40dp</dimen>
+    <dimen name="call_total_padding_left">22dp</dimen>
+    <dimen name="call_total_padding_right"> 20dp</dimen>
 </resources>

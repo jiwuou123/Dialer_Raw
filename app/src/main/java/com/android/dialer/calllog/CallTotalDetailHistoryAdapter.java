@@ -129,7 +129,7 @@ public class CallTotalDetailHistoryAdapter extends BaseAdapter {
         callTypeIconView.clear();
         callTypeIconView.add(callType);
         callTypeIconView.setShowVideo(isVideoCall);
-        callTypeTextView.setText(mCallTypeHelper.getCallTypeText(callType, isVideoCall));
+        callTypeTextView.setText(mCallTypeHelper.getCallTypeText(callType, isVideoCall,details.duration));
         // Set the date.
         String dateValue = DateUtils.formatDateRange(mContext, details.date, details.date,
                 DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_SHOW_YEAR);

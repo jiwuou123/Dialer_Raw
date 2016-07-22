@@ -18,6 +18,7 @@ package com.android.dialer.calllog;
 
 import android.content.Context;
 import android.provider.CallLog.Calls;
+import android.text.format.DateFormat;
 import android.text.format.DateUtils;
 import android.text.format.Formatter;
 import android.view.LayoutInflater;
@@ -32,7 +33,11 @@ import com.android.dialer.R;
 import com.android.dialer.util.DialerUtils;
 import com.google.common.collect.Lists;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Locale;
+
+import static com.android.dialer.R.id.date;
 
 /**
  * Adapter for a ListView containing history items from the details of a call.
@@ -69,7 +74,7 @@ public class CallDetailHistoryAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return mPhoneCallDetails.length>=5?5:mPhoneCallDetails.length;
+        return mPhoneCallDetails.length;
     }
 
     @Override
@@ -129,7 +134,7 @@ public class CallDetailHistoryAdapter extends BaseAdapter {
 //        CallTypeIconsView callTypeIconView =
 //                (CallTypeIconsView) result.findViewById(R.id.call_type_icon);
         TextView callTypeTextView = (TextView) result.findViewById(R.id.call_type_text);
-        TextView dateView = (TextView) result.findViewById(R.id.date);
+        TextView dateView = (TextView) result.findViewById(date);
         TextView durationView = (TextView) result.findViewById(R.id.duration);
 
         int callType = details.callTypes[0];
@@ -139,10 +144,12 @@ public class CallDetailHistoryAdapter extends BaseAdapter {
 //        callTypeIconView.clear();
 //        callTypeIconView.add(callType);
 //        callTypeIconView.setShowVideo(isVideoCall);
-        callTypeTextView.setText(mCallTypeHelper.getCallTypeText(callType, isVideoCall));
+
+        callTypeTextView.setText(mCallTypeHelper.getCallTypeText(callType, isVideoCall,details.duration));
         // Set the date.
-        CharSequence dateValue = DateUtils.formatDateRange(mContext,details.date, details.date,
-                DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_SHOW_YEAR);
+//        CharSequence dateValue = DateUtils.formatDateRange(mContext,new SimpleDateFormat("yyyy-MM-dd",Locale.getDefault()),details.date, details.date,
+//                DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_SHOW_YEAR).toString();
+        CharSequence dateValue = DateFormat.format("yyyy/MM/dd hh:mm",details.date);
         dateView.setText(dateValue);
         // Set the duration
         if (Calls.VOICEMAIL_TYPE == callType || CallTypeHelper.isMissedCallType(callType)) {

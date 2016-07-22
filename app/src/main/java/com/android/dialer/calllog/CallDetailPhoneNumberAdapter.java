@@ -69,7 +69,20 @@ public class CallDetailPhoneNumberAdapter extends BaseAdapter{
             viewHolder.sendMessage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    callDetailCallback.senMessage(v, position);
+                    callDetailCallback.sendMessage(v, position);
+                }
+            });
+            viewHolder.callContent.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    callDetailCallback.onCallContentLongClick(v,position);
+                    return true;
+                }
+            });
+            viewHolder.callContent.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    callDetailCallback.call(v, position);
                 }
             });
         }
@@ -78,7 +91,7 @@ public class CallDetailPhoneNumberAdapter extends BaseAdapter{
             viewHolder.location.setText(location);
         String phoneNumber = phoneNumberEntities[position].phoneNumber;
         if(phoneNumber.equals(currentPhoneNumber))
-            viewHolder.phoneNumber.setTextColor(Color.GREEN);
+            viewHolder.phoneNumber.setTextColor(mContext.getColor(R.color.phone_number_text_select_color));
         viewHolder.phoneNumber.setText(phoneNumber);
         return convertView;
     }
@@ -89,15 +102,18 @@ public class CallDetailPhoneNumberAdapter extends BaseAdapter{
         public TextView location;
         public ImageView call;
         public ImageView sendMessage;
+        public View callContent;
         public ViewHolder(View itemView){
             phoneNumber = (TextView) itemView.findViewById(R.id.cd_phonel);
             location = (TextView) itemView.findViewById(R.id.cd_local);
             call = (ImageView) itemView.findViewById(R.id.bt_phone);
             sendMessage = (ImageView) itemView.findViewById(R.id.bt_message);
+            callContent = itemView.findViewById(R.id.call_detail_call_content);
         }
     }
     public interface CallDetailCallback{
         void call(View v, int position);
-        void senMessage(View v, int position);
+        void sendMessage(View v, int position);
+        void onCallContentLongClick(View v, int position);
     }
 }

@@ -90,12 +90,14 @@ public class PhoneCallDetails {
     // Whether the contact number is a voicemail number.
     public boolean isVoicemail;
 
+    public boolean isStarred;
     /**
      * If this is a voicemail, whether the message is read. For other types of calls, this defaults
      * to {@code true}.
      */
     public boolean isRead = true;
-    public String contactId;
+    public long contactId;
+    public String lookUpKey;
     public PhoneNumberEntity[] phoneNumbers;
     /**
      * Constructor with required fields for the details of a call with a number associated with a

@@ -19,32 +19,28 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+    <!--<View-->
+        <!--style="@style/call_detail_divider_style"></View>-->
     <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="@android:color/darker_gray"></View>
+        android:layout_marginTop="@dimen/call_detail_exist_contact_layout_margin_top"
+        style="@style/call_detail_divider_style"></View>
     <TextView
         android:id="@+id/send_contact"
         style="@style/CallDetailContactTextStyle"
         android:text="@string/send_contact"/>
     <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="@android:color/darker_gray"></View>
+style="@style/call_detail_divider_style"></View>
     <TextView
-        android:id="@+id/add_to_the_personal_collection"
+        android:id="@+id/add_to_the_personal_favorites"
         style="@style/CallDetailContactTextStyle"
-        android:text="@string/add_to_the_personal_collection"/>
+        />
     <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="@android:color/darker_gray"></View>
+        style="@style/call_detail_divider_style"></View>
     <TextView
         android:id="@+id/block_contact"
         style="@style/CallDetailContactTextStyle"
         android:text="@string/block_contact"/>
     <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="@android:color/darker_gray"></View>
+        style="@style/call_detail_divider_style"></View>
+
 </LinearLayout>

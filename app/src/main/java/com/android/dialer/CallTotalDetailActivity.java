@@ -38,6 +38,7 @@ import android.widget.Toast;
 
 import com.android.contacts.common.ContactPhotoManager;
 import com.android.contacts.common.GeoUtil;
+import com.android.dialer.calllog.CallDetailHistoryAdapter;
 import com.android.dialer.calllog.CallLogAsyncTaskUtil;
 import com.android.dialer.calllog.CallLogAsyncTaskUtil.CallLogAsyncTaskListener;
 import com.android.dialer.calllog.CallTotalDetailHistoryAdapter;
@@ -131,7 +132,7 @@ public class CallTotalDetailActivity extends Activity
 
             ListView historyList = (ListView) findViewById(R.id.history);
             historyList.setAdapter(
-                    new CallTotalDetailHistoryAdapter(mContext, mInflater, mCallTypeHelper, details));
+                    new CallDetailHistoryAdapter(mContext, mInflater, mCallTypeHelper, details));
 
             String lookupKey = contactUri == null ? null
                     : ContactInfoHelper.getLookupKeyFromUri(contactUri);

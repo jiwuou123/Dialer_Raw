@@ -25,8 +25,6 @@
     android:orientation="vertical"
     android:layout_alignParentStart="true"
     android:layout_alignParentTop="true"
-    android:paddingLeft="@dimen/call_detail_horizontal_margin"
-    android:paddingRight="@dimen/call_detail_horizontal_margin"
     android:background="@color/background_dialer_call_log" >
 
     <!--<Toolbar-->
@@ -39,47 +37,60 @@
             android:layout_height="@dimen/contact_detail_photo_size"
             android:layout_alignParentStart="true"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="@dimen/call_detail_horizontal_margin"
+            android:layout_marginTop="@dimen/call_detail_quick_contact_badge_margin_top"
             android:focusable="true" />
             <TextView
                 android:id="@+id/caller_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@android:color/primary_text_light"
-                android:textSize="@dimen/call_log_primary_text_size"
-                android:layout_marginTop="5dp"
+                android:textColor="@color/phone_number_primary_text"
+                android:textSize="@dimen/call_detail_item_text_size"
+                android:layout_marginTop="@dimen/call_detail_caller_name_margin_top"
                 android:layout_gravity="center_horizontal"
-                android:includeFontPadding="false"
-                android:layout_marginBottom="5dp"
                 android:singleLine="true" />
 
             <TextView
                 android:id="@+id/caller_number"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@android:color/secondary_text_light"
-                android:textSize="@dimen/call_log_secondary_text_size"
+                android:textColor="@color/phone_number_secondary_text"
+                android:textSize="@dimen/call_detail_item_text_size"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="1dp"
                 android:singleLine="true" />
+    <View
+        style="@style/call_detail_divider_style"
+        android:visibility="gone"
+        android:id="@+id/history_divide"
+        android:layout_marginTop="@dimen/call_detail_history_item_padding_top"></View>
     <com.android.dialer.widget.StretchListView
         android:id="@+id/history"
-        android:layout_marginTop="@dimen/call_detail_vertical_margin"
         android:layout_width="match_parent"
-        android:dividerHeight="@dimen/call_detail_vertical_margin"
-        android:layout_marginBottom="@dimen/call_detail_vertical_margin"
+        android:paddingLeft="@dimen/call_detail_text_inner_padding"
+        android:paddingRight="@dimen/call_detail_text_inner_padding"
+        android:overScrollMode="never"
         android:layout_height="wrap_content" />
-
+    <View
+        style="@style/call_detail_divider_style"
+        android:visibility="gone"
+        android:id="@+id/call_detail_more_call_log_item_divider"
+        ></View>
     <ViewStub
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:visibility="gone"
         android:id="@+id/call_detail_more_call_log_item"
         android:layout="@layout/call_detail_more_call_log_item"/>
+    <View
+        style="@style/call_detail_divider_style"
+        android:visibility="gone"
+        android:id="@+id/contact_phone_numbers_divide"></View>
     <com.android.dialer.widget.StretchListView
         android:id="@+id/contact_phone_numbers"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:dividerHeight="0dp"
+        android:divider="@android:color/transparent"
+        android:overScrollMode="never"
         android:visibility="gone"
         />
     <ViewStub
@@ -87,12 +98,19 @@
         android:layout_height="wrap_content"
         android:id="@+id/call_detail_exist_contact"
         android:visibility="gone"
-        android:layout="@layout/call_detail_exist_contact"/>
+        android:layout="@layout/call_detail_exist_contact"
+        />
     <ViewStub
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:visibility="gone"
         android:id="@+id/call_detail_no_exist_contact"
         android:layout="@layout/call_detail_no_exist_contact"/>
+    <ViewStub
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:id="@+id/call_detail_voice_mail"
+        android:layout="@layout/call_detail_voice_mail"/>
 </LinearLayout>
 </ScrollView>

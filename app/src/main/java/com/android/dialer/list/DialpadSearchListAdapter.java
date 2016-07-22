@@ -137,7 +137,7 @@ public class DialpadSearchListAdapter extends DialerPhoneNumberListAdapter{
             ViewHolder viewHolder = (ViewHolder) convertView.getTag();
             viewHolder.primaryCallInfo.setText(getQueryString());
             viewHolder.secondaryCallInfo.setVisibility(View.GONE);
-            viewHolder.callDetail.setImageDrawable(mContext.getDrawable(android.R.drawable.ic_input_add));
+            viewHolder.callDetail.setImageDrawable(mContext.getDrawable(R.drawable.add_contact));
             bindListener(NEW_CONTACT,position, viewHolder);
             return convertView;
         }
@@ -165,9 +165,10 @@ public class DialpadSearchListAdapter extends DialerPhoneNumberListAdapter{
     private View newView(Context context, ViewGroup parent) {
         View view = LayoutInflater.from(context).inflate(R.layout.dialpad_search_list_item,parent,false);
         ViewHolder viewHolder = new ViewHolder();
-        viewHolder.primaryCallInfo = (TextView) view.findViewById(R.id.primary_call_info);
-        viewHolder.secondaryCallInfo = (TextView) view.findViewById(R.id.secondary_call_info);
-        viewHolder.callDetail = (ImageButton) view.findViewById(R.id.call_detail);
+        viewHolder.primaryCallInfo = (TextView) view.findViewById(R.id.dialpad_search_primary_call_info);
+        viewHolder.secondaryCallInfo = (TextView) view.findViewById(R.id.dialpad_search_secondary_call_info);
+        viewHolder.callDetail = (ImageButton) view.findViewById(R.id.dialpad_search_call_detail);
+        viewHolder.callDate = (TextView) view.findViewById(R.id.dialpad_search_call_date);
         view.setTag(viewHolder);
         return view;
     }
@@ -190,10 +191,10 @@ public class DialpadSearchListAdapter extends DialerPhoneNumberListAdapter{
     }
     private void bindCallLog(ViewHolder viewHolder, Context context, Cursor cursor){
         if(cursor.getCount() == 1){
-            viewHolder.callDetail.setImageDrawable(context.getDrawable(android.R.drawable.ic_input_add));
+            viewHolder.callDetail.setImageDrawable(context.getDrawable(R.drawable.add_contact));
         }
         else{
-            viewHolder.callDetail.setImageDrawable(context.getDrawable(android.R.drawable.ic_menu_info_details));
+            viewHolder.callDetail.setImageDrawable(context.getDrawable(R.drawable.detail_button));
 
         }
         bindPhoneNumber(viewHolder.primaryCallInfo,cursor);
@@ -207,7 +208,7 @@ public class DialpadSearchListAdapter extends DialerPhoneNumberListAdapter{
 
     }
     private void bindContactView(ViewHolder viewHolder, Context context, Cursor cursor){
-        viewHolder.callDetail.setImageDrawable(context.getDrawable(android.R.drawable.ic_menu_info_details));
+        viewHolder.callDetail.setImageDrawable(context.getDrawable(R.drawable.detail_button));
         bindName(viewHolder.primaryCallInfo,cursor);
         bindPhoneNumber(viewHolder.secondaryCallInfo, cursor);
         viewHolder.secondaryCallInfo.setVisibility(View.VISIBLE);
@@ -278,7 +279,7 @@ public class DialpadSearchListAdapter extends DialerPhoneNumberListAdapter{
                         + " ,styleLength: " + styleLength);
                 break;
             }
-            style.setSpan(new ForegroundColorSpan(Color.RED), start, end,
+            style.setSpan(new ForegroundColorSpan(mContext.getColor(R.color.phone_number_text_select_color)), start, end,
                     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
         return style;
@@ -301,7 +302,7 @@ public class DialpadSearchListAdapter extends DialerPhoneNumberListAdapter{
         if (numberHighlightOffset != null && numberHighlightOffset.size() > 1) {
 //            style.setSpan(new StyleSpan(Typeface.BOLD), numberHighlightOffset.get(0),
 //                    numberHighlightOffset.get(1) + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            style.setSpan(new ForegroundColorSpan(Color.RED), numberHighlightOffset.get(0),
+            style.setSpan(new ForegroundColorSpan(mContext.getColor(R.color.phone_number_text_select_color)), numberHighlightOffset.get(0),
                     numberHighlightOffset.get(1) + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
         return style;
@@ -316,6 +317,7 @@ public class DialpadSearchListAdapter extends DialerPhoneNumberListAdapter{
         public TextView primaryCallInfo;
         public TextView secondaryCallInfo;
         public ImageButton callDetail;
+        public TextView callDate;
     }
 
 

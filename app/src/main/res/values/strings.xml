@@ -1292,10 +1292,17 @@
 
     <string name="send_contact">Send Contact</string>
     <string name="add_to_the_personal_collection">Add To The Personal Collection</string>
-    <string name="block_contact">Block Contact</string>
+    <string name="block_contact">Block This Number</string>
     <string name="call_contact">Call</string>
     <string name="send_message">Send Message</string>
     <string name="call_detail_more_call_log_item">ShowMore</string>
-    <string name="block_call">BlockCall</string>
+    <string name="block_call">Block This Caller</string>
+    <string name="share_via">Share contact via</string>
+    <string name="unblock_call">unblockCall</string>
+    <string name="block">block</string>
+    <string name="unblock">unblock</string>
+    <string name="unfavourite">Removed From Favorites</string>
+    <string name="favorite">Add To Favorites</string>
+    <string name="block_caller_tips">You will not receive any calls or messages from this contact once it has been blocked.Are you sure you want to continue?</string>
 
 </resources>
