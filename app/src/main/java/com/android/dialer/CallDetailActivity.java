@@ -500,11 +500,15 @@ public class CallDetailActivity extends Activity implements View.OnClickListener
                     if(isBlack)
                         try {
                             exInterface.removeBlacklist(currentNumber);
+                            checkBlackList();
                         } catch (RemoteException e) {
                             e.printStackTrace();
                         }
-                    else
+                    else{
                         showAddBlack();
+
+                    }
+
                 }
                 break;
             case R.id.call_contact:

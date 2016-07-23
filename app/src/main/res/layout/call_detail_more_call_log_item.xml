@@ -18,8 +18,8 @@
     android:id="@+id/call_detail"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingLeft="@dimen/call_detail_text_inner_padding"
-    android:paddingRight="@dimen/call_detail_text_inner_padding"
+    android:paddingLeft="@dimen/call_detail_horizontal_margin"
+    android:paddingRight="@dimen/call_detail_horizontal_margin"
     android:orientation="horizontal">
     <TextView
         android:id="@+id/call_detail_more_call_log"
