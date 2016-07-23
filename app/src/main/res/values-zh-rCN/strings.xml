@@ -386,6 +386,9 @@
     <string name="multiple_delete_title">"删除"</string>
     <string name="multiple_delete_content">"是否删除所选记录？"</string>
     <string name="call_log_missed">未接来电</string>
+    <string name="select_call_log">选择通话记录</string>
+    <string name="sure_delete_call_log">确定</string>
+
     
     <!--plus new-->
     <string name="set_yyxx_tip">"缺少语音信箱号码，是否设置？"</string>
@@ -413,6 +416,6 @@
     <string name="unfavourite">取消收藏</string>
     <string name="favorite">添加到个人收藏</string>
     <string name="block_caller_tips">阻止此联系人后，您将不会收到该联系人的来电和信息，确认阻止吗？</string>
-
+    <string name="common_tip">"提示"</string>
 
 </resources>

@@ -20,12 +20,13 @@ import android.database.Cursor;
 import android.provider.CallLog.Calls;
 import android.telephony.PhoneNumberUtils;
 import android.text.format.Time;
+import android.util.Log;
 
 import com.android.contacts.common.util.DateUtils;
 import com.android.contacts.common.util.PhoneNumberHelper;
-
 import com.google.common.annotations.VisibleForTesting;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 /**
@@ -195,6 +196,174 @@ public class CallLogGroupBuilder {
         if (currentGroupSize > 1) {
             addGroup(count - currentGroupSize, currentGroupSize);
         }
+    }
+
+    class GroupData{
+        public int offset;//group head的偏移位置
+        public int len;//group 长度
+    }
+
+    public Cursor addGroupsWithReturnCursor(Cursor cursor) {
+
+        Log.i("f", "addGroupsWithReturnCursor cursor:"+cursor+" size: "+cursor.getCount());
+
+        //需要排序的列表
+        ArrayList<CallLogSortCursor.SortEntry> sortList = new ArrayList<CallLogSortCursor.SortEntry>();
+
+        //需要生成group的列表
+        ArrayList<GroupData> groupList = new ArrayList<GroupData>();
+
+
+        final int count = cursor.getCount();
+        if (count == 0) {
+            return cursor;
+        }
+
+
+        cursor.moveToFirst();
+
+
+        //插入第一条数据
+        CallLogSortCursor.SortEntry firstData = new CallLogSortCursor.SortEntry();
+        firstData.currentNumber = cursor.getString(CallLogQuery.NUMBER);
+        firstData.callType = cursor.getInt(CallLogQuery.CALL_TYPE);
+        firstData.currentAccountComponentName =cursor.getString(CallLogQuery.ACCOUNT_COMPONENT_NAME);
+        firstData.currentAccountId =cursor.getString(CallLogQuery.ACCOUNT_ID);
+        firstData.order = 0;//cursor的真实位置
+        sortList.add(firstData);
+        boolean hasProcessFlag;
+        while (cursor.moveToNext()) {
+
+
+            // The number of the current row in the cursor.
+            final String currentNumber = cursor.getString(CallLogQuery.NUMBER);
+
+
+
+            final int callType = cursor.getInt(CallLogQuery.CALL_TYPE);
+            final String currentAccountComponentName = cursor.getString(
+                    CallLogQuery.ACCOUNT_COMPONENT_NAME);
+            final String currentAccountId = cursor.getString(CallLogQuery.ACCOUNT_ID);
+
+            hasProcessFlag = false;//这行cursor已经处理过的标志
+
+            //是否和之前保存的数据一样
+            for (int i = sortList.size()-1; i >= 0; i--){
+                String firstNumber = sortList.get(i).currentNumber;
+                int firstCallType = sortList.get(i).callType;
+                String firstAccountComponentName = sortList.get(i).currentAccountComponentName;
+                String firstAccountId = sortList.get(i).currentAccountId;
+
+
+                final boolean sameNumber = equalNumbers(firstNumber, currentNumber);
+                final boolean sameAccountComponentName = Objects.equals(
+                        firstAccountComponentName,
+                        currentAccountComponentName);
+                final boolean sameAccountId = Objects.equals(
+                        firstAccountId,
+                        currentAccountId);
+                final boolean sameAccount = sameAccountComponentName && sameAccountId;
+
+                final boolean shouldGroup;
+
+                if (!sameNumber || !sameAccount) {
+                    // Should only group with calls from the same number.
+                    shouldGroup = false;
+                } else if (firstCallType == Calls.VOICEMAIL_TYPE) {
+                    // never group voicemail.
+                    shouldGroup = false;
+                } else {
+                    // Incoming, outgoing, and missed calls group together.
+                    shouldGroup = callType != Calls.VOICEMAIL_TYPE;
+                }
+
+                if (shouldGroup) {
+                    //应该合并为一组
+                    CallLogSortCursor.SortEntry insertData = new CallLogSortCursor.SortEntry();
+                    insertData.currentNumber = currentNumber;
+                    insertData.callType = callType;
+                    insertData.currentAccountComponentName =currentAccountComponentName;
+                    insertData.currentAccountId =currentAccountId;
+                    insertData.order = cursor.getPosition();
+                    sortList.add(i+1, insertData);
+
+                    //更新groupList
+                    if (groupList.size()> 0){
+                        boolean addGroupDataFlag = true;//是否增加一个groupData
+                        int insertPos = -1;
+                        int count2 = 0;
+                        for (GroupData data : groupList) {
+
+                            if (data.offset <= i && i <= data.offset + data.len - 1) {
+                                //长度增加1个
+                                data.len++;
+                                addGroupDataFlag = false;
+                            } else if (data.offset > i) {
+                                //偏移增加1个
+                                data.offset++;
+                            }
+
+                            if (-1 == insertPos && data.offset > i  ) {
+                                insertPos = count2;
+                            }
+
+                            count2++;
+                        }
+
+                        if (-1 == insertPos){
+                            //插在后面
+                            insertPos = groupList.size();
+                        }
+
+                        if (addGroupDataFlag){
+                            //增加一个groupdata
+                            GroupData insertGroupData = new GroupData();
+                            insertGroupData.offset = i;
+                            insertGroupData.len = 2;
+                            groupList.add(insertPos, insertGroupData);
+
+
+                        }
+                    }else{
+                        //创建第一个
+                        GroupData insertGroupData = new GroupData();
+                        insertGroupData.offset = i;
+                        insertGroupData.len = 2;
+                        groupList.add(insertGroupData);
+                    }
+
+                    hasProcessFlag = true;
+                    break;
+
+                } else {
+                    //不能合并为一组
+
+                }
+
+            }
+
+            if ( hasProcessFlag){
+                //已经处理了直接进入下一条cursor
+                continue;
+            }
+
+            //插在sortlist的末尾
+            CallLogSortCursor.SortEntry insertData = new CallLogSortCursor.SortEntry();
+            insertData.currentNumber = currentNumber;
+            insertData.callType = callType;
+            insertData.currentAccountComponentName =currentAccountComponentName;
+            insertData.currentAccountId =currentAccountId;
+            insertData.order = cursor.getPosition();
+            sortList.add(sortList.size(), insertData);
+        }
+
+        //封装一个cursor并生成group
+        CallLogSortCursor retCursor = new CallLogSortCursor(cursor, sortList);
+        for (GroupData data:groupList){
+            addGroup(data.offset, data.len);
+        }
+
+        return retCursor;
     }
 
     /**

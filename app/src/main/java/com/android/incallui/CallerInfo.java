@@ -16,8 +16,6 @@
 
 package com.android.incallui;
 
-import com.android.contacts.common.util.PhoneNumberHelper;
-import com.android.contacts.common.util.TelephonyManagerUtils;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -29,17 +27,17 @@ import android.provider.ContactsContract.Data;
 import android.provider.ContactsContract.PhoneLookup;
 import android.provider.ContactsContract.RawContacts;
 import android.telephony.PhoneNumberUtils;
+import android.telephony.TelephonyManager;
 import android.text.TextUtils;
+import android.util.Log;
 
-import com.google.i18n.phonenumbers.geocoding.PhoneNumberOfflineGeocoder;
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber.PhoneNumber;
+import com.google.i18n.phonenumbers.geocoding.PhoneNumberOfflineGeocoder;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Locale;
-import com.android.dialer.R;
 /**
  * Looks up caller information for the given phone number.
  *
@@ -291,19 +289,7 @@ public class CallerInfo {
      * @param previousResult the result of previous lookup
      * @return previousResult if it's not the case
      */
-    static CallerInfo doSecondaryLookupIfNecessary(Context context,
-            String number, CallerInfo previousResult) {
-        if (!previousResult.contactExists
-                && PhoneNumberHelper.isUriNumber(number)) {
-            String username = PhoneNumberHelper.getUsernameFromUriNumber(number);
-            if (PhoneNumberUtils.isGlobalPhoneNumber(username)) {
-                previousResult = getCallerInfo(context,
-                        Uri.withAppendedPath(PhoneLookup.ENTERPRISE_CONTENT_FILTER_URI,
-                                Uri.encode(username)));
-            }
-        }
-        return previousResult;
-    }
+
 
     // Accessors
 
@@ -326,45 +312,10 @@ public class CallerInfo {
      * @param context To lookup the localized 'Emergency Number' string.
      * @return this instance.
      */
-    /* package */ CallerInfo markAsEmergency(Context context) {
-        name = context.getString(R.string.emergency_call_dialog_number_for_display);
-        phoneNumber = null;
-
-        photoResource = R.drawable.img_phone;
-        mIsEmergency = true;
-        return this;
-    }
 
 
-    /**
-     * Mark this CallerInfo as a voicemail call. The voicemail label
-     * is obtained from the telephony manager. Caller must hold the
-     * READ_PHONE_STATE permission otherwise the phoneNumber will be
-     * set to null.
-     * @return this instance.
-     */
-    /* package */ CallerInfo markAsVoiceMail(Context context) {
-        mIsVoiceMail = true;
 
-        try {
-            // For voicemail calls, we display the voice mail tag
-            // instead of the real phone number in the "number"
-            // field.
-            name = TelephonyManagerUtils.getVoiceMailAlphaTag(context);
-            phoneNumber = null;
-        } catch (SecurityException se) {
-            // Should never happen: if this process does not have
-            // permission to retrieve VM tag, it should not have
-            // permission to retrieve VM number and would not call
-            // this method.
-            // Leave phoneNumber untouched.
-            Log.e(TAG, "Cannot access VoiceMail.", se);
-        }
-        // TODO: There is no voicemail picture?
-        // FIXME: FIND ANOTHER ICON
-        // photoResource = android.R.drawable.badge_voicemail;
-        return this;
-    }
+
 
     private static String normalize(String s) {
         if (s == null || s.length() > 0) {
@@ -468,6 +419,21 @@ public class CallerInfo {
         geoDescription = getGeoDescription(context, number);
     }
 
+    public static String getCurrentCountryIso(Context context, Locale locale) {
+        // Without framework function calls, this seems to be the most accurate location service
+        // we can rely on.
+        final TelephonyManager telephonyManager =
+                (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+        String countryIso = telephonyManager.getNetworkCountryIso().toUpperCase();
+
+        if (countryIso == null) {
+            countryIso = locale.getCountry();
+            Log.w("f", "No CountryDetector; falling back to countryIso based on locale: "
+                    + countryIso);
+        }
+        return countryIso;
+    }
+
     private static String getGeoDescription(Context context, String number) {
         Log.v(TAG, "getGeoDescription('" + number + "')...");
 
@@ -479,7 +445,7 @@ public class CallerInfo {
         PhoneNumberOfflineGeocoder geocoder = PhoneNumberOfflineGeocoder.getInstance();
 
         Locale locale = context.getResources().getConfiguration().locale;
-        String countryIso = TelephonyManagerUtils.getCurrentCountryIso(context, locale);
+        String countryIso = getCurrentCountryIso(context, locale);
         PhoneNumber pn = null;
         try {
             Log.v(TAG, "parsing '" + number
@@ -515,7 +481,7 @@ public class CallerInfo {
         PhoneNumberOfflineGeocoder geocoder = PhoneNumberOfflineGeocoder.getInstance(context);
 
         Locale locale = context.getResources().getConfiguration().locale;
-        String countryIso = TelephonyManagerUtils.getCurrentCountryIso(context, locale);
+        String countryIso = getCurrentCountryIso(context, locale);
         PhoneNumber pn = null;
         try {
             Log.v(TAG, "parsing '" + number

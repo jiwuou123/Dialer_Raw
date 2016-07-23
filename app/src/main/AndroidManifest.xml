@@ -59,6 +59,10 @@
      start requests, even if they happen immediately after the user
      presses home. -->
     <uses-permission android:name="android.permission.STOP_APP_SWITCHES" />
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
+
 
     <application
         android:name="DialerApplication"
@@ -157,12 +161,7 @@
                 android:resource="@layout/keyguard_preview" />
         </activity>
 
-        <activity android:name="com.android.dialer.settings.DialerSettingsActivity"
-                  android:label="@string/dialer_settings_label"
-                  android:parentActivityName="com.android.dialer.DialtactsActivity"
-                  android:theme="@style/SettingsStyle"
-                  android:exported="false">
-        </activity>
+
 
         <activity android:name="com.android.dialer.calllog.CallLogActivity"
             android:label="@string/call_log_activity_title"
@@ -192,11 +191,7 @@
 
         </activity>
 
-        <activity android:name="com.android.contacts.common.test.FragmentTestActivity">
-            <intent-filter>
-                <category android:name="android.intent.category.TEST"/>
-            </intent-filter>
-        </activity>
+
 
         <!-- Backwards compatibility: "Phone" from Gingerbread and earlier -->
         <activity-alias android:name="DialtactsActivity"
@@ -297,32 +292,6 @@
         <service android:name="com.android.contacts.common.location.UpdateCountryService"
             android:exported="false"/>
 
-        <!-- Main in-call UI activity.  This is never launched directly
-             from outside the phone app; instead, it's either launched by
-             the OutgoingCallBroadcaster (for outgoing calls), or as the
-             fullScreenIntent of a notification (for incoming calls.) -->
-        <activity android:name="com.android.incallui.InCallActivity"
-                  android:theme="@style/Theme.InCallScreen"
-                  android:label="@string/phoneAppLabel"
-                  android:excludeFromRecents="true"
-                  android:launchMode="singleInstance"
-                  android:configChanges="keyboardHidden"
-                  android:exported="false"
-                  android:screenOrientation="nosensor" >
-        </activity>
 
-        <!-- BroadcastReceiver for receiving Intents from Notification mechanism. -->
-        <receiver android:name="com.android.incallui.NotificationBroadcastReceiver"
-                  android:exported="false" />
-
-        <service android:name="com.android.incallui.InCallServiceImpl"
-                 android:permission="android.permission.BIND_INCALL_SERVICE" >
-            <meta-data android:name="android.telecom.IN_CALL_SERVICE_UI" android:value="true" />
-            <intent-filter>
-                <action android:name="android.telecom.InCallService"/>
-            </intent-filter>
-        </service>
-
-        <service android:name=".calllog.ContactSaveService"></service>
     </application>
 </manifest>

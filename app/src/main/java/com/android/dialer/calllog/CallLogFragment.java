@@ -25,8 +25,10 @@ import android.app.Activity;
 import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.KeyguardManager;
+import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.ContentObserver;
@@ -50,11 +52,15 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.android.contacts.common.GeoUtil;
+import com.android.contacts.common.preference.DisplayOrderPreference;
 import com.android.contacts.common.util.PermissionsUtil;
 import com.android.contacts.common.util.ViewUtil;
 import com.android.dialer.R;
 import com.android.dialer.bbk.RecyclerViewChangedImpl;
+import com.android.dialer.bbk.SelectedCallLogImpl;
+import com.android.dialer.bbkwidget.TouchableRecyclerView;
 import com.android.dialer.list.ListsFragment.HostInterface;
+import com.android.dialer.m1000systemdialog.RoundAlertDialog;
 import com.android.dialer.util.DialerUtils;
 import com.android.dialer.util.EmptyLoader;
 import com.android.dialer.voicemail.VoicemailPlaybackPresenter;
@@ -91,7 +97,8 @@ public class CallLogFragment extends Fragment implements CallLogQueryHandler.Lis
 
     private static final int READ_CALL_LOG_PERMISSION_REQUEST_CODE = 1;
 
-    private RecyclerView mRecyclerView;
+//    private RecyclerView mRecyclerView;
+    private TouchableRecyclerView mRecyclerView;
 
     private LinearLayoutManager mLayoutManager;
     private CallLogAdapter mAdapter;
@@ -293,7 +300,7 @@ public class CallLogFragment extends Fragment implements CallLogQueryHandler.Lis
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedState) {
         View view = inflater.inflate(R.layout.call_log_fragment, container, false);
 
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
+        mRecyclerView = (TouchableRecyclerView) view.findViewById(R.id.recycler_view);
         // bbk wangchunhe   2016/07/12
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -323,8 +330,8 @@ public class CallLogFragment extends Fragment implements CallLogQueryHandler.Lis
                 isShowingRecentsTab);
         mRecyclerView.setAdapter(mAdapter);
 
-        fetchCalls();
-        Log.d(TAG, " ---  onCreateView --- ");
+        //fetchCalls();
+        Log.d(TAG, " ---  onCreateView ---");
         return view;
     }
 
@@ -489,6 +496,62 @@ public class CallLogFragment extends Fragment implements CallLogQueryHandler.Lis
             mAdapter.notifyDataSetChanged();
         }
     }
+
+    public void showMultipleDelete( boolean b){
+        mAdapter.setEditItem(b);
+        mAdapter.notifyDataSetChanged();
+    }
+
+    public void allSelectLog(boolean b){
+        if (b){
+            mAdapter.setAllSelectLog(true);
+            mAdapter.selectAllItems();
+        } else {
+            mAdapter.unSelectAllItems();
+            mAdapter.setAllSelectLog(false);
+        }
+        mAdapter.notifyDataSetChanged();
+
+    }
+
+    public int getSelectLogCount(){
+        return mAdapter.getSelectedItemCount();
+    }
+
+    public void setmSelectCallLogImpl(SelectedCallLogImpl mSelectCallLogImpl) {
+        mAdapter.setmSelectCallLogImpl(mSelectCallLogImpl);
+    }
+
+    /**
+     * delete selected call log items
+     */
+    public void deleteSelectedCallItems() {
+        if (mAdapter.getSelectedItemCount() > 0) {
+
+            RoundAlertDialog.Builder builder = new RoundAlertDialog.Builder(getActivity());
+            RoundAlertDialog deletedialog = builder.setTitle(R.string.multiple_delete_title)
+            .setMessage(R.string.multiple_delete_content)
+                    .setPositiveButton(R.string.sure_delete_call_log, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            mCallLogQueryHandler.deleteSpecifiedCalls(mAdapter.getDeleteFilter());
+                            Log.d(TAG, " ---- deleteSelectedCallItems() --- ");
+                            mAdapter.notifyDataSetChanged();
+                            dialog.dismiss();
+                        }
+                    })
+            .setNegativeButton(R.string.custom_message_cancel, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            }).create();
+            deletedialog.show();
+        }
+
+    }
+
+
 
     /**
      * Updates the call data and notification state on entering or leaving the call log tab.

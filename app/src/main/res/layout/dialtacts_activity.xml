@@ -21,7 +21,6 @@
     android:orientation="vertical"
     android:focusable="true"
     android:focusableInTouchMode="true"
-    android:clipChildren="false"
     >
 
 
@@ -32,14 +31,14 @@
         android:layout_height="match_parent"
         android:layout_marginBottom="@dimen/dialtacts_container_marginBottom"
         android:layout_gravity="center_horizontal|bottom"
-        android:clipChildren="false">
+      >
 
         <!-- The main contacts grid -->
         <FrameLayout
             android:layout_height="match_parent"
             android:layout_width="match_parent"
             android:id="@+id/dialtacts_frame"
-            android:clipChildren="false" />
+             />
 
         <FrameLayout
             android:id="@+id/floating_action_button_container"
@@ -70,7 +69,6 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="0px"
         android:background="#f1f1f1"
-        android:clipChildren="false"
         android:layout_alignParentBottom="true"
         android:layout_gravity="center_horizontal|bottom">
 
@@ -106,6 +104,7 @@
                 <LinearLayout
                     android:layout_weight="1.02"
                     android:gravity="center"
+                    android:id="@+id/bottom_menu_button_contacts_caontainer"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
 
@@ -117,7 +116,18 @@
                         android:layout_gravity="center"
                         android:gravity="center"
                         android:layout_height="wrap_content"/>
+                    <ImageButton
+                        android:id="@+id/dialtacts_bottom_menu_button_delete"
+                        android:contentDescription="@string/action_menu_dialpad_button"
+                        android:layout_width="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:layout_height="50dp"
+                        android:visibility="gone"
+                        android:background="@drawable/dialtacts_bottom_menu_button_delete"
+                        />
                 </LinearLayout>
+
                 <LinearLayout
                     android:layout_weight="1"
                     android:gravity="center"

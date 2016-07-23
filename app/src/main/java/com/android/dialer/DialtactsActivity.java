@@ -74,6 +74,7 @@ import com.android.contacts.common.list.OnPhoneNumberPickerActionListener;
 import com.android.contacts.common.util.PermissionsUtil;
 import com.android.contacts.commonbind.analytics.AnalyticsUtil;
 import com.android.dialer.bbk.RecyclerViewChangedImpl;
+import com.android.dialer.bbk.SelectedCallLogImpl;
 import com.android.dialer.bbkwidget.FloatingActionButtonController;
 import com.android.dialer.calllog.CallLogActivity;
 import com.android.dialer.calllog.CallLogFragment;
@@ -92,7 +93,6 @@ import com.android.dialer.list.RegularSearchFragment;
 import com.android.dialer.list.SearchFragment;
 import com.android.dialer.list.SmartDialSearchFragment;
 import com.android.dialer.list.SpeedDialFragment;
-import com.android.dialer.settings.DialerSettingsActivity;
 import com.android.dialer.util.DialerUtils;
 import com.android.dialer.util.IntentUtil;
 import com.android.dialer.widget.ActionBarController;
@@ -160,7 +160,14 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
      *  bbk wangchunhe 2016/07/12 for popupwindow
      */
     private PopupWindow mCallLogSelectPopupWindow;
-    private ImageView mActionbarMenu;
+
+    /**
+     *   add dialtacts bottom menu button
+     */
+    private ImageButton mMenuButtonCall;
+    private ImageButton mMenuButtonContacts;
+    private ImageButton mMenuButtonSetting;
+    private ImageButton mMenuButtonDelete;
 
 
     /**
@@ -260,6 +267,9 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
     private PopupMenu mOverflowMenu;
     private EditText mSearchView;
     private View mVoiceSearchButton;
+    private ImageView mActionbarMenu;
+    private TextView mActionbarNameTxt;
+
 
     private String mSearchQuery;
 
@@ -270,6 +280,7 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
     private FloatingActionButtonController mFloatingActionButtonController;
 
     private int mActionBarHeight;
+
 
     /**
      * The text returned from a voice search query.  Set in {@link #onActivityResult} and used in
@@ -427,13 +438,15 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
         //在actionbar中放入搜索框
         actionBar.setCustomView(R.layout.dialtacts_actionbar);
         actionBar.setDisplayShowCustomEnabled(true);
-        TextView actionbar_name = (TextView)actionBar.getCustomView().findViewById(R.id.actionbar_name);
+        mActionbarNameTxt = (TextView)actionBar.getCustomView().findViewById(R.id.actionbar_name);
         mActionbarMenu = (ImageView)actionBar.getCustomView().findViewById(R.id.actionbar_menu);
         mActionbarMenu.setOnClickListener(this);
         mEditerToCalldetail = (TextView)actionBar.getCustomView().findViewById(R.id.actionbar_call_dialtacts_action_editer);
         mEditerToCalldetail.setOnClickListener(this);
-        actionbar_name.setClickable(false);
-        actionbar_name.setText(getString(R.string.all_calls));
+        TextView cancelTxt = (TextView)actionBar.getCustomView().findViewById(R.id.actionbar_call_dialtacts_action_cancel);
+        cancelTxt.setOnClickListener(this);
+        mActionbarNameTxt.setClickable(false);
+        mActionbarNameTxt.setText(getString(R.string.all_calls));
         mSearchView = (EditText) actionBar.getCustomView().findViewById(R.id.edittext);
         mSearchView.setVisibility(View.GONE);
 //        actionBar.setBackgroundDrawable(null);
@@ -469,12 +482,14 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
         // bbk wangchunhe 2016/07/12
         final View MenuButtonContainer = findViewById(
                 R.id.dialtacts_bottom_menu_container);
-        ImageButton MenuButtonCall = (ImageButton) findViewById(R.id.dialtacts_bottom_menu_button_call);
-        MenuButtonCall.setOnClickListener(this);
-        ImageButton MenuButtonContacts = (ImageButton) findViewById(R.id.dialtacts_bottom_menu_button_contacts);
-        MenuButtonContacts.setOnClickListener(this);
-        ImageButton MenuButtonSetting = (ImageButton) findViewById(R.id.dialtacts_bottom_menu_button_setting);
-        MenuButtonSetting.setOnClickListener(this);
+         mMenuButtonCall = (ImageButton) findViewById(R.id.dialtacts_bottom_menu_button_call);
+        mMenuButtonCall.setOnClickListener(this);
+         mMenuButtonContacts = (ImageButton) findViewById(R.id.dialtacts_bottom_menu_button_contacts);
+        mMenuButtonContacts.setOnClickListener(this);
+         mMenuButtonSetting = (ImageButton) findViewById(R.id.dialtacts_bottom_menu_button_setting);
+        mMenuButtonSetting.setOnClickListener(this);
+        mMenuButtonDelete = (ImageButton)findViewById(R.id.dialtacts_bottom_menu_button_delete);
+        mMenuButtonDelete.setOnClickListener(this);
 //        mFloatingActionButtonController = new FloatingActionButtonController(this,
 //                MenuButtonContainer, MenuButtonCall);
 
@@ -559,6 +574,7 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
 
         Log.e(TAG, " onCreate()  dialerFragment  " +  mIsDialpadShown  );
     }
+
 
     @Override
     protected void onResume() {
@@ -737,8 +753,8 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
     }
 
     protected void handleMenuSettings() {
-        final Intent intent = new Intent(this, DialerSettingsActivity.class);
-        startActivity(intent);
+//        final Intent intent = new Intent(this, DialerSettingsActivity.class);
+//        startActivity(intent);
     }
 
     @Override
@@ -792,16 +808,108 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
                 Log.e(TAG, " onClick actionbar_menu");
 
                 break;
+            case R.id.actionbar_call_dialtacts_action_editer:
+//                StringBuilder sb = new StringBuilder("已选").append(mCalllogList.getSelectLogCount()).append("项通话记录");
+                if (mEditerToCalldetail.getText().toString().trim().equals(getResources().getString(R.string.call_detail_editer))){
+                    showMultipleEditer();
+                    mEditerToCalldetail.setText(getString(R.string.call_delete_select_all));
+//                    mActionbarNameTxt.setText(sb);
+                } else if (mEditerToCalldetail.getText().toString().trim().equals(getResources().getString(R.string.call_delete_select_all))){
+                    mCalllogList.allSelectLog(true);
+                    mEditerToCalldetail.setText(R.string.call_delete_cansel_all);
+//                    mActionbarNameTxt.setText(sb);
+                } else if (mEditerToCalldetail.getText().toString().trim().equals(getResources().getString(R.string.call_delete_cansel_all))){
+                    mCalllogList.allSelectLog(false);
+                    mEditerToCalldetail.setText(R.string.call_delete_select_all);
+//                    StringBuilder sb = new StringBuilder("已选").append(mCalllogList.getSelectLogCount()).append("项通话记录");
+//                    mActionbarNameTxt.setText(sb);
+                }
+                mFloatingActionButtonController.setVisible(false);
+                mCalllogList.setmSelectCallLogImpl(mSeletectCallLogImpl);
 
 
 
+                break;
+            case R.id.actionbar_call_dialtacts_action_cancel:
+                hideMultipleEditer();
+                break;
 
+            case R.id.dialtacts_bottom_menu_button_delete:
+
+                    if (mCalllogList != null)
+                    mCalllogList.deleteSelectedCallItems();
+
+
+
+                break;
             default: {
                 Log.wtf(TAG, "Unexpected onClick event from " + view);
                 break;
             }
         }
     }
+
+    private void showMultipleEditer() {
+        mActionbarNameTxt.setText(getString(R.string.select_call_log));
+        mActionbarMenu.setVisibility(View.GONE);
+        getActionBar().getCustomView().findViewById(R.id.actionbar_call_dialtacts_action_cancel).setVisibility(View.VISIBLE);
+        bottomMenuButtonSlideOut();
+        bottomMenuButtonDeleteSlideIn();
+        mCalllogList.showMultipleDelete(true);
+        if (mIsDialpadShown){
+
+            hideDialpadFragment(true,true);
+        }
+        Log.d(TAG, "  showMultipleEditer()  --- ActionButton  --1- " + mFloatingActionButtonController.isVisible());
+
+
+
+        Log.d(TAG, "  showMultipleEditer()  --- ActionButton  --2- " + mFloatingActionButtonController.isVisible());
+
+
+
+    }
+
+    private void hideMultipleEditer(){
+        mActionbarNameTxt.setText(getString(R.string.all_calls));
+        mActionbarMenu.setVisibility(View.VISIBLE);
+        mEditerToCalldetail.setText(getString(R.string.call_detail_editer));
+        getActionBar().getCustomView().findViewById(R.id.actionbar_call_dialtacts_action_cancel).setVisibility(View.GONE);
+        bottomMenuButtonSlideIn();
+        bottomMenuButtonDeleteSlideOut();
+        mCalllogList.showMultipleDelete(false);
+        mCalllogList.allSelectLog(false);
+        if (!mIsDialpadShown) {
+            mInCallDialpadUp = false;
+            showDialpadFragment(true);
+        }
+        mFloatingActionButtonController.setVisible(true);
+
+        Log.d(TAG, "  hideMultipleEditer()  --- ActionButton  --- " + mFloatingActionButtonController.isVisible());
+    }
+
+
+
+    private void bottomMenuButtonSlideOut(){
+        mMenuButtonCall.setVisibility(View.GONE);
+        mMenuButtonContacts.setVisibility(View.GONE);
+        mMenuButtonSetting.setVisibility(View.GONE);
+    }
+    private void bottomMenuButtonSlideIn() {
+        mMenuButtonCall.setVisibility(View.VISIBLE);
+        mMenuButtonContacts.setVisibility(View.VISIBLE);
+        mMenuButtonSetting.setVisibility(View.VISIBLE);
+    }
+    private void bottomMenuButtonDeleteSlideOut(){
+        mMenuButtonDelete.setVisibility(View.GONE);
+    }
+    private void bottomMenuButtonDeleteSlideIn() {
+        mMenuButtonDelete.setVisibility(View.VISIBLE);
+    }
+
+
+
+
 
     @Override
     public boolean onMenuItemClick(MenuItem item) {
@@ -889,9 +997,9 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
 //        ft.commit();
 
 //        if (animate) {
-//            mFloatingActionButtonController.scaleOut();
+////            mFloatingActionButtonController.scaleOut();
 //        } else {
-//            mFloatingActionButtonController.setVisible(false);
+////            mFloatingActionButtonController.setVisible(false);
 //            maybeEnterSearchUi();
 //        }
         if (!isInSearchUi() && TextUtils.isEmpty(mSearchQuery)) {
@@ -1156,6 +1264,7 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
             return;
         }
         mDialpadFragment.showSearchView();
+
         if (DEBUG) {
             Log.d(TAG, "Entering search UI - smart dial " + smartDialSearch);
         }
@@ -1185,6 +1294,8 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
             transaction.setTransition(FragmentTransaction.TRANSIT_NONE);
         }
         if (fragment == null) {
+
+            Log.e(TAG, " --- enterSearchUi --- null" );
             if (smartDialSearch) {
                 fragment = new SmartDialSearchFragment();
                 transaction.add(R.id.dialtacts_frame, fragment, tag);
@@ -1203,6 +1314,7 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
 
         } else {
             transaction.show(fragment);
+
         }
         // DialtactsActivity will provide the options menu
         fragment.setHasOptionsMenu(false);
@@ -1340,7 +1452,9 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
     private void maybeEnterSearchUi() {
         if (!isInSearchUi()) {
             enterSearchUi(true /* isSmartDial */, mSearchQuery, false);
+//            enterSearchUi(false,mSearchQuery,false);
         }
+
     }
 
     /**
@@ -1834,6 +1948,24 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
                 //exitSearchUi();
                 //DialerUtils.hideInputMethod(mParentLayout);
             }
+        }
+    };
+
+    private SelectedCallLogImpl mSeletectCallLogImpl = new SelectedCallLogImpl() {
+        @Override
+        public void selectCallLogToDelete(int count) {
+            StringBuilder sb = new StringBuilder("已选").append(count).append("项通话记录");
+
+//            ColorStateList colorStateListTxt = getColorStateList(R.color.multiple_selected_call_log_deletebtn_color);
+//            mMenuButtonDelete.setImageTintList(colorStateListTxt);
+            if (count>0){
+                mMenuButtonDelete.setEnabled(true);
+                mActionbarNameTxt.setText(sb);
+            }else {
+                mMenuButtonDelete.setEnabled(false);
+                mActionbarNameTxt.setText(getString(R.string.select_call_log));
+            }
+
         }
     };
 }
