@@ -26,6 +26,7 @@
         style="@style/CallDetailContactTextStyle"
         android:layout_width="0dp"
         android:layout_weight="1"
+        android:layout_gravity="center_vertical"
         android:paddingLeft="@dimen/call_detail_text_inner_padding"
         android:paddingRight="@dimen/call_detail_text_inner_padding"
         android:clickable="true"
