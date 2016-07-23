@@ -557,6 +557,20 @@ public class CallLogAdapter extends GroupingListAdapter
 
         final CallLogListItemViewHolder views = (CallLogListItemViewHolder) viewHolder;
         SwipeItemLayout swipeRoot = (SwipeItemLayout) views.rootView;
+        swipeRoot.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG ,"--- swipeRoot onClic ---");
+                IntentProvider intentProvider = IntentProvider.getReturnCallIntentProvider(views.number);
+                if (intentProvider != null) {
+                    final Intent intent = intentProvider.getIntent(mContext);
+                    // See IntentProvider.getCallDetailIntentProvider() for why this may be null.
+                    if (intent != null) {
+                        DialerUtils.startActivityWithErrorToast(mContext, intent);
+                    }
+                }
+            }
+        });
 
         views.info = info;
         views.rowId = c.getLong(CallLogQuery.ID);
@@ -626,6 +640,8 @@ public class CallLogAdapter extends GroupingListAdapter
 
             }
         });
+
+
 
 
         if (!isMultipleDelete){
@@ -723,13 +739,15 @@ public class CallLogAdapter extends GroupingListAdapter
                 Log.d(TAG, " ---  getCallLogEntryUris --- id is： " + uris[index]);
             }
              allUri =  uris;
+        } else {
+            final Uri uri = ContentUris.withAppendedId(TelecomUtil.getCallLogUri(mContext),
+                    viewHolder.rowId);
+            if (uri != null) {
+                // If there is a data on the intent, it takes precedence over the extra.
+                allUri = new Uri[]{ uri };
+            }
         }
-        final Uri uri = ContentUris.withAppendedId(TelecomUtil.getCallLogUri(mContext),
-                viewHolder.rowId);
-        if (uri != null) {
-            // If there is a data on the intent, it takes precedence over the extra.
-            allUri = new Uri[]{ uri };
-        }
+
             return allUri;
     }
 

@@ -26,6 +26,7 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.telecom.PhoneAccountHandle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
@@ -155,6 +156,7 @@ public final class CallLogListItemViewHolder extends RecyclerView.ViewHolder
 
     private View.OnClickListener mExpandCollapseListener;
     private boolean mVoicemailPrimaryActionButtonClicked;
+    private final static String TAG = "CalLogListItemViewHolde";
 
 
 
@@ -194,6 +196,7 @@ public final class CallLogListItemViewHolder extends RecyclerView.ViewHolder
         this.multipleDeleteImg = multipleDeleteImg;
 
 
+
         Resources resources = mContext.getResources();
         mPhotoSize = mContext.getResources().getDimensionPixelSize(R.dimen.contact_photo_size);
 
@@ -205,7 +208,8 @@ public final class CallLogListItemViewHolder extends RecyclerView.ViewHolder
 
 
         primaryActionButtonView.setOnClickListener(this);
-        primaryActionView.setOnClickListener(mExpandCollapseListener);
+        primaryActionView.setOnClickListener(this);
+
 
 
     }
@@ -311,6 +315,8 @@ public final class CallLogListItemViewHolder extends RecyclerView.ViewHolder
             }
         }
         primaryActionButtonView.setVisibility(View.GONE);
+        primaryActionView.setTag(IntentProvider.getReturnCallIntentProvider(number));
+
     }
 
     /**
@@ -403,6 +409,7 @@ public final class CallLogListItemViewHolder extends RecyclerView.ViewHolder
         detailsImg.setTag(IntentProvider.getCallDetailIntentProvider(rowId, callIds, null));
         detailsImg.setOnClickListener(this);
 
+
     }
 
     public void expandVoicemailTranscriptionView(boolean isExpanded) {
@@ -449,10 +456,10 @@ public final class CallLogListItemViewHolder extends RecyclerView.ViewHolder
 
     @Override
     public void onClick(View view) {
-        if (view.getId() == R.id.primary_action_button && !TextUtils.isEmpty(voicemailUri)) {
-            mVoicemailPrimaryActionButtonClicked = true;
-            mExpandCollapseListener.onClick(primaryActionView);
-        } else {
+//        if (view.getId() == R.id.primary_action_button && !TextUtils.isEmpty(voicemailUri)) {
+//            mVoicemailPrimaryActionButtonClicked = true;
+//            mExpandCollapseListener.onClick(primaryActionView);
+//        } else {
             final IntentProvider intentProvider = (IntentProvider) view.getTag();
             if (intentProvider != null) {
                 final Intent intent = intentProvider.getIntent(mContext);
@@ -461,7 +468,7 @@ public final class CallLogListItemViewHolder extends RecyclerView.ViewHolder
                     DialerUtils.startActivityWithErrorToast(mContext, intent);
                 }
             }
-        }
+//        }
     }
 
     @NeededForTesting

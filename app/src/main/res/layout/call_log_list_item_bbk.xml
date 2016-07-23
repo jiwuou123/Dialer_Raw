@@ -258,8 +258,8 @@
                 android:paddingBottom="@dimen/call_log_inner_margin"
                 android:paddingEnd="@dimen/call_log_inner_margin"
                 android:scaleType="center"
-                android:src="@drawable/ic_info_outline_24dp"
-                android:tint="@android:color/black"
+                android:src="@drawable/detail_normal"
+
                 />
             <ImageView
                 android:id="@+id/multiple_delete_img"

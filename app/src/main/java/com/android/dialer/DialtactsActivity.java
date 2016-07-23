@@ -589,7 +589,7 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
         }else {
             showSearchFragment();
             showDialpadFragment(true);
-            mFloatingActionButtonController.setVisible(false);
+            mFloatingActionButtonController.setVisible(true);
             Log.e(TAG, " ----- onResume() -----  show 2");
         }
 
