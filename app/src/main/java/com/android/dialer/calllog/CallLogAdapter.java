@@ -667,8 +667,11 @@ public class CallLogAdapter extends GroupingListAdapter
                         if (callIds.length() != 0) {
                             callIds.append(",");
                         }
+
                         callIds.append(ContentUris.parseId(callUri));
+                        Log.d(TAG, " --- deleteTextView.setOnClick  for --- " + callIds.toString());
                     }
+                    Log.d(TAG, " --- deleteTextView.setOnClick --- " + callIds.toString());
                     CallLogAsyncTaskUtil.deleteCalls(
                             mContext, callIds.toString(), null);
                     closeOpenedSwipeItemLayout();
@@ -714,21 +717,25 @@ public class CallLogAdapter extends GroupingListAdapter
      * If both are available, the data on the intent takes precedence.
      */
     private Uri[] getCallLogEntryUris(CallLogListItemViewHolder viewHolder) {
-//        final Uri uri = getIntent().getData();
+              Uri[] allUri = null;
+        if (viewHolder.callIds != null && viewHolder.callIds.length > 0){
+            final long[] ids = viewHolder.callIds;
+            final int numIds = ids == null ? 0 : ids.length;
+            final Uri[] uris = new Uri[numIds];
+            for (int index = 0; index < numIds; ++index) {
+                uris[index] = ContentUris.withAppendedId(
+                        TelecomUtil.getCallLogUri(mContext), ids[index]);
+                Log.d(TAG, " ---  getCallLogEntryUris --- id is： " + uris[index]);
+            }
+             allUri =  uris;
+        }
         final Uri uri = ContentUris.withAppendedId(TelecomUtil.getCallLogUri(mContext),
                 viewHolder.rowId);
         if (uri != null) {
             // If there is a data on the intent, it takes precedence over the extra.
-            return new Uri[]{ uri };
+            allUri = new Uri[]{ uri };
         }
-        final long[] ids = viewHolder.callIds;
-        final int numIds = ids == null ? 0 : ids.length;
-        final Uri[] uris = new Uri[numIds];
-        for (int index = 0; index < numIds; ++index) {
-            uris[index] = ContentUris.withAppendedId(
-                    TelecomUtil.getCallLogUri(mContext), ids[index]);
-        }
-        return uris;
+            return allUri;
     }
 
     @Override
