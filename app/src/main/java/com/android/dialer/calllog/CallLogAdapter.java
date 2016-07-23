@@ -581,12 +581,13 @@ public class CallLogAdapter extends GroupingListAdapter
 //        } else {
 //            views.dayGroupHeader.setVisibility(View.GONE);
 //        }
-        if ( 0 == position) {
-            views.dayGroupHeader.setVisibility(View.VISIBLE);
-
-        } else {
-            views.dayGroupHeader.setVisibility(View.GONE);
-        }
+        views.dayGroupHeader.setVisibility(View.GONE);
+//        if ( 0 == position) {
+//
+//
+//        } else {
+//            views.dayGroupHeader.setVisibility(View.GONE);
+//        }
 
 
 
