@@ -330,8 +330,8 @@ public class CallLogFragment extends Fragment implements CallLogQueryHandler.Lis
                 isShowingRecentsTab);
         mRecyclerView.setAdapter(mAdapter);
 
-        fetchCalls();
-        Log.d(TAG, " ---  onCreateView --- ");
+        //fetchCalls();
+        Log.d(TAG, " ---  onCreateView ---");
         return view;
     }
 

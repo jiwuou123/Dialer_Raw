@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) 2009 The Android Open Source Project
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/call_detail"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <View
+
+        style="@style/call_detail_divider_style"></View>
+    <TextView
+        android:id="@+id/call_contact"
+        style="@style/CallDetailContactTextStyle"
+        android:text="@string/call_contact"/>
+    <View
+
+        style="@style/call_detail_divider_style"></View>
+    <TextView
+        android:id="@+id/send_message"
+        style="@style/CallDetailContactTextStyle"
+        android:text="@string/send_message"/>
+    <View
+        style="@style/call_detail_divider_style"></View>
+    <TextView
+        android:id="@+id/add_new_contacts"
+        style="@style/CallDetailContactTextStyle"
+        android:text="@string/add_new_contacts"/>
+\
+
+    <View
+        style="@style/call_detail_divider_style"></View>
+
+    <TextView
+        android:id="@+id/add_new_exits_contacts"
+        style="@style/CallDetailContactTextStyle"
+        android:text="@string/add_new_exits_contacts"/>
+    <View
+style="@style/call_detail_divider_style"></View>
+
+    <TextView
+        android:id="@+id/block_contact"
+        style="@style/CallDetailContactTextStyle"
+        android:text="@string/block_contact"/>
+    <View
+        style="@style/call_detail_divider_style"></View>
+</LinearLayout>

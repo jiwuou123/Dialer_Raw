@@ -727,7 +727,6 @@ public abstract class ContactEntryListFragment<T extends ContactEntryListAdapter
             mListView.setFocusableInTouchMode(true);
             mListView.requestFocus();
         }
-
         return mView;
     }
 

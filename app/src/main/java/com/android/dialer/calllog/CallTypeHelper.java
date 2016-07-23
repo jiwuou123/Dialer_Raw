@@ -39,6 +39,8 @@ public class CallTypeHelper {
     private final CharSequence mMissedVideoName;
     /** Name used to identify voicemail calls. */
     private final CharSequence mVoicemailName;
+
+    private final CharSequence mRejectName;
     /** Color used to identify new missed calls. */
     private final int mNewMissedColor;
     /** Color used to identify new voicemail calls. */
@@ -48,6 +50,7 @@ public class CallTypeHelper {
         // Cache these values so that we do not need to look them up each time.
         mIncomingName = resources.getString(R.string.type_incoming);
         mOutgoingName = resources.getString(R.string.type_outgoing);
+        mRejectName = resources.getString(R.string.reject_call);
         mMissedName = resources.getString(R.string.type_missed);
         mIncomingVideoName = resources.getString(R.string.type_incoming_video);
         mOutgoingVideoName = resources.getString(R.string.type_outgoing_video);
@@ -58,12 +61,14 @@ public class CallTypeHelper {
     }
 
     /** Returns the text used to represent the given call type. */
-    public CharSequence getCallTypeText(int callType, boolean isVideoCall) {
+    public CharSequence getCallTypeText(int callType, boolean isVideoCall,long duration) {
         switch (callType) {
             case Calls.INCOMING_TYPE:
                 if (isVideoCall) {
                     return mIncomingVideoName;
                 } else {
+                    if(duration == 0)
+                        return mRejectName;
                     return mIncomingName;
                 }
 

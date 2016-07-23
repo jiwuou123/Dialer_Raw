@@ -129,6 +129,7 @@
     </style>
 
     <style name="CallDetailActivityTheme" parent="DialtactsThemeWithoutActionBarOverlay">
+        <item name="android:actionBarStyle">@style/DialtactsActionBarWithoutTitleStyle</item>
         <item name="android:windowBackground">@color/background_dialer_call_log</item>
         <!-- CallLog -->
         <item name="call_log_primary_background_color">#F7F7F7</item>
@@ -436,7 +437,19 @@
         <item name="android:gravity">center_vertical</item>
         <item name="android:background">?android:attr/selectableItemBackground</item>
     </style>
-
+    <style name="CallDetailContactTextStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/call_detail_item_height</item>
+        <item name="android:textColor">?attr/call_log_primary_text_color</item>
+        <item name="android:textSize">@dimen/call_detail_item_text_size</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:paddingLeft">@dimen/call_detail_horizontal_text_margin</item>
+        <item name="android:fontFamily">"sans-serif-medium"</item>
+        <item name="android:background">@drawable/call_detail_item_background</item>
+        <item name="android:focusable">true</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:importantForAccessibility">no</item>
+    </style>
     <style name="DialpadSearchPopupWindowAnim">
         <item name="android:windowEnterAnimation">@anim/dialpad_search_popup_enter</item>
         <item name="android:windowExitAnimation">@anim/dialpad_search_popup_exit</item>
@@ -450,5 +463,23 @@
         <item name="android:windowEnterAnimation">@anim/popupwindows_slide_in_top</item>
         <item name="android:windowExitAnimation">@anim/popupwindows_slide_out_top</item>
     </style>
+
+    <style name="Theme_Light_Dialog" parent="android:style/Theme.Dialog">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:scrollHorizontally">true</item>
+    </style>
+
+    <style name="call_detail_divider_style">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1px</item>
+        <item name="android:layout_marginLeft">@dimen/call_detail_horizontal_margin</item>
+        <item name="android:layout_marginRight">@dimen/call_detail_horizontal_margin</item>
+        <item name="android:background">@color/call_detail_divider_color</item>
+    </style>
+
+
 
 </resources>

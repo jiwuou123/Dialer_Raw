@@ -4,6 +4,7 @@ package com.android.contacts.common.util;
 import com.android.contacts.common.R;
 
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.view.View;
 import android.widget.ListView;
 
@@ -51,7 +52,8 @@ public class ContactListViewUtils {
         final int listViewWeight = resources.getInteger(
                 R.integer.contact_list_card_layout_weight);
         if (listSpaceWeight > 0 && listViewWeight > 0) {
-            rootLayout.setBackgroundResource(0);
+//            rootLayout.setBackgroundResource();
+            rootLayout.setBackgroundColor(Color.WHITE);
             // Set the card view visible
             View mCardView = rootLayout.findViewById(R.id.list_card);
             if (mCardView == null) {

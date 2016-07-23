@@ -23,12 +23,11 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.net.Uri;
-import android.support.v7.widget.RecyclerView;
 import android.os.Bundle;
 import android.os.Trace;
-import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 import android.provider.CallLog;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.telecom.PhoneAccountHandle;
 import android.telephony.PhoneNumberUtils;
@@ -36,20 +35,18 @@ import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.MenuItem.OnMenuItemClickListener;
 import android.view.View;
 import android.view.View.AccessibilityDelegate;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
-import android.view.ContextMenu.ContextMenuInfo;
 import android.view.accessibility.AccessibilityEvent;
 
 import com.android.contacts.common.CallUtil;
 import com.android.contacts.common.ClipboardUtils;
 import com.android.contacts.common.util.PermissionsUtil;
-import com.android.dialer.CallDetailActivity;
 import com.android.dialer.DialtactsActivity;
 import com.android.dialer.PhoneCallDetails;
 import com.android.dialer.R;
@@ -61,14 +58,11 @@ import com.android.dialer.util.DialerUtils;
 import com.android.dialer.util.PhoneNumberUtil;
 import com.android.dialer.util.TelecomUtil;
 import com.android.dialer.voicemail.VoicemailPlaybackPresenter;
-
 import com.google.common.annotations.VisibleForTesting;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import static com.android.dialer.CallDetailActivity.EXTRA_CALL_LOG_IDS;
 
 /**
  * Adapter class to fill in data for the Call Log.
@@ -401,7 +395,8 @@ public class CallLogAdapter extends GroupingListAdapter
 
     @Override
     protected void addGroups(Cursor cursor) {
-        mCallLogGroupBuilder.addGroups(cursor);
+        //mCallLogGroupBuilder.addGroups(cursor);
+        setCursor(mCallLogGroupBuilder.addGroupsWithReturnCursor(cursor));
     }
 
     @Override

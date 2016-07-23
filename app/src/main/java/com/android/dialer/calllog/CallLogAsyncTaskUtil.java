@@ -23,6 +23,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.CallLog;
+import android.provider.ContactsContract;
 import android.provider.VoicemailContract.Voicemails;
 import android.telecom.PhoneAccountHandle;
 import android.text.TextUtils;
@@ -34,8 +35,10 @@ import com.android.dialer.util.AsyncTaskExecutor;
 import com.android.dialer.util.AsyncTaskExecutors;
 import com.android.dialer.util.PhoneNumberUtil;
 import com.android.dialer.util.TelecomUtil;
-
+import com.android.incallui.CallerInfo;
 import com.google.common.annotations.VisibleForTesting;
+
+import java.io.IOException;
 
 public class CallLogAsyncTaskUtil {
     private static String TAG = CallLogAsyncTaskUtil.class.getSimpleName();
@@ -61,7 +64,9 @@ public class CallLogAsyncTaskUtil {
             CallLog.Calls.PHONE_ACCOUNT_ID,
             CallLog.Calls.FEATURES,
             CallLog.Calls.DATA_USAGE,
-            CallLog.Calls.TRANSCRIPTION
+            CallLog.Calls.TRANSCRIPTION,
+            "raw_contact_id",
+                CallLog.Calls.CACHED_LOOKUP_URI,
         };
 
         static final int DATE_COLUMN_INDEX = 0;
@@ -76,6 +81,8 @@ public class CallLogAsyncTaskUtil {
         static final int FEATURES = 9;
         static final int DATA_USAGE = 10;
         static final int TRANSCRIPTION_COLUMN_INDEX = 11;
+        static final int RAW_CONTACT_ID_INDEX = 12;
+        static final int CACHED_LOOKUP_URI_INDEX = 13;
     }
 
     public interface CallLogAsyncTaskListener {
@@ -110,6 +117,9 @@ public class CallLogAsyncTaskUtil {
                                 details[index] =
                                         getPhoneCallDetailsForUri(context, callUris[index]);
                             }
+                            if(numCalls>0){
+                                getPhoneNumbers(details[0], context);
+                            }
                             return details;
                         } catch (IllegalArgumentException e) {
                             // Something went wrong reading in our primary data.
@@ -127,13 +137,37 @@ public class CallLogAsyncTaskUtil {
                 });
     }
 
+    private static void getPhoneNumbers(PhoneCallDetails details, Context context) {
+        Cursor c = context.getContentResolver().query(ContactsContract.Data.CONTENT_URI,
+                new String[] {ContactsContract.Data._ID, ContactsContract.CommonDataKinds.Phone.NUMBER,ContactsContract.CommonDataKinds.Phone.STARRED},
+                ContactsContract.Data.CONTACT_ID + "=?" + " AND "
+                        + ContactsContract.Data.MIMETYPE + "='" + ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE + "'",
+                new String[] {String.valueOf(details.contactId)}, null);
+        if(c.moveToFirst()){
+            details.phoneNumbers = new PhoneCallDetails.PhoneNumberEntity[c.getCount()];
+            details.isStarred = c.getInt(2) == 1?true:false;
+            int i = 0;
+            do{
+                details.phoneNumbers[i] = new PhoneCallDetails.PhoneNumberEntity();
+                details.phoneNumbers[i].phoneNumber = c.getString(1);
+                try {
+                    details.phoneNumbers[i].location = CallerInfo.getGeoDescriptionByContext(context, details.phoneNumbers[i].phoneNumber.replaceAll(" ", ""));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                i++;
+            }while (c.moveToNext());
+        }
+        if(c!=null)
+            c.close();
+    }
+
     /**
      * Return the phone call details for a given call log URI.
      */
     private static PhoneCallDetails getPhoneCallDetailsForUri(Context context, Uri callUri) {
         Cursor cursor = context.getContentResolver().query(
                 callUri, CallDetailQuery.CALL_LOG_PROJECTION, null, null, null);
-
         try {
             if (cursor == null || !cursor.moveToFirst()) {
                 throw new IllegalArgumentException("Cannot find content: " + callUri);
@@ -169,6 +203,7 @@ public class CallLogAsyncTaskUtil {
             details.photoUri = info.photoUri;
             details.sourceType = info.sourceType;
             details.objectId = info.objectId;
+            details.lookUpKey = info.lookupKey;
 
             details.callTypes = new int[] {
                 cursor.getInt(CallDetailQuery.CALL_TYPE_COLUMN_INDEX)
@@ -181,10 +216,7 @@ public class CallLogAsyncTaskUtil {
 
             details.countryIso = !TextUtils.isEmpty(countryIso) ? countryIso
                     : GeoUtil.getCurrentCountryIso(context);
-
-            if (!cursor.isNull(CallDetailQuery.DATA_USAGE)) {
-                details.dataUsage = cursor.getLong(CallDetailQuery.DATA_USAGE);
-            }
+            details.contactId = cursor.getLong(CallDetailQuery.RAW_CONTACT_ID_INDEX);
 
             return details;
         } finally {
