@@ -33,18 +33,12 @@ import android.text.TextDirectionHeuristics;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.contacts.common.ContactsUtils;
 import com.android.contacts.common.interactions.TouchPointManager;
 import com.android.dialer.R;
-import com.android.dialer.widget.EmptyContentView;
-import com.android.incallui.CallCardFragment;
-import com.android.incallui.Log;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
