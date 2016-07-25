@@ -431,7 +431,7 @@ public class CallLogAdapter extends GroupingListAdapter
         viewHolder.callLogEntryView.setTag(viewHolder);
         viewHolder.callLogEntryView.setAccessibilityDelegate(mAccessibilityDelegate);
 
-        viewHolder.primaryActionView.setOnCreateContextMenuListener(mOnCreateContextMenuListener);
+//        viewHolder.primaryActionView.setOnCreateContextMenuListener(mOnCreateContextMenuListener);
         viewHolder.primaryActionView.setTag(viewHolder);
 
         return viewHolder;
