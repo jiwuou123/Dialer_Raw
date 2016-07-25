@@ -84,8 +84,10 @@ public class PhoneCallDetailsHelper {
     /** Fills the call details views with content. */
     public void setPhoneCallDetails(PhoneCallDetailsViews views, PhoneCallDetails details) {
         // Display up to a given number of icons.
+        int type = -1;
         views.callTypeIcons.clear();
         int count = details.callTypes.length;
+        type = details.callTypes[0];
         boolean isVoicemail = false;
         for (int index = 0; index < count && index < MAX_CALL_TYPE_ICONS; ++index) {
             views.callTypeIcons.add(details.callTypes[index]);
@@ -134,6 +136,10 @@ public class PhoneCallDetailsHelper {
         } else {
             views.callAccountLabel.setVisibility(View.GONE);
         }
+
+        int missColor  = R.color.bbk_miss_call_color;
+        if (type == Calls.MISSED_TYPE)
+            views.nameView.setTextColor(mContext.getResources().getColor(missColor));
 
         final CharSequence nameText;
         final CharSequence displayNumber = details.displayNumber;
