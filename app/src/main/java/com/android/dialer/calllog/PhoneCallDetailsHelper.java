@@ -64,6 +64,7 @@ public class PhoneCallDetailsHelper {
     private ArrayList<CharSequence> mDescriptionItems = Lists.newArrayList();
 
     private final boolean DEG = false;
+    private final static String TAG  = "PhoneCallDetailsHelper";
 
     /**
      * Creates a new instance of the helper.
@@ -89,8 +90,27 @@ public class PhoneCallDetailsHelper {
         int count = details.callTypes.length;
         type = details.callTypes[0];
         boolean isVoicemail = false;
+//        for (int index = 0; index < count && index < MAX_CALL_TYPE_ICONS; ++index) {
+//            views.callTypeIcons.add(details.callTypes[index]);
+//            if (index == 0) {
+//                isVoicemail = details.callTypes[index] == Calls.VOICEMAIL_TYPE;
+//            }
+//
+//        }
         for (int index = 0; index < count && index < MAX_CALL_TYPE_ICONS; ++index) {
-            views.callTypeIcons.add(details.callTypes[index]);
+            //拒接类型
+            if (details.duration == 0){
+                if (Calls.INCOMING_TYPE == details.callTypes[index]){
+                    views.callTypeIcons.add(Calls.VOICEMAIL_TYPE);
+                    Log.d(TAG, " --- setPhoneCallDetails ---   INCOMING_TYPE");
+                } else {
+                    views.callTypeIcons.add(details.callTypes[index]);
+                }
+            } else {
+                views.callTypeIcons.add(details.callTypes[index]);
+            }
+
+
             if (index == 0) {
                 isVoicemail = details.callTypes[index] == Calls.VOICEMAIL_TYPE;
             }
@@ -118,7 +138,7 @@ public class PhoneCallDetailsHelper {
         setCallDataAndTime(views,getCallDate(details));
 
         // Set the call count, location and date.
-        setCallCountAndDate(views, callCount, callLocationAndDate);
+        setCallCountAndDate(views, null, callLocationAndDate);
 
         // Set the account label if it exists.
         String accountLabel = mTelecomCallLogCache.getAccountLabel(details.accountHandle);
@@ -137,9 +157,7 @@ public class PhoneCallDetailsHelper {
             views.callAccountLabel.setVisibility(View.GONE);
         }
 
-        int missColor  = R.color.bbk_miss_call_color;
-        if (type == Calls.MISSED_TYPE)
-            views.nameView.setTextColor(mContext.getResources().getColor(missColor));
+
 
         final CharSequence nameText;
         final CharSequence displayNumber = details.displayNumber;
@@ -150,6 +168,10 @@ public class PhoneCallDetailsHelper {
         } else {
             nameText = details.name;
         }
+        int missColor  = R.color.bbk_miss_call_color;
+        int callColor = R.color.bbk_call_color;
+        if(type == Calls.MISSED_TYPE)views.nameView.setTextColor(mResources.getColor(missColor));
+        else views.nameView.setTextColor(mResources.getColor(callColor));
 
         views.nameView.setText(nameText);
 
@@ -179,7 +201,13 @@ public class PhoneCallDetailsHelper {
         // Get type of call (ie mobile, home, etc) if known, or the caller's location.
         //CharSequence callTypeOrLocation = getCallTypeOrLocation(details);//不再显示手机存储状态
         CharSequence callTypeOrLocation = details.geocode;
-        if(TextUtils.isEmpty(callTypeOrLocation))callTypeOrLocation = mResources.getString(R.string.unkown_location);
+        Log.d(TAG," --- getCallLocation ---" + details.number);
+        if (!TextUtils.isEmpty(details.name)){
+            callTypeOrLocation = details.number;
+        } else {
+            if(TextUtils.isEmpty(callTypeOrLocation))callTypeOrLocation = mResources.getString(R.string.unkown_location);
+        }
+
         return callTypeOrLocation;
     }
 

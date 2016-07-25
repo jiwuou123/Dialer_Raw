@@ -446,13 +446,13 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
         actionBar.setCustomView(R.layout.dialtacts_actionbar);
         actionBar.setDisplayShowCustomEnabled(true);
         mActionbarNameTxt = (TextView)actionBar.getCustomView().findViewById(R.id.actionbar_name);
+        mActionbarNameTxt.setOnClickListener(this);
         mActionbarMenu = (ImageView)actionBar.getCustomView().findViewById(R.id.actionbar_menu);
         mActionbarMenu.setOnClickListener(this);
         mEditerToCalldetail = (TextView)actionBar.getCustomView().findViewById(R.id.actionbar_call_dialtacts_action_editer);
         mEditerToCalldetail.setOnClickListener(this);
         TextView cancelTxt = (TextView)actionBar.getCustomView().findViewById(R.id.actionbar_call_dialtacts_action_cancel);
         cancelTxt.setOnClickListener(this);
-        mActionbarNameTxt.setClickable(false);
         mActionbarNameTxt.setText(getString(R.string.all_calls));
         mSearchView = (EditText) actionBar.getCustomView().findViewById(R.id.edittext);
         mSearchView.setVisibility(View.GONE);
@@ -815,6 +815,10 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
                 Log.e(TAG, " onClick actionbar_menu");
 
                 break;
+            case R.id.actionbar_name:
+                initCallLogSelectPopupWindow();
+                Log.e(TAG, " ---- onClick actionbarName ----");
+                break;
             case R.id.actionbar_call_dialtacts_action_editer:
 //                StringBuilder sb = new StringBuilder("已选").append(mCalllogList.getSelectLogCount()).append("项通话记录");
                 if (mEditerToCalldetail.getText().toString().trim().equals(getResources().getString(R.string.call_detail_editer))){
@@ -845,8 +849,6 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
 
                     if (mCalllogList != null)
                     mCalllogList.deleteSelectedCallItems();
-
-
 
                 break;
             default: {
@@ -1897,6 +1899,7 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
                 callLogMissedImage.setSelected(false);
                 callLogMissedTxt.setSelected(false);
                 showCallLogFragment(CallLogQueryHandler.CALL_TYPE_ALL);
+                mActionbarNameTxt.setText(getString(R.string.all_calls));
                 mCallLogSelectPopupWindow.dismiss();
 
 
@@ -1912,6 +1915,7 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
                 callLogMissedImage.setSelected(true);
                 callLogMissedTxt.setSelected(true);
                 showCallLogFragment(Calls.MISSED_TYPE);
+                mActionbarNameTxt.setText(getString(R.string.call_log_missed));
                 mCallLogSelectPopupWindow.dismiss();
 
             }

@@ -595,8 +595,6 @@ public class SwipeItemLayout extends RelativeLayout {
                 // 顶部视图的left被允许的最大值
                 maxTopLeft = getPaddingLeft() + mTopLp.leftMargin + (mDragRange + mSpringDistance);
             }
-
-            Log.e(TAG, "  第 " + Math.min(Math.max(minTopLeft, left), maxTopLeft) + " 在滑动 ");
             return Math.min(Math.max(minTopLeft, left), maxTopLeft);
         }
 
