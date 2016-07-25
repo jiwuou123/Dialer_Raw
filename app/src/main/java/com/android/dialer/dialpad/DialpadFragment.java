@@ -22,6 +22,7 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.Fragment;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -1016,9 +1017,20 @@ public class DialpadFragment extends Fragment
                                     .setPositiveButton(R.string.set_yyxx,
                                             new DialogInterface.OnClickListener() {
                                                 public void onClick(DialogInterface dialog, int which) {
-                                                    Intent callSettingsIntent = new Intent(TelecomManager.ACTION_SHOW_CALL_SETTINGS);
-                                                    callSettingsIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                                    startActivity(callSettingsIntent);
+
+
+                                                    try {
+                                                        ComponentName cn = new ComponentName("com.android.phone", "com.android.phone.settings.VoicemailSettingsActivity");
+                                                        Intent intent = new Intent();
+                                                        intent.setComponent(cn);
+                                                        intent.addFlags(Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+                                                        startActivity(intent);
+                                                    } catch (Exception e){
+                                                        e.printStackTrace();
+                                                    }
+
+
+
                                                     mDeletedialog.dismiss();
                                                 }
                                             });

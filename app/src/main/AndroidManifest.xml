@@ -77,18 +77,12 @@
             android:value="AEdPqrEAAAAIBXgtCEKQ6W0PXVnW-ZVia2KmlV2AxsTw3GjAeQ" />
 
         <!--emergency call activity-->
-        <!--<activity android:name=".EmergencyCallActivity"-->
-            <!--android:theme="@android:style/Theme.Black.NoTitleBar"-->
-            <!--android:launchMode="singleTask">-->
+        <activity android:name=".EmergencyCallActivity"
+            android:theme="@android:style/Theme.Black.NoTitleBar"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait">
 
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN" />-->
-                <!--<category android:name="android.intent.category.LAUNCHER" />-->
-            <!--</intent-filter>-->
-
-
-
-        <!--</activity>-->
+        </activity>
 
 
 
@@ -100,6 +94,7 @@
             android:theme="@style/DialtactsActivityTheme"
             android:launchMode="singleTask"
             android:clearTaskOnLaunch="true"
+            android:screenOrientation="portrait"
             android:icon="@mipmap/ic_launcher_phone"
             android:enabled="@*android:bool/config_voice_capable"
             android:windowSoftInputMode="stateAlwaysHidden|adjustNothing">
@@ -165,12 +160,15 @@
 
         <activity android:name="com.android.dialer.calllog.CallLogActivity"
             android:label="@string/call_log_activity_title"
+            android:screenOrientation="portrait"
             android:theme="@style/DialtactsThemeWithoutActionBarOverlay"
             android:icon="@mipmap/ic_launcher_phone">
         </activity>
 
         <activity android:name="com.android.dialer.CallDetailActivity"
                   android:label=""
+                  android:screenOrientation="portrait"
+                  android:configChanges="keyboardHidden|keyboard|navigation|mnc|mcc"
                   android:theme="@style/CallDetailActivityTheme"
                   android:icon="@mipmap/ic_launcher_phone"
                   android:launchMode="singleTop"
@@ -186,6 +184,7 @@
         <activity android:name="com.android.dialer.CallTotalDetailActivity"
             android:theme="@style/CallDetailActivityTheme"
             android:icon="@mipmap/ic_launcher_phone"
+            android:screenOrientation="portrait"
             android:parentActivityName="com.android.dialer.CallDetailActivity"
             >
 

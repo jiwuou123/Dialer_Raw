@@ -17,6 +17,19 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    //这是应用编译完成
+    applicationVariants.all { variant ->
+        variant.outputs.each { output ->
+            //开始输出
+            def outputFile = output.outputFile
+            if (outputFile != null && outputFile.name.endsWith('debug.apk')) {
+                //这里修改apk文件名
+                def fileName = "../../../../apk/Dialer.apk"
+                output.outputFile = new File(outputFile.parent, fileName)
+            }
+        }
+    }
 }
 
 dependencies {

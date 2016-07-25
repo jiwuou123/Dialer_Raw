@@ -325,7 +325,14 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
             return true;
         }
     }
-
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            moveTaskToBack(false);
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
     /**
      * Listener used to send search queries to the phone search fragment.
      */
