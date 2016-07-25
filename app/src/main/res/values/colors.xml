@@ -95,6 +95,7 @@
 
     <!-- Color for answered or outgoing call icons. -->
     <color name="answered_call">@color/dialer_green_highlight_color</color>
+    <color name="answered_call_bbk">#999999</color>
 
 
 

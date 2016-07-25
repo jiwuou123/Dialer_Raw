@@ -33,16 +33,20 @@ public final class PhoneCallDetailsViews {
     public final TextView callLocationAndDate;
     public final TextView voicemailTranscriptionView;
     public final TextView callAccountLabel;
+    public final TextView dataAndTime;
+    public final TextView dataAndTime2;
 
     private PhoneCallDetailsViews(TextView nameView, View callTypeView,
             CallTypeIconsView callTypeIcons, TextView callLocationAndDate,
-            TextView voicemailTranscriptionView, TextView callAccountLabel) {
+            TextView voicemailTranscriptionView, TextView callAccountLabel,TextView dataAndTime,TextView dataAndTime2) {
         this.nameView = nameView;
         this.callTypeView = callTypeView;
         this.callTypeIcons = callTypeIcons;
         this.callLocationAndDate = callLocationAndDate;
         this.voicemailTranscriptionView = voicemailTranscriptionView;
         this.callAccountLabel = callAccountLabel;
+        this.dataAndTime = dataAndTime;
+        this.dataAndTime2 = dataAndTime2;
     }
 
     /**
@@ -58,7 +62,9 @@ public final class PhoneCallDetailsViews {
                 (CallTypeIconsView) view.findViewById(R.id.call_type_icons),
                 (TextView) view.findViewById(R.id.call_location_and_date),
                 (TextView) view.findViewById(R.id.voicemail_transcription),
-                (TextView) view.findViewById(R.id.call_account_label));
+                (TextView) view.findViewById(R.id.call_account_label),
+                (TextView) view.findViewById(R.id.date_and_time),
+                (TextView) view.findViewById(R.id.date_and_time_2));
     }
 
     public static PhoneCallDetailsViews createForTest(Context context) {
@@ -66,6 +72,8 @@ public final class PhoneCallDetailsViews {
                 new TextView(context),
                 new View(context),
                 new CallTypeIconsView(context),
+                new TextView(context),
+                new TextView(context),
                 new TextView(context),
                 new TextView(context),
                 new TextView(context));
