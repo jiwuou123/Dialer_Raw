@@ -1,10 +1,8 @@
 package com.android.dialer.list;
 
-import android.animation.LayoutTransition;
 import android.app.ActionBar;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -14,26 +12,21 @@ import android.provider.CallLog.Calls;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
-import android.widget.ListView;
 
 import com.android.contacts.common.GeoUtil;
 import com.android.contacts.common.list.ViewPagerTabs;
 import com.android.contacts.commonbind.analytics.AnalyticsUtil;
-import com.android.dialer.DialtactsActivity;
+import com.android.dialer.DialtactsFragment;
 import com.android.dialer.R;
 import com.android.dialer.calllog.CallLogFragment;
 import com.android.dialer.calllog.CallLogQueryHandler;
-import com.android.dialer.calllog.ContactInfoHelper;
 import com.android.dialer.util.DialerUtils;
 import com.android.dialer.voicemail.VoicemailStatusHelper;
 import com.android.dialer.voicemail.VoicemailStatusHelperImpl;
 import com.android.dialer.widget.ActionBarController;
-import com.android.dialerbind.ObjectFactory;
 
 import java.util.ArrayList;
 
@@ -49,7 +42,7 @@ public class ListsFragment extends Fragment
         implements ViewPager.OnPageChangeListener, CallLogQueryHandler.Listener {
 
 
-    private static final boolean DEBUG = DialtactsActivity.DEBUG;
+    private static final boolean DEBUG = DialtactsFragment.DEBUG;
     private static final String TAG = "ListsFragment";
 
     public static final int TAB_INDEX_SPEED_DIAL = 0;

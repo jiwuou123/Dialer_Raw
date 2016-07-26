@@ -21,6 +21,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.ContentResolver;
@@ -74,7 +75,7 @@ import com.android.contacts.common.util.PermissionsUtil;
 import com.android.contacts.common.util.PhoneNumberFormatter;
 import com.android.contacts.common.util.StopWatch;
 import com.android.contacts.common.widget.FloatingActionButtonController;
-import com.android.dialer.DialtactsActivity;
+import com.android.dialer.DialtactsFragment;
 import com.android.dialer.NeededForReflection;
 import com.android.dialer.R;
 import com.android.dialer.SpecialCharSequenceMgr;
@@ -152,7 +153,7 @@ public class DialpadFragment extends Fragment
         boolean onDialpadSpacerTouchWithEmptyQuery();
     }
 
-    private static final boolean DEBUG = DialtactsActivity.DEBUG;
+    private static final boolean DEBUG = DialtactsFragment.DEBUG;
 
     // This is the amount of screen the dialpad fragment takes up when fully displayed
     private static final float DIALPAD_SLIDE_FRACTION = 0.67f;
@@ -305,6 +306,29 @@ public class DialpadFragment extends Fragment
     }
 
     @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        if (getParentFragment() instanceof DialtactsFragment){
+            DialtactsFragment dtf = (DialtactsFragment)getParentFragment();
+            dtf.mDialpadFragment = this;
+//            if (!mIsDialpadShown && !mShowDialpadOnResume) {
+//                final FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+//                transaction.hide(mDialpadFragment);
+//                transaction.commit();
+//            }
+            if (!dtf.mShowDialpadOnResume) {
+                final FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+                transaction.hide(dtf.mDialpadFragment);
+                transaction.commit();
+            }
+            dtf.mInCallDialpadUp = false;
+            dtf.showDialpadFragment(true);
+            Log.e(TAG," ----- onAttachFragment ----  showDialpadFragment");
+        }
+    }
+
+    @Override
     public void afterTextChanged(Editable input) {
         // When DTMF dialpad buttons are being pressed, we delay SpecialCharSequenceMgr sequence,
         // since some of SpecialCharSequenceMgr's behavior is too abrupt for the "touch-down"
@@ -415,8 +439,8 @@ public class DialpadFragment extends Fragment
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (isDigitsEmpty()) {
-                    if (getActivity() != null) {
-                        return ((HostInterface) getActivity()).onDialpadSpacerTouchWithEmptyQuery();
+                    if (getParentFragment() != null) {
+                        return ((HostInterface) getParentFragment()).onDialpadSpacerTouchWithEmptyQuery();
                     }
                     return true;
                 }
@@ -525,15 +549,15 @@ public class DialpadFragment extends Fragment
      * Checks the given Intent and changes dialpad's UI state. For example, if the Intent requires
      * the screen to enter "Add Call" mode, this method will show correct UI for the mode.
      */
-    private void configureScreenFromIntent(Activity parent) {
+    private void configureScreenFromIntent(Fragment parent) {
         // If we were not invoked with a DIAL intent,
-        if (!(parent instanceof DialtactsActivity)) {
+        if (!(parent instanceof DialtactsFragment)) {
             setStartedFromNewIntent(false);
             return;
         }
         // See if we were invoked with a DIAL intent. If we were, fill in the appropriate
         // digits in the dialer field.
-        Intent intent = parent.getIntent();
+        Intent intent = parent.getActivity().getIntent();
 
         if (!isLayoutReady()) {
             // This happens typically when parent's Activity#onNewIntent() is called while
@@ -652,7 +676,7 @@ public class DialpadFragment extends Fragment
         Trace.beginSection(TAG + " onResume");
         super.onResume();
 
-        final DialtactsActivity activity = (DialtactsActivity) getActivity();
+        final DialtactsFragment activity = (DialtactsFragment) getParentFragment();
         mDialpadQueryListener = activity;
 
         final StopWatch stopWatch = StopWatch.start("Dialpad.onResume");
@@ -663,7 +687,7 @@ public class DialpadFragment extends Fragment
 
         stopWatch.lap("qloc");
 
-        final ContentResolver contentResolver = activity.getContentResolver();
+        final ContentResolver contentResolver = activity.getActivity().getContentResolver();
 
         // retrieve the DTMF tone play back setting.
         mDTMFToneEnabled = Settings.System.getInt(contentResolver,
@@ -678,7 +702,7 @@ public class DialpadFragment extends Fragment
 
         mPressedDialpadKeys.clear();
 
-        configureScreenFromIntent(getActivity());
+        configureScreenFromIntent(getParentFragment());
 
         stopWatch.lap("fdin");
 
@@ -1082,7 +1106,7 @@ public class DialpadFragment extends Fragment
     }
 
     private void hideAndClearDialpad(boolean animate) {
-        ((DialtactsActivity) getActivity()).hideDialpadFragment(animate, true);
+        ((DialtactsFragment) getParentFragment()).hideDialpadFragment(animate, true);
     }
 
     public static class ErrorDialogFragment extends DialogFragment {
@@ -1174,8 +1198,8 @@ public class DialpadFragment extends Fragment
                 clearDialpad();
             } else {
                 final Intent intent = IntentUtil.getCallIntent(number,
-                        (getActivity() instanceof DialtactsActivity ?
-                                ((DialtactsActivity) getActivity()).getCallOrigin() : null));
+                        (getParentFragment() instanceof DialtactsFragment ?
+                                ((DialtactsFragment) getParentFragment()).getCallOrigin() : null));
                 DialerUtils.startActivityWithErrorToast(getActivity(), intent);
                 hideAndClearDialpad(false);
             }
@@ -1704,7 +1728,7 @@ public class DialpadFragment extends Fragment
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
-        final DialtactsActivity activity = (DialtactsActivity) getActivity();
+        final DialtactsFragment activity = (DialtactsFragment) getParentFragment();
         final DialpadView dialpadView = (DialpadView) getView().findViewById(R.id.dialpad_view);
         if (activity == null) return;
         if (!hidden && !isDialpadChooserVisible()) {

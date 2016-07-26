@@ -17,14 +17,15 @@ package com.android.dialer.list;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,9 +38,8 @@ import android.widget.TextView;
 
 import com.android.contacts.common.list.ContactEntryListAdapter;
 import com.android.contacts.common.list.PhoneNumberListAdapter;
-import com.android.contacts.common.list.PhoneNumberPickerFragment;
 import com.android.contacts.common.util.PermissionsUtil;
-import com.android.contacts.common.util.ViewUtil;
+import com.android.dialer.DialtactsFragment;
 import com.android.dialer.R;
 import com.android.dialer.calllog.IntentProvider;
 import com.android.dialer.database.DialerSearchHelper;
@@ -86,6 +86,20 @@ public class SmartDialSearchFragment extends SearchFragment
     protected void onCreateView(LayoutInflater inflater, ViewGroup container) {
         super.onCreateView(inflater, container);
         getListView().setDividerHeight(1);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        if (getParentFragment() instanceof DialtactsFragment){
+            DialtactsFragment dtf = (DialtactsFragment)getParentFragment();
+
+            Log.e(TAG, "SmartDialSearchFragment");
+            dtf.mSmartDialSearchFragment =  this;
+            dtf.mSmartDialSearchFragment.setOnPhoneNumberPickerActionListener(dtf);
+        }
+
     }
 
     @Override
@@ -169,7 +183,7 @@ public class SmartDialSearchFragment extends SearchFragment
             return;
         }
 
-        requestPermissions(new String[] {CALL_PHONE}, CALL_PHONE_PERMISSION_REQUEST_CODE);
+        requestPermissions(new String[]{CALL_PHONE}, CALL_PHONE_PERMISSION_REQUEST_CODE);
     }
 
     @Override

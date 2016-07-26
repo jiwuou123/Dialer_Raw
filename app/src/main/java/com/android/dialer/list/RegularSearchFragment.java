@@ -15,11 +15,9 @@
  */
 package com.android.dialer.list;
 
-import static android.Manifest.permission.ACCESS_FINE_LOCATION;
-import static android.Manifest.permission.READ_CONTACTS;
-
 import android.app.Activity;
-import android.content.pm.PackageManager;
+import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -27,12 +25,14 @@ import com.android.contacts.common.list.ContactEntryListAdapter;
 import com.android.contacts.common.list.PinnedHeaderListView;
 import com.android.contacts.common.util.PermissionsUtil;
 import com.android.contacts.commonbind.analytics.AnalyticsUtil;
-import com.android.dialerbind.ObjectFactory;
-
+import com.android.dialer.DialtactsFragment;
 import com.android.dialer.R;
 import com.android.dialer.service.CachedNumberLookupService;
 import com.android.dialer.widget.EmptyContentView;
 import com.android.dialer.widget.EmptyContentView.OnEmptyViewActionButtonClickedListener;
+import com.android.dialerbind.ObjectFactory;
+
+import static android.Manifest.permission.READ_CONTACTS;
 
 public class RegularSearchFragment extends SearchFragment
         implements OnEmptyViewActionButtonClickedListener {
@@ -57,6 +57,23 @@ public class RegularSearchFragment extends SearchFragment
     public void configureDirectorySearch() {
         setDirectorySearchEnabled(true);
         setDirectoryResultLimit(SEARCH_DIRECTORY_RESULT_LIMIT);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        if (getParentFragment() instanceof DialtactsFragment) {
+
+
+            DialtactsFragment dtf = (DialtactsFragment) getParentFragment();
+
+            Log.e("f", "RegularSearchFragment");
+            dtf.mRegularSearchFragment = this;
+            dtf.mRegularSearchFragment.setOnPhoneNumberPickerActionListener(dtf);
+        }
+
+
     }
 
     @Override

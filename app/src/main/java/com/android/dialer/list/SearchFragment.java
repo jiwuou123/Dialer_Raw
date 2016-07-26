@@ -15,23 +15,19 @@
  */
 package com.android.dialer.list;
 
-import static android.Manifest.permission.READ_CONTACTS;
-
 import android.animation.Animator;
 import android.animation.AnimatorInflater;
 import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.app.DialogFragment;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Interpolator;
@@ -47,13 +43,15 @@ import com.android.contacts.common.list.OnPhoneNumberPickerActionListener;
 import com.android.contacts.common.list.PhoneNumberPickerFragment;
 import com.android.contacts.common.util.PermissionsUtil;
 import com.android.contacts.common.util.ViewUtil;
-import com.android.contacts.commonbind.analytics.AnalyticsUtil;
-import com.android.dialer.dialpad.DialpadFragment.ErrorDialogFragment;
+import com.android.dialer.DialtactsFragment;
 import com.android.dialer.R;
+import com.android.dialer.dialpad.DialpadFragment.ErrorDialogFragment;
 import com.android.dialer.util.DialerUtils;
 import com.android.dialer.util.IntentUtil;
 import com.android.dialer.widget.EmptyContentView;
 import com.android.phone.common.animation.AnimUtils;
+
+import static android.Manifest.permission.READ_CONTACTS;
 
 public class SearchFragment extends PhoneNumberPickerFragment {
     private static final String TAG  = SearchFragment.class.getSimpleName();
@@ -96,17 +94,34 @@ public class SearchFragment extends PhoneNumberPickerFragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
 
-        setQuickContactEnabled(true);
-        setAdjustSelectionBoundsEnabled(false);
-        setDarkTheme(false);
-        setPhotoPosition(ContactListItemView.getDefaultPhotoPosition(false /* opposite */));
-        setUseCallableUri(true);
 
-        try {
-            mActivityScrollListener = (OnListFragmentScrolledListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnListFragmentScrolledListener");
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        if (getParentFragment() instanceof DialtactsFragment){
+
+
+
+            DialtactsFragment dtf = (DialtactsFragment)getParentFragment();
+
+
+            setQuickContactEnabled(true);
+            setAdjustSelectionBoundsEnabled(false);
+            setDarkTheme(false);
+            setPhotoPosition(ContactListItemView.getDefaultPhotoPosition(false /* opposite */));
+            setUseCallableUri(true);
+
+            try {
+                mActivityScrollListener = (OnListFragmentScrolledListener) dtf;
+            } catch (ClassCastException e) {
+                throw new ClassCastException(dtf.toString()
+                        + " must implement OnListFragmentScrolledListener");
+            }
+
+
         }
     }
 
@@ -117,7 +132,7 @@ public class SearchFragment extends PhoneNumberPickerFragment {
             getAdapter().setHasHeader(0, false);
         }
 
-        mActivity = (HostInterface) getActivity();
+        mActivity = (HostInterface) getParentFragment();
 
         final Resources res = getResources();
         mActionBarHeight = mActivity.getActionBarHeight();

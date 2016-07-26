@@ -16,9 +16,6 @@
 
 package com.android.dialer.calllog;
 
-import static android.Manifest.permission.READ_CALL_LOG;
-import static android.Manifest.permission.READ_CONTACTS;
-
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -36,13 +33,16 @@ import android.util.Log;
 
 import com.android.common.io.MoreCloseables;
 import com.android.contacts.common.util.PermissionsUtil;
-import com.android.dialer.DialtactsActivity;
+import com.android.dialer.DialtactsFragment;
 import com.android.dialer.R;
-import com.android.dialer.calllog.PhoneAccountUtils;
+import com.android.dialer.TestFragmentActivity;
 import com.android.dialer.list.ListsFragment;
 import com.google.common.collect.Maps;
 
 import java.util.Map;
+
+import static android.Manifest.permission.READ_CALL_LOG;
+import static android.Manifest.permission.READ_CONTACTS;
 
 /**
  * VoicemailNotifier that shows a notification in the status bar.
@@ -185,8 +185,8 @@ public class DefaultVoicemailNotifier {
         final Intent contentIntent;
         // Open the call log.
         // TODO: Send to recents tab in Dialer instead.
-        contentIntent = new Intent(mContext, DialtactsActivity.class);
-        contentIntent.putExtra(DialtactsActivity.EXTRA_SHOW_TAB, ListsFragment.TAB_INDEX_VOICEMAIL);
+        contentIntent = new Intent(mContext, TestFragmentActivity.class);
+        contentIntent.putExtra(DialtactsFragment.EXTRA_SHOW_TAB, ListsFragment.TAB_INDEX_VOICEMAIL);
         notificationBuilder.setContentIntent(PendingIntent.getActivity(
                 mContext, 0, contentIntent, PendingIntent.FLAG_UPDATE_CURRENT));
 
