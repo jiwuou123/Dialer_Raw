@@ -29,11 +29,13 @@ import com.android.contacts.common.list.ContactListAdapter;
 import com.android.contacts.common.list.ContactListItemView;
 import com.android.contacts.common.list.DirectoryPartition;
 import com.android.contacts.common.list.PhoneNumberListAdapter;
+import com.android.contacts.common.util.PhoneNumberFormatter;
 import com.android.dialer.R;
 import com.android.dialer.database.DialerSearchHelper;
 import com.android.dialer.dialpad.DialpadSearchCursorLoader;
 import com.android.dialer.dialpad.SmartDialCursorLoader;
 import com.android.dialer.util.DialerSearchUtils;
+import com.google.i18n.phonenumbers.PhoneNumberUtil;
 
 import java.util.ArrayList;
 
@@ -168,7 +170,8 @@ public class DialpadSearchListAdapter extends DialerPhoneNumberListAdapter{
         viewHolder.primaryCallInfo = (TextView) view.findViewById(R.id.dialpad_search_primary_call_info);
         viewHolder.secondaryCallInfo = (TextView) view.findViewById(R.id.dialpad_search_secondary_call_info);
         viewHolder.callDetail = (ImageButton) view.findViewById(R.id.dialpad_search_call_detail);
-        viewHolder.callDate = (TextView) view.findViewById(R.id.dialpad_search_call_date);
+        PhoneNumberFormatter.setPhoneNumberFormattingTextWatcher(context, viewHolder.secondaryCallInfo);
+//        viewHolder.callDate = (TextView) view.findViewById(R.id.dialpad_search_call_date);
         view.setTag(viewHolder);
         return view;
     }
@@ -317,7 +320,7 @@ public class DialpadSearchListAdapter extends DialerPhoneNumberListAdapter{
         public TextView primaryCallInfo;
         public TextView secondaryCallInfo;
         public ImageButton callDetail;
-        public TextView callDate;
+//        public TextView callDate;
     }
 
 

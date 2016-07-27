@@ -152,7 +152,8 @@ public class CallDetailHistoryAdapter extends BaseAdapter {
         CharSequence dateValue = DateFormat.format("yyyy/MM/dd hh:mm",details.date);
         dateView.setText(dateValue);
         // Set the duration
-        if (Calls.VOICEMAIL_TYPE == callType || CallTypeHelper.isMissedCallType(callType)) {
+//        if (Calls.VOICEMAIL_TYPE == callType || CallTypeHelper.isMissedCallType(callType)) {
+        if (Calls.VOICEMAIL_TYPE == callType ) {
             durationView.setVisibility(View.GONE);
         } else {
             durationView.setVisibility(View.VISIBLE);

@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal" android:layout_width="match_parent"
     android:layout_height="@dimen/dialpad_search_list_item_height"
-    android:background="@android:color/transparent"
+    android:paddingLeft="@dimen/dialpad_search_list_item_padding_left"
+    android:paddingRight="@dimen/dialpad_search_list_item_padding_right"
     android:descendantFocusability="blocksDescendants">
     <LinearLayout
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:gravity="center_vertical"
-        android:layout_weight="1"
     >
         <TextView
             android:layout_width="match_parent"
@@ -26,15 +26,22 @@
             android:textColor="@color/phone_number_secondary_text"
             android:id="@+id/dialpad_search_secondary_call_info"/>
     </LinearLayout>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:id="@+id/dialpad_search_call_date"/>
+    <!--<TextView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="center_vertical"-->
+        <!--android:id="@+id/dialpad_search_call_date"/>-->
     <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:background="@android:color/transparent"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
         android:id="@+id/dialpad_search_call_detail"/>
-</LinearLayout>
+    <View
+        style="@style/call_detail_divider_style"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
+        android:layout_alignParentBottom="true"></View>
+</RelativeLayout>

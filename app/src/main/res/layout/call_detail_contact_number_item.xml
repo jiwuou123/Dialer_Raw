@@ -29,7 +29,7 @@
         android:paddingBottom="@dimen/call_detail_phone_number_item_padding"
         android:layout_weight="1"
         android:clickable="true"
-        android:background="@drawable/call_detail_item_background"
+        android:background="?android:attr/selectableItemBackground"
         android:id="@+id/call_detail_call_content"
         android:layout_toStartOf="@+id/bt_message">
     <LinearLayout
@@ -78,7 +78,7 @@
         android:paddingBottom="@dimen/call_detail_phone_number_item_padding"
         android:paddingRight="@dimen/call_detail_horizontal_text_margin"
         android:src="@drawable/call_detail_message"
-        android:background="@drawable/call_detail_item_background"
+        android:background="?android:attr/selectableItemBackground"
         >
     </ImageButton>
     <View

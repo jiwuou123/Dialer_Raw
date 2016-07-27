@@ -186,6 +186,7 @@ public class ContactInfoHelper {
                     info.photoId = phonesCursor.getLong(PhoneQuery.PHOTO_ID);
                     info.photoUri =
                             UriUtils.parseUriOrNull(phonesCursor.getString(PhoneQuery.PHOTO_URI));
+                    info.contactId = contactId;
                     info.formattedNumber = null;
                 } else {
                     info = ContactInfo.EMPTY;

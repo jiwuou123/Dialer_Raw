@@ -54,8 +54,10 @@
         <ListView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/background_dark"
-            android:padding="10dp"
+            android:overScrollMode="ifContentScrolls"
+            android:background="@android:color/transparent"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="0dp"
             android:id="@android:id/list"></ListView>
         <!--<ProgressBar-->
         <!--android:id="@+id/search_progress"-->

@@ -445,7 +445,7 @@
         <item name="android:gravity">center_vertical</item>
         <item name="android:paddingLeft">@dimen/call_detail_horizontal_text_margin</item>
         <item name="android:fontFamily">"sans-serif-medium"</item>
-        <item name="android:background">@drawable/call_detail_item_background</item>
+        <item name="android:background">?android:attr/selectableItemBackground</item>
         <item name="android:focusable">true</item>
         <item name="android:singleLine">true</item>
         <item name="android:importantForAccessibility">no</item>

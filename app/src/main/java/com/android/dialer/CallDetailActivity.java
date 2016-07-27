@@ -72,6 +72,8 @@ import com.android.dialer.util.PhoneNumberUtil;
 import com.android.dialer.util.TelecomUtil;
 import com.eebbk.bbksafe.module.psfilter.exinterface.Iexinterface;
 
+import java.util.Arrays;
+
 /**
  * Displays the details of a specific call log entry.
  * <p>
@@ -90,9 +92,14 @@ public class CallDetailActivity extends Activity implements View.OnClickListener
 
     public static final String VOICEMAIL_FRAGMENT_TAG = "voicemail_fragment";
 
+    //以下两个参数一起用 表示当前不显示通话历史
+    public static final String SHOW_CALL_LOG = "show_call_log";
+    public static final String SHOW_NUMBER  = "show_number";
+
     private PhoneCallDetails[] detail;
     private boolean isBlack;//检验是否为黑名单联系人
     private boolean isStarted;//判断联系人是否收藏。
+    private boolean isShowCallLog;
     private CallLogAsyncTaskListener mCallLogAsyncTaskListener = new CallLogAsyncTaskListener() {
 
         @Override
@@ -121,17 +128,17 @@ public class CallDetailActivity extends Activity implements View.OnClickListener
             PhoneCallDetails firstDetails = details[0];
             mNumber = TextUtils.isEmpty(firstDetails.number) ?
                     null : firstDetails.number.toString();
-            final int numberPresentation = firstDetails.numberPresentation;
+//            final int numberPresentation = firstDetails.numberPresentation;
             final Uri contactUri = firstDetails.contactUri;
             Uri photoUri = firstDetails.photoUri;
-            final PhoneAccountHandle accountHandle = firstDetails.accountHandle;
+//            final PhoneAccountHandle accountHandle = firstDetails.accountHandle;
 
             // Cache the details about the phone number.
-            final boolean canPlaceCallsTo =
-                    PhoneNumberUtil.canPlaceCallsTo(mNumber, numberPresentation);
-            mIsVoicemailNumber =
-                    PhoneNumberUtil.isVoicemailNumber(mContext, accountHandle, mNumber);
-            final boolean isSipNumber = PhoneNumberUtil.isSipNumber(mNumber);
+//            final boolean canPlaceCallsTo =
+//                    PhoneNumberUtil.canPlaceCallsTo(mNumber, numberPresentation);
+//            mIsVoicemailNumber =
+//                    PhoneNumberUtil.isVoicemailNumber(mContext, accountHandle, mNumber);
+//            final boolean isSipNumber = PhoneNumberUtil.isSipNumber(mNumber);
 
             final CharSequence callLocationOrType = getNumberTypeOrLocation(firstDetails);
 
@@ -156,10 +163,10 @@ public class CallDetailActivity extends Activity implements View.OnClickListener
                 }
             }
 
-            mHasEditNumberBeforeCallOption =
-                    canPlaceCallsTo && !isSipNumber && !mIsVoicemailNumber;
-            mHasReportMenuOption = mContactInfoHelper.canReportAsInvalid(
-                    firstDetails.sourceType, firstDetails.objectId);
+//            mHasEditNumberBeforeCallOption =
+//                    canPlaceCallsTo && !isSipNumber && !mIsVoicemailNumber;
+//            mHasReportMenuOption = mContactInfoHelper.canReportAsInvalid(
+//                    firstDetails.sourceType, firstDetails.objectId);
             invalidateOptionsMenu();
 
             ListView historyList = (ListView) findViewById(R.id.history);
@@ -178,9 +185,14 @@ public class CallDetailActivity extends Activity implements View.OnClickListener
                     setCallDetailListener();
                 }
             }
-            historyList.setAdapter(
-                    new CallDetailHistoryAdapter(mContext, mInflater, mCallTypeHelper, showDetails));
-            findViewById(R.id.history_divide).setVisibility(View.VISIBLE);
+            if(isShowCallLog){
+                historyList.setAdapter(
+                        new CallDetailHistoryAdapter(mContext, mInflater, mCallTypeHelper, showDetails));
+                findViewById(R.id.history_divide).setVisibility(View.VISIBLE);
+            }else {
+                historyList.setVisibility(View.GONE);
+            }
+
             if(firstDetails.isVoicemail){
                 View view =  findViewById(R.id.call_detail_voice_mail);
                 if(view != null){
@@ -189,7 +201,7 @@ public class CallDetailActivity extends Activity implements View.OnClickListener
                 }
             }else if(firstDetails.phoneNumbers!=null){
                 contactPhoneNumbers.setVisibility(View.VISIBLE);
-                CallDetailPhoneNumberAdapter adater = new CallDetailPhoneNumberAdapter(mContext,firstDetails.phoneNumbers,displayNumber.toString());
+                CallDetailPhoneNumberAdapter adater = new CallDetailPhoneNumberAdapter(mContext,firstDetails.phoneNumbers,firstDetails.number.toString());
                 contactPhoneNumbers.setAdapter(adater);
                 findViewById(R.id.contact_phone_numbers_divide).setVisibility(View.VISIBLE);
                 adater.setCallDetailCallback(CallDetailActivity.this);
@@ -325,8 +337,8 @@ public class CallDetailActivity extends Activity implements View.OnClickListener
     private BidiFormatter mBidiFormatter = BidiFormatter.getInstance();
 
     /** Whether we should show "edit number before call" in the options menu. */
-    private boolean mHasEditNumberBeforeCallOption;
-    private boolean mHasReportMenuOption;
+//    private boolean mHasEditNumberBeforeCallOption;
+//    private boolean mHasReportMenuOption;
     private Button actionBarEdit;
 
     @Override
@@ -335,7 +347,11 @@ public class CallDetailActivity extends Activity implements View.OnClickListener
 
         mContext = this;
 
-        setContentView(R.layout.call_detail_instead);
+        setContentView(R.layout.call_detail);
+        isShowCallLog = getIntent().getBooleanExtra(SHOW_CALL_LOG,true);
+        currentNumber = getIntent().getStringExtra(SHOW_NUMBER);
+        initActionBar();
+
 
         mInflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
         mResources = getResources();
@@ -353,6 +369,14 @@ public class CallDetailActivity extends Activity implements View.OnClickListener
         mDefaultCountryIso = GeoUtil.getCurrentCountryIso(this);
         mContactPhotoManager = ContactPhotoManager.getInstance(this);
         mContactInfoHelper = new ContactInfoHelper(this, GeoUtil.getCurrentCountryIso(this));
+
+        if (getIntent().getBooleanExtra(EXTRA_FROM_NOTIFICATION, false)) {
+            closeSystemDialogs();
+        }
+        bindService();
+    }
+
+    private void initActionBar() {
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayHomeAsUpEnabled(false);
         actionBar.setDisplayShowTitleEnabled(false);
@@ -370,10 +394,12 @@ public class CallDetailActivity extends Activity implements View.OnClickListener
                 }
             });
         }
-        if (getIntent().getBooleanExtra(EXTRA_FROM_NOTIFICATION, false)) {
-            closeSystemDialogs();
+        TextView title = (TextView) actionBar.getCustomView().findViewById(R.id.call_detail_title);
+        if(!isShowCallLog){
+            title.setText(R.string.intro);
+        }else {
+            title.setText(R.string.call_history);
         }
-        bindService();
     }
 
     @Override
@@ -383,8 +409,15 @@ public class CallDetailActivity extends Activity implements View.OnClickListener
     }
 
     public void getCallDetails() {
-        CallLogAsyncTaskUtil.getCallDetails(this, getCallLogEntryUris(), mCallLogAsyncTaskListener);
-    }
+        if(isShowCallLog){
+            Uri[] uris = getCallLogEntryUris();
+            if(uris.length>=5)
+                uris = Arrays.copyOf(uris,5);
+            CallLogAsyncTaskUtil.getCallDetails(this, uris, mCallLogAsyncTaskListener);
+        }
+        else
+            CallLogAsyncTaskUtil.getContactDetails(this,currentNumber,mCallLogAsyncTaskListener);
+}
 
     private boolean hasVoicemail() {
         return mVoicemailUri != null;
@@ -500,7 +533,6 @@ public class CallDetailActivity extends Activity implements View.OnClickListener
                         }
                     else{
                         showAddBlack();
-
                     }
 
                 }
@@ -542,14 +574,14 @@ public class CallDetailActivity extends Activity implements View.OnClickListener
 
     @Override
     public void call(View v, int position) {
-        String number = detail[0].displayNumber;
+        String number = detail[0].phoneNumbers[position].phoneNumber;
         if(!TextUtils.isEmpty(number))
             callContact(number);
     }
 
     @Override
     public void sendMessage(View v, int position) {
-        String number = detail[0].displayNumber;
+        String number = detail[0].phoneNumbers[position].phoneNumber;
         if(!TextUtils.isEmpty(number))
             sendMessage(number);
     }
@@ -679,7 +711,7 @@ public class CallDetailActivity extends Activity implements View.OnClickListener
     }
 
     private void vibrator() {
-        Vibrator vibrator = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
-        vibrator.vibrate(300);
+//        Vibrator vibrator = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
+//        vibrator.vibrate(300);
     }
 }

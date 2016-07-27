@@ -1306,5 +1306,6 @@
     <string name="block_caller_tips">You will not receive any calls or messages from this contact once it has been blocked.Are you sure you want to continue?</string>
     <string name="select_call_log">"SELECT CALL LOG"</string>
     <string name="sure_delete_call_log">SURE</string>
+    <string name="intro">Intro</string>
 
 </resources>

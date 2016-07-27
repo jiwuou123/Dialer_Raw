@@ -118,8 +118,8 @@ public class DialerPhoneNumberListAdapter extends PhoneNumberListAdapter {
                     if (shortcutCount < 0) return i;
                 }
             }
-            throw new IllegalArgumentException("Invalid position - greater than cursor count "
-                    + " but not a shortcut.");
+//            throw new IllegalArgumentException("Invalid position - greater than cursor count "
+//                    + " but not a shortcut.");
         }
         return SHORTCUT_INVALID;
     }
