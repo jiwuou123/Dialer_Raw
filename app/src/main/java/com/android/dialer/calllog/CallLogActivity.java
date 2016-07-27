@@ -20,9 +20,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
-import android.os.Handler;
 import android.provider.CallLog;
 import android.provider.CallLog.Calls;
 import android.support.v13.app.FragmentPagerAdapter;
@@ -35,12 +33,8 @@ import android.view.ViewGroup;
 
 import com.android.contacts.common.interactions.TouchPointManager;
 import com.android.contacts.common.list.ViewPagerTabs;
-import com.android.contacts.common.util.PermissionsUtil;
 import com.android.contacts.commonbind.analytics.AnalyticsUtil;
-import com.android.dialer.DialtactsActivity;
 import com.android.dialer.R;
-import com.android.dialer.voicemail.VoicemailStatusHelper;
-import com.android.dialer.voicemail.VoicemailStatusHelperImpl;
 
 public class CallLogActivity extends Activity implements ViewPager.OnPageChangeListener {
     private ViewPager mViewPager;
@@ -178,20 +172,20 @@ public class CallLogActivity extends Activity implements ViewPager.OnPageChangeL
         return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                final Intent intent = new Intent(this, DialtactsActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-                return true;
-            case R.id.delete_all:
-                ClearCallLogDialog.show(getFragmentManager());
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        switch (item.getItemId()) {
+//            case android.R.id.home:
+//                final Intent intent = new Intent(this, DialtactsActivity.class);
+//                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                startActivity(intent);
+//                return true;
+//            case R.id.delete_all:
+//                ClearCallLogDialog.show(getFragmentManager());
+//                return true;
+//        }
+//        return super.onOptionsItemSelected(item);
+//    }
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {

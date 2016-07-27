@@ -1,16 +1,13 @@
 package com.android.dialer.widget;
 
-import com.google.common.annotations.VisibleForTesting;
-
 import android.animation.ValueAnimator;
 import android.animation.ValueAnimator.AnimatorUpdateListener;
-import android.app.ActionBar;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.android.dialer.DialtactsActivity;
-import com.android.phone.common.animation.AnimUtils;
+import com.android.dialer.DialtactsFragment;
 import com.android.phone.common.animation.AnimUtils.AnimationCallback;
+import com.google.common.annotations.VisibleForTesting;
 
 /**
  * Controls the various animated properties of the actionBar: showing/hiding, fading/revealing,
@@ -18,7 +15,7 @@ import com.android.phone.common.animation.AnimUtils.AnimationCallback;
  * current state of the UI.
  */
 public class ActionBarController {
-    public static final boolean DEBUG = DialtactsActivity.DEBUG;
+    public static final boolean DEBUG = DialtactsFragment.DEBUG;
     public static final String TAG = "ActionBarController";
     private static final String KEY_IS_SLID_UP = "key_actionbar_is_slid_up";
     private static final String KEY_IS_FADED_OUT = "key_actionbar_is_faded_out";

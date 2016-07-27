@@ -17,9 +17,7 @@
 package com.android.dialer;
 
 import android.app.backup.BackupAgentHelper;
-import android.app.backup.BackupDataInput;
 import android.app.backup.SharedPreferencesBackupHelper;
-import android.content.Context;
 
 /**
  * The Dialer backup agent backs up the shared preferences settings of the
@@ -33,6 +31,6 @@ public class DialerBackupAgent extends BackupAgentHelper
     @Override
     public void onCreate() {
         addHelper(SHARED_KEY, new SharedPreferencesBackupHelper(this,
-                DialtactsActivity.SHARED_PREFS_NAME));
+                DialtactsFragment.SHARED_PREFS_NAME));
     }
 }
