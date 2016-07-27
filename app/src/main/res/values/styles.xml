@@ -274,7 +274,7 @@
         <item name="android:layout_marginBottom">@dimen/dialpad_zero_key_number_margin_bottom</item>
     </style>
     <style name="DialpadKeyStarStyle">
-        <item name="android:textColor">?attr/dialpad_text_color_secondary</item>
+        <item name="android:textColor">@color/dialpad_key_num_color</item>
         <item name="android:textSize">@dimen/dialpad_key_star_size</item>
         <item name="android:fontFamily">sans-serif-light</item>
         <item name="android:alpha">0.8</item>
@@ -284,7 +284,7 @@
         <item name="android:gravity">center</item>
     </style>
     <style name="DialpadKeyPoundStyle">
-        <item name="android:textColor">?attr/dialpad_text_color_secondary</item>
+        <item name="android:textColor">@color/dialpad_key_num_color</item>
         <item name="android:textSize">@dimen/dialpad_key_pound_size</item>
         <item name="android:fontFamily">sans-serif-light</item>
         <item name="android:alpha">0.8</item>
@@ -294,7 +294,7 @@
         <item name="android:gravity">center</item>
     </style>
     <style name="DialpadKeyLettersStyle">
-        <item name="android:textColor">?attr/dialpad_text_color_secondary</item>
+        <item name="android:textColor">@color/dialpad_key_letters_color</item>
         <item name="android:textSize">@dimen/dialpad_key_letters_size</item>
         <item name="android:fontFamily">sans-serif-regular</item>
         <item name="android:layout_width">wrap_content</item>
@@ -302,7 +302,7 @@
         <item name="android:gravity">center_horizontal</item>
     </style>
     <style name="DialpadKeyNumberStyle">
-        <item name="android:textColor">?attr/dialpad_text_color_primary</item>
+        <item name="android:textColor">@color/dialpad_key_num_color</item>
         <item name="android:textSize">@dimen/dialpad_key_numbers_size</item>
         <item name="android:fontFamily">sans-serif-light</item>
         <item name="android:layout_width">wrap_content</item>
@@ -335,7 +335,7 @@
     </style>
     <style name="Dialpad_Light">
         <item name="dialpad_text_color">@color/dialpad_digits_text_color</item>
-        <!-- BBK Wangchunhe   -->
+
         <!--<item name="dialpad_text_color_primary">@color/dialpad_primary_text_color</item>-->
         <item name="dialpad_text_color_primary">@color/dialpad_key_number_color</item>
         <item name="dialpad_text_color_secondary">@color/dialpad_secondary_text_color</item>

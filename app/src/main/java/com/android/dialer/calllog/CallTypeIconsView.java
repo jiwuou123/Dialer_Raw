@@ -66,7 +66,7 @@ public class CallTypeIconsView extends View {
         mCallTypes.add(callType);
 
         final Drawable drawable = getCallTypeDrawable(callType);
-        mWidth += drawable.getIntrinsicWidth() + mResources.iconMargin;
+        mWidth += drawable.getIntrinsicWidth()/* + mResources.iconMargin*/;
         mHeight = Math.max(mHeight, drawable.getIntrinsicHeight());
         invalidate();
     }
@@ -190,17 +190,18 @@ public class CallTypeIconsView extends View {
         public Resources(Context context) {
             final android.content.res.Resources r = context.getResources();
 
-            incoming = r.getDrawable(R.drawable.ic_call_arrow);
-            incoming.setColorFilter(r.getColor(R.color.answered_call_bbk), PorterDuff.Mode.MULTIPLY);
+            incoming = r.getDrawable(R.drawable.call_incoming);
+//            incoming.setColorFilter(r.getColor(R.color.answered_call_bbk), PorterDuff.Mode.MULTIPLY);
 
             // Create a rotated instance of the call arrow for outgoing calls.
-            outgoing = BitmapUtil.getRotatedDrawable(r, R.drawable.ic_call_arrow, 180f);
-            outgoing.setColorFilter(r.getColor(R.color.answered_call_bbk), PorterDuff.Mode.MULTIPLY);
+            outgoing = r.getDrawable(R.drawable.call_outgoing);
+//            outgoing = BitmapUtil.getRotatedDrawable(r, R.drawable.ic_call_arrow, 180f);
+//            outgoing.setColorFilter(r.getColor(R.color.answered_call_bbk), PorterDuff.Mode.MULTIPLY);
 
             // Need to make a copy of the arrow drawable, otherwise the same instance colored
             // above will be recolored here.
-            missed = r.getDrawable(R.drawable.ic_call_arrow).mutate();
-            missed.setColorFilter(r.getColor(R.color.missed_call), PorterDuff.Mode.MULTIPLY);
+            missed = r.getDrawable(R.drawable.call_missed);
+//            missed.setColorFilter(r.getColor(R.color.missed_call), PorterDuff.Mode.MULTIPLY);
 
             voicemail = r.getDrawable(R.drawable.ic_call_voicemail_holo_dark);
 

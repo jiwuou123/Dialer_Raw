@@ -41,25 +41,24 @@
         />
 
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:background="@android:color/holo_red_light"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/bbk_log_delete_text_container_width"
+        android:background="@color/call_log_delete_text_bg_color"
+        android:layout_height="match_parent"
         android:layout_alignTop="@+id/call_log_row"
         android:layout_alignBottom="@+id/call_log_row"
         android:layout_below="@+id/call_log_day_group_label"
         >
 
         <TextView
-            android:id="@+id/call_log__delete"
-            android:layout_width="wrap_content"
+            android:id="@+id/call_log_delete"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clickable="true"
             android:gravity="center"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp"
-            android:text="删除"
-            android:textColor="@android:color/white"
-            android:textSize="20sp" />
+            android:layout_gravity="center"
+            android:text="@string/multiple_delete_title"
+            android:textColor="@color/call_log_delete_text_color"
+            android:textSize="@dimen/bbk_log_delete_text_size" />
     </LinearLayout>
 
 
@@ -73,10 +72,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+
         android:layout_below="@+id/call_log_day_group_label">
 
         <!-- Primary area containing the contact badge and caller information -->
-
 
 
         <LinearLayout
@@ -84,15 +83,14 @@
             android:background="?android:attr/selectableItemBackground"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingStart="@dimen/call_log_start_margin"
-            android:paddingEnd="@dimen/call_log_outer_margin"
+
             android:paddingTop="@dimen/call_log_vertical_padding"
             android:paddingBottom="@dimen/call_log_vertical_padding"
+
             android:orientation="horizontal"
             android:gravity="center_vertical"
             android:focusable="true"
-            android:nextFocusRight="@+id/call_back_action"
-            android:nextFocusLeft="@+id/bbk_dial_incalling" >
+             >
 
             <!-- M: [Multi-Delete] for CallLog multiple delete @{-->
             <!--<ViewStub android:id="@+id/checkbox_container"-->
@@ -162,8 +160,8 @@
                     android:id="@+id/name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/call_log_name_margin_bottom"
-                    android:layout_marginEnd="@dimen/call_log_icon_margin"
+                    android:layout_marginBottom="0dp"
+                    android:layout_marginEnd="0dp"
                     android:textColor="#313131"
                     android:textSize="@dimen/call_log_primary_text_size"
                     android:singleLine="true" />
@@ -183,6 +181,7 @@
                     android:id="@+id/call_type"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:paddingTop="6dp"
                     android:orientation="horizontal">
 
                     <view
@@ -190,17 +189,16 @@
                         android:id="@+id/call_type_icons"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="@dimen/call_log_icon_margin"
+                        android:layout_marginEnd="6dp"
                         android:layout_gravity="center_vertical" />
 
                     <TextView
                         android:id="@+id/call_location_and_date"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="@dimen/call_log_icon_margin"
                         android:layout_gravity="center_vertical"
-                        android:textColor="#8c8c8c"
-                        android:textSize="@dimen/bbk_call_log_secondary_text_size"
+                        android:textColor="@color/call_location_and_date_text_color"
+                        android:textSize="@dimen/call_location_and_date_text_size"
                         android:singleLine="true" />
 
                 </LinearLayout>
@@ -221,6 +219,7 @@
             android:layout_width="82dp"
             android:layout_height="wrap_content"
             android:orientation="vertical"
+            android:layout_marginEnd="11.66dp"
             android:gravity="right" >
                  <TextView
                         android:id="@+id/date_and_time"
@@ -228,7 +227,7 @@
                         android:layout_height="match_parent"
                         android:layout_marginRight="1dp"
                         android:paddingStart="0dp"
-                        android:paddingEnd="5dp"
+
                         android:textColor="#999999"
                         android:textSize="@dimen/bbk_call_log_secondary_text_size"
                         android:gravity="center_vertical|right"
@@ -240,7 +239,7 @@
                         android:layout_height="match_parent"
                         android:layout_marginRight="1dp"
                         android:paddingStart="0dp"
-                        android:paddingEnd="5dp"
+
                         android:textColor="#999999"
                         android:textSize="@dimen/bbk_call_log_secondary_text_size"
                         android:gravity="center_vertical|right"
@@ -248,31 +247,23 @@
                         />
         </LinearLayout>
 
-            <ImageView
+            <ImageButton
                 android:id="@+id/details_action_img"
-                android:layout_width="@dimen/dialpad_detial_width"
-                android:layout_height="@dimen/dialpad_detial_height"
-                android:layout_marginRight="0dp"
-                android:paddingStart="0dp"
-                android:paddingTop="@dimen/call_log_inner_margin"
-                android:paddingBottom="@dimen/call_log_inner_margin"
-                android:paddingEnd="@dimen/call_log_inner_margin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="20.33dp"
                 android:scaleType="center"
-                android:src="@drawable/detail_normal"
+                android:background="@drawable/call_log_item_detail_bg"
 
                 />
+
             <ImageView
                 android:id="@+id/multiple_delete_img"
-                android:layout_width="@dimen/dialpad_detial_width"
-                android:layout_height="@dimen/dialpad_detial_height"
-                android:layout_marginRight="0dp"
-                android:paddingStart="0dp"
-                android:paddingTop="@dimen/call_log_inner_margin"
-                android:paddingBottom="@dimen/call_log_inner_margin"
-                android:paddingEnd="@dimen/call_log_inner_margin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="20.33dp"
                 android:scaleType="center"
                 android:src="@drawable/call_log_multi_delete"
-
                 android:visibility="gone"
                 />
             <!--@}-->
@@ -287,11 +278,11 @@
             android:visibility="gone"/>
         <View
             android:id="@+id/calllog_divider"
-            android:layout_width="match_parent"
+            android:layout_width="324dp"
             android:layout_height="0.5dp"
-            android:background="#cccccc"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"/>
+            android:background="#dedede"
+            android:layout_gravity="center"
+          />
 
     </LinearLayout>
 

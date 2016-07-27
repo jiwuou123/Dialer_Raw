@@ -1,0 +1,8 @@
+<selector xmlns:android="http://schemas.android.com/apk/res/android">  
+<item 
+	android:state_pressed= "true"
+	android:drawable = "@drawable/dialpad_floating_action_button_press"/>
+<item
+	android:state_pressed ="false"
+	android:drawable = "@drawable/dialpad_floating_action_button" />
+</selector>  

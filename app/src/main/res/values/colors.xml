@@ -116,6 +116,7 @@
     <color name="focus_color">#44ff0000</color>
     <color name="dialpad_key_number_color">#cc000000</color>
     <color name="dialpad_fab_ic_call_color">#737373</color>
+    <color name="dialpad_shadow_fade_up_color">#cdcdcd</color>
     <!-- In-call UI background color. -->
     <color name="incall_background_color">@color/dialer_theme_color</color>
     <color name="incall_accent_color">#ffffff</color>
@@ -145,6 +146,7 @@
 
     <!-- Color of dialpad digits -->
     <color name="dialpad_digits_text_color">#333</color>
+    <color name="dialpad_top_divider_color">#cdcdcd</color>
 
     <color name="incall_dialpad_background">#ffffff</color>
     <color name="incall_dialpad_background_pressed">#ccaaaaaa</color>
@@ -161,7 +163,7 @@
     <!-- Background color for status bar. For portrait this will be ignored. -->
     <color name="statusbar_background_color">@color/dialer_theme_color</color>
 
-    <color name="bbk_actionbar_background_color">#f7f7f7</color>
+    <color name="bbk_actionbar_background_color">#eeeeee</color>
 
     <color name="translucent_shadow">#33999999</color>
 
@@ -170,7 +172,7 @@
 
     <!-- actionbar title text clolor  -->
     <color name="bbk_actionbar_icon_color">#464646</color>
-    <color name="bbk_miss_call_color">#f43737</color>
+    <color name="bbk_miss_call_color">#ae3736</color>
     <color name="bbk_call_color">#313131</color>
     <color name="bbk_search_append_list_item_color">#2073ff</color>
     <color name="bbk_call_log_secondary_text_color">#8c8c8c</color>
@@ -179,7 +181,7 @@
     <color name="bbk_tab_text_delete_color">#f13738</color>
     <color name="bbk_tab_text_delete_color_alph">#80f13738</color>
     <color name="ccc_color">#cccccc</color>
-    <color name="bbk_actionbar__editer_text_color">#ff16b900</color>
+    <color name="bbk_actionbar_editer_text_color">#16b900</color>
 
     <!-- color for all calls select popupwindow -->
     <color name="popupwindow_background_color">#b0000000</color>
@@ -187,6 +189,10 @@
     <color name="popupwindow_item_text_color">#464646</color>
     <color name="popupwindow_item_selected_color">#ff16b900</color>
     <color name="popupwindow_divider_color">#636363</color>
+
+    <!-- color of dialtacts_bottom_menu -->
+    <color name="dialtacts_bottom_menu_container_color">#EDEDED</color>
+    <color name="dialtacts_bottom_menu_divider_color">#C7C7C7</color>
 
 
     <!-- 70% opacity, black. -->
@@ -208,7 +214,19 @@
     <color name="bottom_menu_button_delete_select_unable">#a3a3a3</color>
     <color name="bottom_menu_button_delete_select_enable">#b3000000</color>
     <color name="bottom_menu_button_delete_select_press">#ff16b900</color>
+    <!-- color for bottom menu text -->
+    <color name="bottom_menu_text_view_color">#848484</color>
+    <color name="bottom_menu_text_view_color_selected">#16B801</color>
 
+    <!--  color for dialpad layout-->
+    <color name="dialpad_text_color">#313131</color>
+    <color name="dialpad_key_num_color">#313131</color>
+    <color name="dialpad_key_letters_color">#898989</color>
+
+    <!-- color for call_log_list_item_bbk layout-->
+    <color name="call_log_delete_text_color">#ffffff</color>
+    <color name="call_log_delete_text_bg_color">#ff593e</color>
+    <color name="call_location_and_date_text_color">#898989</color>
     <!-- Background colors for InCallUI. This set of colors is a subset of
         https://spec.googleplex.com/quantumpalette#extended which pass WCAG AA and all have a
         contrast ratio over 5:1.

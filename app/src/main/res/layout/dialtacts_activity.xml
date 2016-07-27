@@ -42,7 +42,6 @@
 
         <FrameLayout
             android:id="@+id/floating_action_button_container"
-            android:background="@drawable/fab_blue"
             android:layout_width="@dimen/floating_action_button_width"
             android:layout_height="@dimen/floating_action_button_height"
             android:layout_gravity="center_horizontal|bottom"
@@ -51,11 +50,11 @@
 
             <ImageButton
                 android:id="@+id/floating_action_button"
-                android:background="@drawable/floating_action_button"
+                android:background="@drawable/floating_action_button_btn_bg"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:contentDescription="@string/action_menu_dialpad_button"
-                android:src="@drawable/fab_ic_dial"/>
+                />
         </FrameLayout>
 
 
@@ -68,7 +67,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="0px"
-        android:background="#f1f1f1"
+        android:background="@color/dialtacts_bottom_menu_container_color"
         android:layout_alignParentBottom="true"
         android:layout_gravity="center_horizontal|bottom">
 
@@ -80,42 +79,68 @@
                 android:id="@+id/dialtacts_bottom_menu_divider"
                 android:layout_width="match_parent"
                 android:layout_height="1px"
-                android:background="#979797" />
+                android:background="@color/dialtacts_bottom_menu_divider_color" />
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/bottom_menu_button_container_height"
                 android:layout_weight="3"
+                android:paddingTop="@dimen/bottom_menu_button_container_paddingTop"
                 android:orientation="horizontal">
+
                 <LinearLayout
                     android:layout_weight="1"
                     android:gravity="center"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
                     <ImageButton
                         android:id="@+id/dialtacts_bottom_menu_button_call"
-                        android:background="@drawable/dialtacts_bottom_menu_button_call"
+                        android:background="@drawable/bottom_menu_button_call_bg"
                         android:layout_width="wrap_content"
                         android:layout_gravity="center"
                         android:gravity="center"
                         android:layout_height="wrap_content"
                         />
+
+                    <TextView
+                        android:id="@+id/dialtacts_bottom_menu_txt_call"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:paddingTop="@dimen/bottom_menu_txt_paddingTop"
+                        android:text="@string/bottom_menu_txt_call"
+                        android:textSize="@dimen/bottom_menu_text_size"
+                        android:textColor="@color/bottom_menu_txt_color"
+                        android:gravity="center"/>
                 </LinearLayout>
+
                 <LinearLayout
                     android:layout_weight="1.02"
                     android:gravity="center"
                     android:id="@+id/bottom_menu_button_contacts_caontainer"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
                     <ImageButton
                         android:id="@+id/dialtacts_bottom_menu_button_contacts"
-                        android:background="@drawable/dialtacts_bottom_menu_button_contacts"
+                        android:background="@drawable/bottom_menu_button_contacts_bg"
                         android:contentDescription="@string/action_menu_dialpad_button"
                         android:layout_width="wrap_content"
                         android:layout_gravity="center"
                         android:gravity="center"
                         android:layout_height="wrap_content"/>
+                    <TextView
+                        android:id="@+id/bottom_menu_txt_contacts"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:paddingTop="@dimen/bottom_menu_txt_paddingTop"
+                        android:textSize="@dimen/bottom_menu_text_size"
+                        android:gravity="center"
+                        android:textColor="@color/bottom_menu_txt_color"
+                        android:text="@string/bottom_menu_txt_contacts"/>
                     <ImageButton
                         android:id="@+id/dialtacts_bottom_menu_button_delete"
                         android:contentDescription="@string/action_menu_dialpad_button"
@@ -132,14 +157,25 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
                     <ImageButton
-                        android:id="@+id/dialtacts_bottom_menu_button_setting"
-                        android:background="@drawable/dialtacts_bottom_menu_button_setting"
+                        android:id="@+id/dialtacts_bottom_menu_button_group"
+                        android:background="@drawable/bottom_menu_button_group_bg"
                         android:layout_width="wrap_content"
                         android:layout_gravity="center"
                         android:gravity="center"
                         android:layout_height="wrap_content"/>
+                    <TextView
+                        android:id="@+id/bottom_menu_txt_group"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:paddingTop="@dimen/bottom_menu_txt_paddingTop"
+                        android:textSize="@dimen/bottom_menu_text_size"
+                        android:textColor="@color/bottom_menu_txt_color"
+                        android:gravity="center"
+                        android:text="@string/bottom_menu_button_group"/>
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>

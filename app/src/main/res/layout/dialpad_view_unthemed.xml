@@ -96,34 +96,42 @@
             android:freezesText="true"
             android:focusableInTouchMode="true"
             android:cursorVisible="false"
-            android:textColor="?attr/dialpad_text_color"
+            android:textColor="@color/dialpad_text_color"
             android:textCursorDrawable="@null"
             android:fontFamily="sans-serif"
             android:textStyle="normal"
             ex:resizing_text_min_size="@dimen/dialpad_digits_text_min_size" />
 
-        <ImageButton
-            android:id="@+id/deleteButton"
-            android:background="@drawable/bbk_dialpad_delete"
-
-            android:paddingLeft="@dimen/dialpad_digits_padding"
-            android:paddingRight="@dimen/dialpad_digits_padding"
+        <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/description_delete_button"
-             />
+            android:layout_height="match_parent"
+            android:paddingTop="@dimen/dialpad_digits_padding_top"
+            android:paddingLeft="@dimen/dialpad_digits_padding_left"
+            android:paddingRight="@dimen/dialpad_digits_padding_right"
+            >
+            <ImageButton
+                android:id="@+id/deleteButton"
+                android:background="@drawable/bbk_dialpad_delete"
+                android:tint="?attr/dialpad_icon_tint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/description_delete_button"
+                />
+        </LinearLayout>
+
     </LinearLayout>
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#e3e3e3" />
+        android:layout_height="1px"
+        android:background="@color/dialpad_top_divider_color" />
 
     <!--<Space-->
         <!--android:layout_width="match_parent"-->
         <!--android:layout_height="@dimen/dialpad_space_above_keys" />-->
 
-    <include layout="@layout/dialpad" />
+    <include layout="@layout/dialpad"
+        />
 
     <!--<Space-->
         <!--android:layout_width="match_parent"-->

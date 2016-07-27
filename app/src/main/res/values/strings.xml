@@ -1307,5 +1307,9 @@
     <string name="select_call_log">"SELECT CALL LOG"</string>
     <string name="sure_delete_call_log">SURE</string>
     <string name="intro">Intro</string>
+<!-- The string of dialtacts_bottom_menu -->
+    <string name="bottom_menu_txt_call">DIAL</string>
+    <string name="bottom_menu_txt_contacts">CONTACTS</string>
+    <string name="bottom_menu_button_group">GROUP</string>
 
 </resources>

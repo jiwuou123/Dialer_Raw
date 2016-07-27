@@ -25,16 +25,17 @@
     <dimen name="call_log_horizontal_margin">8dp</dimen>
     <dimen name="call_log_call_action_size">32dp</dimen>
     <dimen name="call_log_call_action_width">54dp</dimen>
-    <dimen name="call_log_icon_margin">4dp</dimen>
+    <dimen name="call_log_icon_margin">5dp</dimen>
     <dimen name="call_log_inner_margin">13dp</dimen>
     <dimen name="call_log_outer_margin">8dp</dimen>
     <dimen name="call_log_start_margin">8dp</dimen>
     <dimen name="call_log_indent_margin">24dp</dimen>
     <dimen name="call_log_name_margin_bottom">2dp</dimen>
-    <dimen name="call_log_vertical_padding">12dp</dimen>
+    <dimen name="call_log_vertical_padding">16dp</dimen>
     <dimen name="call_log_list_item_height">56dp</dimen>
-    <dimen name="call_log_list_item_info_margin_start">16dp</dimen>
+    <dimen name="call_log_list_item_info_margin_start">18dp</dimen>
     <dimen name="show_call_history_list_item_height">72dp</dimen>
+
 
     <!-- Size of contact photos in the call log and call details. -->
     <dimen name="contact_photo_size">40dp</dimen>
@@ -90,11 +91,12 @@
     <dimen name="actionbar_contentInsetStart">72dp</dimen>
 
     <!-- Dimensions for bbk dialtacts actionbar -->
-    <dimen name="bbk_tab_text_size">16sp</dimen>
-    <dimen name="dialtacts_actionbar_editer_text_size">15sp</dimen>
+    <dimen name="bbk_tab_text_size">14.66sp</dimen>
+    <dimen name="dialtacts_actionbar_editer_text_size">14sp</dimen>
     <dimen name="dialtacts_actionbar_name_layout_marginRight">48dp</dimen>
     <dimen name="dialtacts_actionbar_name_layout_marginLeft">48dp</dimen>
     <dimen name="dialtacts_actionbar_menu_layout_marginLeft">210dp</dimen>
+
 
     <!-- Dimensions for  all calls select popupwindow -->
     <dimen name="popupwindow_all_calls_cantainer_height">35dp</dimen>
@@ -140,6 +142,7 @@
     <dimen name="call_log_primary_text_size">14sp</dimen>
     <dimen name="call_log_secondary_text_size">14sp</dimen>
     <dimen name="call_log_list_item_actions_text_size">12sp</dimen>
+    <dimen name="call_location_and_date_text_size">10.66sp</dimen>
 
 
     <!-- Height of the call log actions section for each call log entry -->
@@ -169,6 +172,10 @@
     <dimen name="dialpad_detial_width">36dp</dimen>
     <dimen name="dialpad_detial_height">36dp</dimen>
     <dimen name="bbk_call_log_secondary_text_size">12sp</dimen>
+    <dimen name="bbk_log_delete_text_size">14sp</dimen>
+    <dimen name="bbk_log_delete_text_container_width">54dp</dimen>
+    <dimen name="primary_action_view_padding_left">18dp</dimen>
+
 
 
     <!-- Dimensions for promo cards -->
@@ -195,21 +202,24 @@
     <dimen name="dialpad_key_letters_size">12sp</dimen>
     <dimen name="dialpad_symbol_margin_bottom">13dp</dimen>
     <!-- Text dimensions for dialpad keys -->
-    <dimen name="dialpad_key_pound_size">23sp</dimen>
+    <dimen name="dialpad_key_pound_size">28sp</dimen>
     <!-- The bottom row of the dialpad is slightly taller to account for the dial button -->
     <dimen name="dialpad_bottom_key_height">65dp</dimen>
     <dimen name="dialpad_key_height">64dp</dimen>
     <dimen name="dialpad_space_above_keys">14dp</dimen>
-    <dimen name="dialpad_digits_padding">16dp</dimen>
+    <dimen name="dialpad_digits_padding_right">18dp</dimen>
+    <dimen name="dialpad_digits_padding_left">19.66dp</dimen>
+    <dimen name="dialpad_digits_padding_top">22.5dp</dimen>
     <dimen name="dialpad_digits_text_min_size">24sp</dimen>
     <!-- Provide adjustable dimensions so that different apps can use different dialpad sizes. -->
     <dimen name="dialpad_digits_menu_left_padding">8dp</dimen>
     <dimen name="dialpad_digits_menu_right_padding">10dp</dimen>
     <dimen name="dialpad_overflow_margin">8dp</dimen>
+    <dimen name="dialpad_floating_action_button_marginBotton">11.3dp</dimen>
     <!-- dialtacts_container marginBottom -->
-    <dimen name="dialtacts_container_marginBottom">50dp</dimen>
+    <dimen name="dialtacts_container_marginBottom">51dp</dimen>
 
-    <dimen name="dialtacts_floating_action_button_marginBotton">16dp</dimen>
+    <dimen name="dialtacts_floating_action_button_marginBotton">1dp</dimen>
 
     <dimen name="ild_margin_height">10dp</dimen>
     <dimen name="contact_browser_list_item_text_size">16sp</dimen>
@@ -267,8 +277,8 @@
     <dimen name="dialpad_key_number_margin_bottom">1dp</dimen>
     <!-- Zero key should have less space between self and text because "+" is smaller -->
     <dimen name="dialpad_zero_key_number_margin_bottom">0dp</dimen>
-    <dimen name="dialpad_digits_adjustable_text_size">20sp</dimen>
-    <dimen name="dialpad_digits_adjustable_height">50dp</dimen>
+    <dimen name="dialpad_digits_adjustable_text_size">30sp</dimen>
+    <dimen name="dialpad_digits_adjustable_height">60dp</dimen>
     <dimen name="dialpad_key_numbers_size">36dp</dimen>
 
     <dimen name="floating_action_button_vertical_offset">-24dp</dimen>
@@ -349,4 +359,10 @@
     <dimen name="call_detail_exist_contact_layout_margin_top">40dp</dimen>
     <dimen name="call_total_padding_left">22dp</dimen>
     <dimen name="call_total_padding_right"> 20dp</dimen>
+    <!-- The dimen of dialtacts_bottom_menu -->
+    <dimen name="bottom_menu_button_container_height">51dp</dimen>
+    <dimen name="bottom_menu_button_container_paddingTop">8dp</dimen>
+    <dimen name="bottom_menu_txt_paddingTop">3dp</dimen>
+    <dimen name="bottom_menu_text_size">10sp</dimen>
+
 </resources>

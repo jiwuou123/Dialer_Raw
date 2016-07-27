@@ -646,7 +646,7 @@ public class CallLogAdapter extends GroupingListAdapter
 
 
         if (!isMultipleDelete){
-            views.detailsImg.setVisibility(View.VISIBLE);
+            views.detailsBtn.setVisibility(View.VISIBLE);
             views.multipleDeleteImg.setVisibility(View.GONE);
             swipeRoot.setSwipeAble(true);
             swipeRoot.setDelegate(new SwipeItemLayout.SwipeItemLayoutDelegate() {
@@ -692,7 +692,7 @@ public class CallLogAdapter extends GroupingListAdapter
         } else {
             swipeRoot.setSwipeAble(false);
             views.multipleDeleteImg.setVisibility(View.VISIBLE);
-            views.detailsImg.setVisibility(View.GONE);
+            views.detailsBtn.setVisibility(View.GONE);
 
             if (isAllSelectLog){
                 views.multipleDeleteImg.setSelected(true);

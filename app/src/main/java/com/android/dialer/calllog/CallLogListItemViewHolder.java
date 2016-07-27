@@ -27,7 +27,9 @@ import android.support.v7.widget.RecyclerView;
 import android.telecom.PhoneAccountHandle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.view.ViewTreeObserver;
@@ -77,7 +79,7 @@ public final class CallLogListItemViewHolder extends RecyclerView.ViewHolder
 
     public final TextView deleteTextView;
 
-    public final ImageView detailsImg;
+    public final ImageView detailsBtn;
 
     public final ImageView multipleDeleteImg;
 
@@ -175,7 +177,7 @@ public final class CallLogListItemViewHolder extends RecyclerView.ViewHolder
             TextView dayGroupHeader,
             ImageView primaryActionButtonView,
             TextView deleteTextView,
-            ImageView detailsImg,
+            ImageButton detailsView,
             ImageView multipleDeleteImg) {
         super(rootView);
 
@@ -193,7 +195,7 @@ public final class CallLogListItemViewHolder extends RecyclerView.ViewHolder
         this.dayGroupHeader = dayGroupHeader;
         this.primaryActionButtonView = primaryActionButtonView;
         this.deleteTextView = deleteTextView;
-        this.detailsImg = detailsImg;
+        this.detailsBtn = detailsView;
         this.multipleDeleteImg = multipleDeleteImg;
 
 
@@ -213,7 +215,11 @@ public final class CallLogListItemViewHolder extends RecyclerView.ViewHolder
 
 
 
+
+
     }
+
+
 
     public static CallLogListItemViewHolder create(
             View view,
@@ -236,8 +242,8 @@ public final class CallLogListItemViewHolder extends RecyclerView.ViewHolder
                 (LinearLayout) view.findViewById(R.id.call_log_row),
                 (TextView) view.findViewById(R.id.call_log_day_group_label),
                 (ImageView) view.findViewById(R.id.primary_action_button),
-                (TextView)view.findViewById(R.id.call_log__delete),
-                (ImageView) view.findViewById(R.id.details_action_img),
+                (TextView)view.findViewById(R.id.call_log_delete),
+                (ImageButton) view.findViewById(R.id.details_action_img),
                 (ImageView)view.findViewById(R.id.multiple_delete_img));
     }
 
@@ -316,9 +322,52 @@ public final class CallLogListItemViewHolder extends RecyclerView.ViewHolder
             }
         }
         primaryActionButtonView.setVisibility(View.GONE);
-        primaryActionView.setTag(IntentProvider.getReturnCallIntentProvider(number));
+        primaryActionView.setOnTouchListener(new View.OnTouchListener() {
+            float downX = 0;
+            float dowmY = 0;
+            int slop = ViewConfiguration.get(mContext).getScaledEdgeSlop();
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()){
+
+                    case MotionEvent.ACTION_DOWN:
+                        downX = event.getX();
+                        dowmY = event.getY();
+                        Log.d(TAG," --- onTouch ---   --_DOWN");
+                    break;
+
+                    case MotionEvent.ACTION_MOVE:
+
+                        Log.d(TAG," --- onTouch ---   _MOVE");
+                        break;
+                    case MotionEvent.ACTION_UP:
+
+                        float offsetX = Math.abs(event.getX() - downX);
+                        float offsetY = Math.abs(event.getY() - dowmY);
+                        Log.d(TAG," --- onTouch --- up    offsetX :"+ offsetX +"  offsetY:" + offsetY );
+                        if (offsetX < 2*slop && offsetY < 2*slop){
+                            IntentProvider intentProvider = IntentProvider.getReturnCallIntentProvider(number);
+                            if (intentProvider != null) {
+                                final Intent intent = intentProvider.getIntent(mContext);
+                                // See IntentProvider.getCallDetailIntentProvider() for why this may be null.
+                                if (intent != null) {
+                                    DialerUtils.startActivityWithErrorToast(mContext, intent);
+                                }
+                            }
+                        }
+
+
+                        break;
+
+
+                }
+                return true;
+            }
+        });
 
     }
+
+
 
     /**
      * Binds text titles, click handlers and intents to the voicemail, details and callback action
@@ -407,8 +456,8 @@ public final class CallLogListItemViewHolder extends RecyclerView.ViewHolder
 
         updatePrimaryActionButton(show);
 
-        detailsImg.setTag(IntentProvider.getCallDetailIntentProvider(rowId, callIds, null));
-        detailsImg.setOnClickListener(this);
+        detailsBtn.setTag(IntentProvider.getCallDetailIntentProvider(rowId, callIds, null));
+        detailsBtn.setOnClickListener(this);
 
 
     }
@@ -457,10 +506,10 @@ public final class CallLogListItemViewHolder extends RecyclerView.ViewHolder
 
     @Override
     public void onClick(View view) {
-//        if (view.getId() == R.id.primary_action_button && !TextUtils.isEmpty(voicemailUri)) {
-//            mVoicemailPrimaryActionButtonClicked = true;
-//            mExpandCollapseListener.onClick(primaryActionView);
-//        } else {
+        if (view.getId() == R.id.primary_action_button && !TextUtils.isEmpty(voicemailUri)) {
+            mVoicemailPrimaryActionButtonClicked = true;
+            mExpandCollapseListener.onClick(primaryActionView);
+        } else {
             final IntentProvider intentProvider = (IntentProvider) view.getTag();
             if (intentProvider != null) {
                 final Intent intent = intentProvider.getIntent(mContext);
@@ -469,7 +518,7 @@ public final class CallLogListItemViewHolder extends RecyclerView.ViewHolder
                     DialerUtils.startActivityWithErrorToast(mContext, intent);
                 }
             }
-//        }
+        }
     }
 
     @NeededForTesting
@@ -493,7 +542,7 @@ public final class CallLogListItemViewHolder extends RecyclerView.ViewHolder
                 new TextView(context),
                 new ImageView(context),
                 new TextView(context),
-                new ImageView(context),
+                new ImageButton(context),
                 new ImageView(context));
         viewHolder.detailsButtonView = new TextView(context);
         viewHolder.actionsView = new View(context);

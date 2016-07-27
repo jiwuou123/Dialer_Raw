@@ -28,6 +28,7 @@ import android.content.res.ColorStateList;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -71,6 +72,7 @@ import com.android.contacts.common.dialog.ClearFrequentsDialog;
 import com.android.contacts.common.interactions.ImportExportDialogFragment;
 import com.android.contacts.common.interactions.TouchPointManager;
 import com.android.contacts.common.list.OnPhoneNumberPickerActionListener;
+import com.android.contacts.common.util.BitmapUtil;
 import com.android.contacts.common.util.PermissionsUtil;
 import com.android.contacts.commonbind.analytics.AnalyticsUtil;
 import com.android.dialer.bbk.RecyclerViewChangedImpl;
@@ -493,7 +495,7 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
         mMenuButtonCall.setOnClickListener(this);
          mMenuButtonContacts = (ImageButton) findViewById(R.id.dialtacts_bottom_menu_button_contacts);
         mMenuButtonContacts.setOnClickListener(this);
-         mMenuButtonSetting = (ImageButton) findViewById(R.id.dialtacts_bottom_menu_button_setting);
+         mMenuButtonSetting = (ImageButton) findViewById(R.id.dialtacts_bottom_menu_button_group);
         mMenuButtonSetting.setOnClickListener(this);
         mMenuButtonDelete = (ImageButton)findViewById(R.id.dialtacts_bottom_menu_button_delete);
         mMenuButtonDelete.setOnClickListener(this);
@@ -1821,13 +1823,13 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
         mCallLogSelectPopupWindow.setAnimationStyle(R.style.PopupWindowAinm);
         mCallLogSelectPopupWindow.setBackgroundDrawable(new BitmapDrawable());
         mCallLogSelectPopupWindow.showAsDropDown(getActionBar().getCustomView());
-        mActionbarMenu.setImageResource(R.drawable.ic_actionbar_meun_up);
+        mActionbarMenu.setImageResource(R.drawable.actionbar_menu_down);
         popupWindowItemSelect(mCallLogSelectPopupWindow);
         mCallLogSelectPopupWindow.update();
         mCallLogSelectPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
             @Override
             public void onDismiss() {
-                mActionbarMenu.setImageResource(R.drawable.ic_actionbar_meun_down);
+                mActionbarMenu.setImageResource(R.drawable.actionbar_menu_down);
 
             }
         });
@@ -1932,7 +1934,7 @@ public class DialtactsActivity extends TransactionSafeActivity implements View.O
      */
     private void actionbarMenuOpen() {
         if(mCallLogSelectPopupWindow != null && mCallLogSelectPopupWindow.isShowing()){
-            mActionbarMenu.setImageResource(R.drawable.ic_actionbar_meun_up);
+            mActionbarMenu.setImageResource(R.drawable.actionbar_menu_down_up);
 
         }
     }
