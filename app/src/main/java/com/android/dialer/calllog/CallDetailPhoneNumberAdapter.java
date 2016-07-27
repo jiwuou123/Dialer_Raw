@@ -90,8 +90,10 @@ public class CallDetailPhoneNumberAdapter extends BaseAdapter{
         if(!TextUtils.isEmpty(location))
             viewHolder.location.setText(location);
         String phoneNumber = phoneNumberEntities[position].phoneNumber;
-        if(phoneNumber.equals(currentPhoneNumber))
+        if(phoneNumber.replaceAll(" ","").equals(currentPhoneNumber))
             viewHolder.phoneNumber.setTextColor(mContext.getColor(R.color.phone_number_text_select_color));
+        else
+            viewHolder.phoneNumber.setTextColor(mContext.getColor(R.color.phone_number_primary_text));
         viewHolder.phoneNumber.setText(phoneNumber);
         return convertView;
     }

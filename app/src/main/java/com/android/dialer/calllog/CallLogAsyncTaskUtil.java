@@ -16,6 +16,7 @@
 
 package com.android.dialer.calllog;
 
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -43,29 +44,30 @@ import java.io.IOException;
 public class CallLogAsyncTaskUtil {
     private static String TAG = CallLogAsyncTaskUtil.class.getSimpleName();
 
-   /** The enumeration of {@link AsyncTask} objects used in this class. */
+    /** The enumeration of {@link AsyncTask} objects used in this class. */
     public enum Tasks {
         DELETE_VOICEMAIL,
         DELETE_CALL,
         MARK_VOICEMAIL_READ,
         GET_CALL_DETAILS,
+        GET_CONTACT_DETAILS,
     }
 
     private static class CallDetailQuery {
-        static final String[] CALL_LOG_PROJECTION = new String[] {
-            CallLog.Calls.DATE,
-            CallLog.Calls.DURATION,
-            CallLog.Calls.NUMBER,
-            CallLog.Calls.TYPE,
-            CallLog.Calls.COUNTRY_ISO,
-            CallLog.Calls.GEOCODED_LOCATION,
-            CallLog.Calls.NUMBER_PRESENTATION,
-            CallLog.Calls.PHONE_ACCOUNT_COMPONENT_NAME,
-            CallLog.Calls.PHONE_ACCOUNT_ID,
-            CallLog.Calls.FEATURES,
-            CallLog.Calls.DATA_USAGE,
-            CallLog.Calls.TRANSCRIPTION,
-            "raw_contact_id",
+        static final String[] CALL_LOG_PROJECTION = new String[]{
+                CallLog.Calls.DATE,
+                CallLog.Calls.DURATION,
+                CallLog.Calls.NUMBER,
+                CallLog.Calls.TYPE,
+                CallLog.Calls.COUNTRY_ISO,
+                CallLog.Calls.GEOCODED_LOCATION,
+                CallLog.Calls.NUMBER_PRESENTATION,
+                CallLog.Calls.PHONE_ACCOUNT_COMPONENT_NAME,
+                CallLog.Calls.PHONE_ACCOUNT_ID,
+                CallLog.Calls.FEATURES,
+                CallLog.Calls.DATA_USAGE,
+                CallLog.Calls.TRANSCRIPTION,
+                "raw_contact_id",
                 CallLog.Calls.CACHED_LOOKUP_URI,
         };
 
@@ -87,7 +89,9 @@ public class CallLogAsyncTaskUtil {
 
     public interface CallLogAsyncTaskListener {
         public void onDeleteCall();
+
         public void onDeleteVoicemail();
+
         public void onGetCallDetails(PhoneCallDetails[] details);
     }
 
@@ -109,6 +113,7 @@ public class CallLogAsyncTaskUtil {
                 new AsyncTask<Void, Void, PhoneCallDetails[]>() {
                     @Override
                     public PhoneCallDetails[] doInBackground(Void... params) {
+
                         // TODO: All calls correspond to the same person, so make a single lookup.
                         final int numCalls = callUris.length;
                         PhoneCallDetails[] details = new PhoneCallDetails[numCalls];
@@ -117,7 +122,7 @@ public class CallLogAsyncTaskUtil {
                                 details[index] =
                                         getPhoneCallDetailsForUri(context, callUris[index]);
                             }
-                            if(numCalls>0){
+                            if (numCalls > 0) {
                                 getPhoneNumbers(details[0], context);
                             }
                             return details;
@@ -137,7 +142,65 @@ public class CallLogAsyncTaskUtil {
                 });
     }
 
+    public static void getContactDetails(final Context context, final String number, final CallLogAsyncTaskListener callLogAsyncTaskListener) {
+        if (sAsyncTaskExecutor == null) {
+            initTaskExecutor();
+        }
+        sAsyncTaskExecutor.submit(Tasks.GET_CONTACT_DETAILS,
+                new AsyncTask<Void, Void, PhoneCallDetails[]>() {
+                    @Override
+                    public PhoneCallDetails[] doInBackground(Void... params) {
+//                        Uri[] callLogUris = getCallLogUris(context,number);
+                        PhoneCallDetails[] details;
+//                        if(callLogUris == null){
+                            details = new PhoneCallDetails[1];
+                            details[0] = getPhoneDetailsForNumber(context, number, false);
+//                        }
+//                        else{
+//                            details = new PhoneCallDetails[callLogUris.length];
+//                            for (int i = 0; i < details.length; i++) {
+//                                details[i] = getPhoneCallDetailsForUri(context,callLogUris[i]);
+//                            }
+//                        }
+                        try {
+                            getPhoneNumbers(details[0], context);
+                            return details;
+                        } catch (IllegalArgumentException e) {
+                            // Something went wrong reading in our primary data.
+                            Log.w(TAG, "Invalid URI starting call details", e);
+                            return null;
+                        }
+                    }
+
+                    @Override
+                    public void onPostExecute(PhoneCallDetails[] phoneCallDetails) {
+                        if (callLogAsyncTaskListener != null) {
+                            callLogAsyncTaskListener.onGetCallDetails(phoneCallDetails);
+                        }
+                    }
+                });
+    }
+
+    private static Uri[] getCallLogUris(Context context, String number) {
+        Cursor cursor = context.getContentResolver().query(
+                CallLog.Calls.CONTENT_URI, new String[]{"_id"}, CallLog.Calls.NUMBER + "=?", new String[]{String.valueOf(number)}, null);
+        if(cursor!=null && cursor.moveToFirst()){
+            Uri[] uris = new Uri[cursor.getCount()];
+            for (int i = 0; i < uris.length; i++) {
+                uris[i] = ContentUris.withAppendedId(
+                        TelecomUtil.getCallLogUri(context), cursor.getLong(0));
+                if(!cursor.moveToNext())
+                    break;
+            }
+            cursor.close();
+            return uris;
+        }
+
+
+        return null;
+    }
     private static void getPhoneNumbers(PhoneCallDetails details, Context context) {
+
         Cursor c = context.getContentResolver().query(ContactsContract.Data.CONTENT_URI,
                 new String[] {ContactsContract.Data._ID, ContactsContract.CommonDataKinds.Phone.NUMBER,ContactsContract.CommonDataKinds.Phone.STARRED},
                 ContactsContract.Data.CONTACT_ID + "=?" + " AND "
@@ -162,10 +225,31 @@ public class CallLogAsyncTaskUtil {
             c.close();
     }
 
+    private static PhoneCallDetails getPhoneDetailsForNumber(Context context, String phoneNumber,boolean isVoicemail) {
+        String countryIso = GeoUtil.getCurrentCountryIso(context);
+        ContactInfoHelper contactInfoHelper =
+                new ContactInfoHelper(context, GeoUtil.getCurrentCountryIso(context));
+        ContactInfo info = contactInfoHelper.lookupNumber(phoneNumber, countryIso);
+        PhoneCallDetails details = new PhoneCallDetails(
+                context, phoneNumber, 0, info.formattedNumber, isVoicemail);
+
+//        details.accountHandle = accountHandle;
+        details.contactUri = info.lookupUri;
+        details.name = info.name;
+        details.numberType = info.type;
+        details.numberLabel = info.label;
+        details.photoUri = info.photoUri;
+        details.sourceType = info.sourceType;
+        details.objectId = info.objectId;
+        details.lookUpKey = info.lookupKey;
+        details.contactId = info.contactId;
+        return  details;
+    }
     /**
      * Return the phone call details for a given call log URI.
      */
     private static PhoneCallDetails getPhoneCallDetailsForUri(Context context, Uri callUri) {
+
         Cursor cursor = context.getContentResolver().query(
                 callUri, CallDetailQuery.CALL_LOG_PROJECTION, null, null, null);
         try {

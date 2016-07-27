@@ -40,6 +40,7 @@ import com.android.contacts.common.list.PhoneNumberListAdapter;
 import com.android.contacts.common.list.PhoneNumberPickerFragment;
 import com.android.contacts.common.util.PermissionsUtil;
 import com.android.contacts.common.util.ViewUtil;
+import com.android.dialer.CallDetailActivity;
 import com.android.dialer.R;
 import com.android.dialer.calllog.IntentProvider;
 import com.android.dialer.database.DialerSearchHelper;
@@ -47,6 +48,7 @@ import com.android.dialer.dialpad.DialpadSearchCursorLoader;
 import com.android.dialer.dialpad.SmartDialCursorLoader;
 import com.android.dialer.util.DialerUtils;
 import com.android.dialer.util.IntentUtil;
+import com.android.dialer.voicemail.VoicemailStatusHelperImpl;
 import com.android.dialer.widget.EmptyContentView;
 
 import static android.Manifest.permission.CALL_PHONE;
@@ -91,17 +93,18 @@ public class SmartDialSearchFragment extends SearchFragment
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        int paddingLeft = (int) getResources().getDimension(R.dimen.dialpad_search_list_item_padding_left);
-        int paddingRight = (int) getResources().getDimension(R.dimen.dialpad_search_list_item_padding_right);
-        ListView listView = getListView();
-        getListView().setPadding(paddingLeft,listView.getPaddingTop(),paddingRight,listView.getPaddingBottom());
+//        int paddingLeft = (int) getResources().getDimension(R.dimen.dialpad_search_list_item_padding_left);
+//        int paddingRight = (int) getResources().getDimension(R.dimen.dialpad_search_list_item_padding_right);
+
+
     }
 
     @Override
     public void onStart() {
         super.onStart();
+        ListView listView = getListView();
         getListView().setBackgroundColor(Color.WHITE);
-
+        getListView().setPadding(0,0,0,listView.getPaddingBottom());
     }
 
 
@@ -198,6 +201,11 @@ public class SmartDialSearchFragment extends SearchFragment
                 int callId = adapter.getCallLogId(position);
                Intent intent = IntentProvider.getCallDetailIntentProvider(callId,null,null).getIntent(getContext());
                 DialerUtils.startActivityWithErrorToast(getContext(), intent);
+//                Intent intent = new Intent(Intent.ACTION_VIEW);
+//                intent.setType("vnd.android.cursor.item/calls");
+//                intent.putExtra("show_call_log",false);
+//                intent.putExtra("show_number","120");
+//                DialerUtils.startActivityWithErrorToast(getContext(), intent);
                 break;
             case DialpadSearchListAdapter.CONTACT_DETAIL:
                 final Uri uri = adapter.getContactUri(position);

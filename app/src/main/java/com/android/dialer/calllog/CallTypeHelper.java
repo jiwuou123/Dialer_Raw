@@ -83,7 +83,7 @@ public class CallTypeHelper {
                 if (isVideoCall) {
                     return mMissedVideoName;
                 } else {
-                    return mMissedName;
+                    return mIncomingName;
                 }
 
             case Calls.VOICEMAIL_TYPE:

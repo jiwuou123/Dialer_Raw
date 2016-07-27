@@ -110,7 +110,7 @@ public class PhoneNumberPickerFragment extends ContactEntryListFragment<ContactE
 
         View paddingView = inflater.inflate(R.layout.contact_detail_list_padding, null, false);
         mPaddingView = paddingView.findViewById(R.id.contact_detail_list_padding);
-        getListView().addHeaderView(paddingView);
+//        getListView().addHeaderView(paddingView);
 
         mAccountFilterHeader = getView().findViewById(R.id.account_filter_header_container);
         mAccountFilterHeader.setOnClickListener(mFilterHeaderClickListener);

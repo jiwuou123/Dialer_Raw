@@ -417,5 +417,6 @@
     <string name="favorite">添加到个人收藏</string>
     <string name="block_caller_tips">阻止此联系人后，您将不会收到该联系人的来电和信息，确认阻止吗？</string>
     <string name="common_tip">"提示"</string>
+    <string name="intro">简介</string>
 
 </resources>
