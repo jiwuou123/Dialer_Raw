@@ -17,14 +17,15 @@ package com.android.dialer.list;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,10 +38,8 @@ import android.widget.TextView;
 
 import com.android.contacts.common.list.ContactEntryListAdapter;
 import com.android.contacts.common.list.PhoneNumberListAdapter;
-import com.android.contacts.common.list.PhoneNumberPickerFragment;
 import com.android.contacts.common.util.PermissionsUtil;
-import com.android.contacts.common.util.ViewUtil;
-import com.android.dialer.CallDetailActivity;
+import com.android.dialer.DialtactsFragment;
 import com.android.dialer.R;
 import com.android.dialer.calllog.IntentProvider;
 import com.android.dialer.database.DialerSearchHelper;
@@ -48,7 +47,6 @@ import com.android.dialer.dialpad.DialpadSearchCursorLoader;
 import com.android.dialer.dialpad.SmartDialCursorLoader;
 import com.android.dialer.util.DialerUtils;
 import com.android.dialer.util.IntentUtil;
-import com.android.dialer.voicemail.VoicemailStatusHelperImpl;
 import com.android.dialer.widget.EmptyContentView;
 
 import static android.Manifest.permission.CALL_PHONE;
