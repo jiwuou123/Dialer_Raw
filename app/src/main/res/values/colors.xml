@@ -261,4 +261,5 @@
     <color name="phone_number_primary_text">#313131</color>
     <color name="phone_number_secondary_text">#898989</color>
     <color name="call_detail_divider_color">#dedede</color>
+    <color name="setup_dialog_startbar_color">#eeeeee</color>//设置dialog的状态栏颜色
 </resources>
