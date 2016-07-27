@@ -318,34 +318,24 @@ public class EmergencyCallActivity extends TransactionSafeActivity implements Vi
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.dial_pic:
-//                拨打
-                mHaptic.vibrate();
-                handleDialButtonPressed();
+        int i = v.getId();
+        if (i == R.id.dial_pic) {//                拨打
+            mHaptic.vibrate();
+            handleDialButtonPressed();
 
 
-                break;
-            case R.id.deleteButton: {
-//                删除
-                keyPressed(KeyEvent.KEYCODE_DEL);
-                break;
+        } else if (i == R.id.deleteButton) {
+            keyPressed(KeyEvent.KEYCODE_DEL);
+        } else if (i == R.id.digits) {
+            if (!isDigitsEmpty()) {
+                mDigits.setCursorVisible(true);
             }
-            case R.id.digits: {
-                if (!isDigitsEmpty()) {
-                    mDigits.setCursorVisible(true);
-                }
-                break;
-            }
-            case R.id.cancel_pic:{
-//                退出
-                finish();
-            }
-            break;
-            default: {
-                Log.wtf("f", "Unexpected onClick() event from: " + v);
-                return;
-            }
+        } else if (i == R.id.cancel_pic) {
+            finish();
+
+        } else {
+            Log.wtf("f", "Unexpected onClick() event from: " + v);
+            return;
         }
     }
     /**
@@ -486,59 +476,33 @@ public class EmergencyCallActivity extends TransactionSafeActivity implements Vi
     public void onPressed(View view, boolean pressed) {
         Log.d("f", "onPressed(). view: " + view + ", pressed: " + pressed);
         if (pressed) {
-            switch (view.getId()) {
-                case R.id.one: {
-                    keyPressed(KeyEvent.KEYCODE_1);
-                    break;
-                }
-                case R.id.two: {
-                    keyPressed(KeyEvent.KEYCODE_2);
-                    break;
-                }
-                case R.id.three: {
-                    keyPressed(KeyEvent.KEYCODE_3);
-                    break;
-                }
-                case R.id.four: {
-                    keyPressed(KeyEvent.KEYCODE_4);
-                    break;
-                }
-                case R.id.five: {
-                    keyPressed(KeyEvent.KEYCODE_5);
-                    break;
-                }
-                case R.id.six: {
-                    keyPressed(KeyEvent.KEYCODE_6);
-                    break;
-                }
-                case R.id.seven: {
-                    keyPressed(KeyEvent.KEYCODE_7);
-                    break;
-                }
-                case R.id.eight: {
-                    keyPressed(KeyEvent.KEYCODE_8);
-                    break;
-                }
-                case R.id.nine: {
-                    keyPressed(KeyEvent.KEYCODE_9);
-                    break;
-                }
-                case R.id.zero: {
-                    keyPressed(KeyEvent.KEYCODE_0);
-                    break;
-                }
-                case R.id.pound: {
-                    keyPressed(KeyEvent.KEYCODE_POUND);
-                    break;
-                }
-                case R.id.star: {
-                    keyPressed(KeyEvent.KEYCODE_STAR);
-                    break;
-                }
-                default: {
-                    Log.wtf("f", "Unexpected onTouch(ACTION_DOWN) event from: " + view);
-                    break;
-                }
+            int i = view.getId();
+            if (i == R.id.one) {
+                keyPressed(KeyEvent.KEYCODE_1);
+            } else if (i == R.id.two) {
+                keyPressed(KeyEvent.KEYCODE_2);
+            } else if (i == R.id.three) {
+                keyPressed(KeyEvent.KEYCODE_3);
+            } else if (i == R.id.four) {
+                keyPressed(KeyEvent.KEYCODE_4);
+            } else if (i == R.id.five) {
+                keyPressed(KeyEvent.KEYCODE_5);
+            } else if (i == R.id.six) {
+                keyPressed(KeyEvent.KEYCODE_6);
+            } else if (i == R.id.seven) {
+                keyPressed(KeyEvent.KEYCODE_7);
+            } else if (i == R.id.eight) {
+                keyPressed(KeyEvent.KEYCODE_8);
+            } else if (i == R.id.nine) {
+                keyPressed(KeyEvent.KEYCODE_9);
+            } else if (i == R.id.zero) {
+                keyPressed(KeyEvent.KEYCODE_0);
+            } else if (i == R.id.pound) {
+                keyPressed(KeyEvent.KEYCODE_POUND);
+            } else if (i == R.id.star) {
+                keyPressed(KeyEvent.KEYCODE_STAR);
+            } else {
+                Log.wtf("f", "Unexpected onTouch(ACTION_DOWN) event from: " + view);
             }
             mPressedDialpadKeys.add(view);
         } else {
@@ -579,13 +543,10 @@ public class EmergencyCallActivity extends TransactionSafeActivity implements Vi
     public boolean onLongClick(View view) {
         final Editable digits = mDigits.getText();
         final int id = view.getId();
-        switch (id) {
-            case R.id.deleteButton: {
-                digits.clear();
-                return true;
-            }
-            default:
-                break;
+        if (id == R.id.deleteButton) {
+            digits.clear();
+            return true;
+        } else {
         }
         return false;
     }

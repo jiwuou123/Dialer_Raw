@@ -469,58 +469,58 @@ public class CallDetailActivity extends Activity implements View.OnClickListener
         Intent intent = null;
         if(TextUtils.isEmpty(currentNumber))
             return;
-        switch (v.getId()){
-            case R.id.call_detail_more_call_log:
-                if (toTotalDetailsIntent != null) {
-                    intent = toTotalDetailsIntent.getIntent(mContext);
-                    // See IntentProvider.getCallDetailIntentProvider() for why this may be null.
-                    if (intent != null) {
-                        DialerUtils.startActivityWithErrorToast(mContext, intent);
+        int i = v.getId();
+        if (i == R.id.call_detail_more_call_log) {
+            if (toTotalDetailsIntent != null) {
+                intent = toTotalDetailsIntent.getIntent(mContext);
+                // See IntentProvider.getCallDetailIntentProvider() for why this may be null.
+                if (intent != null) {
+                    DialerUtils.startActivityWithErrorToast(mContext, intent);
+                }
+            }
+
+        } else if (i == R.id.send_contact) {
+            shareContact(lookUpKey, contactId);
+
+        } else if (i == R.id.add_to_the_personal_favorites) {
+            intent = ContactSaveService.createSetStarredIntent(
+                    getApplicationContext(), ContactUri, !isStarted);
+            startService(intent);
+            isStarted = !isStarted;
+            checkStarted();
+
+        } else if (i == R.id.block_contact) {
+            if (isConnection) {
+                if (isBlack)
+                    try {
+                        exInterface.removeBlacklist(currentNumber);
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
                     }
-                }
-                break;
-            case R.id.send_contact:
-                shareContact(lookUpKey,contactId);
-                break;
-            case R.id.add_to_the_personal_favorites:
-                intent = ContactSaveService.createSetStarredIntent(
-                        getApplicationContext(),ContactUri,!isStarted);
-                startService(intent);
-                isStarted = !isStarted;
-                checkStarted();
-                break;
-            case R.id.block_contact:
-                if(isConnection) {
-                    if(isBlack)
-                        try {
-                            exInterface.removeBlacklist(currentNumber);
-                        } catch (RemoteException e) {
-                            e.printStackTrace();
-                        }
-                    else
-                        showAddBlack();
-                }
-                break;
-            case R.id.call_contact:
-                callContact(currentNumber);
-                break;
-            case R.id.send_message:
-                sendMessage(currentNumber);
-                break;
-            case R.id.add_new_contacts:
-                intent = IntentUtil.getNewContactIntent(currentNumber);
-                DialerUtils.startActivityWithErrorToast(this, intent);
-                break;
-            case R.id.add_new_exits_contacts:
-                intent = IntentUtil.getAddToExistingContactIntent(currentNumber);
-                DialerUtils.startActivityWithErrorToast(this,intent,
-                            R.string.add_contact_not_available);
-                break;
-            case R.id.call_detail_action_editer:
-                intent = new Intent(Intent.ACTION_EDIT);
-                intent.setDataAndType(ContactUri,ContactsContract.Contacts.CONTENT_ITEM_TYPE);
-                startActivity(intent);
-                break;
+                else
+                    showAddBlack();
+            }
+
+        } else if (i == R.id.call_contact) {
+            callContact(currentNumber);
+
+        } else if (i == R.id.send_message) {
+            sendMessage(currentNumber);
+
+        } else if (i == R.id.add_new_contacts) {
+            intent = IntentUtil.getNewContactIntent(currentNumber);
+            DialerUtils.startActivityWithErrorToast(this, intent);
+
+        } else if (i == R.id.add_new_exits_contacts) {
+            intent = IntentUtil.getAddToExistingContactIntent(currentNumber);
+            DialerUtils.startActivityWithErrorToast(this, intent,
+                    R.string.add_contact_not_available);
+
+        } else if (i == R.id.call_detail_action_editer) {
+            intent = new Intent(Intent.ACTION_EDIT);
+            intent.setDataAndType(ContactUri, ContactsContract.Contacts.CONTENT_ITEM_TYPE);
+            startActivity(intent);
+
         }
     }
 
@@ -665,11 +665,11 @@ public class CallDetailActivity extends Activity implements View.OnClickListener
     }
     @Override
     public boolean onLongClick(View v) {
-        switch (v.getId()){
-            case R.id.caller_name:
-                vibrator();
-                showCopyDialog(currentNumber);
-                return true;
+        int i = v.getId();
+        if (i == R.id.caller_name) {
+            vibrator();
+            showCopyDialog(currentNumber);
+            return true;
         }
         return false;
     }

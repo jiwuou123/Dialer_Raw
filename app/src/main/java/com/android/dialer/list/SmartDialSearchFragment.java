@@ -264,19 +264,19 @@ public class SmartDialSearchFragment extends SearchFragment
         DialpadSearchListAdapter adapter = (DialpadSearchListAdapter) getAdapter();
         final Intent intent;
         final String number;
-        switch (v.getId()){
-            case R.id.create_new_contact_action:
-                number = adapter.getFormattedQueryString();
-                intent = IntentUtil.getNewContactIntent(number);
-                DialerUtils.startActivityWithErrorToast(getActivity(), intent,
-                        R.string.add_contact_not_available);
-                break;
-            case R.id.add_to_existing_contact_action:
-                number = adapter.getFormattedQueryString() ;
-                intent = IntentUtil.getAddToExistingContactIntent(number);
-                DialerUtils.startActivityWithErrorToast(getActivity(), intent,
-                        R.string.add_contact_not_available);
-                break;
+        int i = v.getId();
+        if (i == R.id.create_new_contact_action) {
+            number = adapter.getFormattedQueryString();
+            intent = IntentUtil.getNewContactIntent(number);
+            DialerUtils.startActivityWithErrorToast(getActivity(), intent,
+                    R.string.add_contact_not_available);
+
+        } else if (i == R.id.add_to_existing_contact_action) {
+            number = adapter.getFormattedQueryString();
+            intent = IntentUtil.getAddToExistingContactIntent(number);
+            DialerUtils.startActivityWithErrorToast(getActivity(), intent,
+                    R.string.add_contact_not_available);
+
         }
     }
 

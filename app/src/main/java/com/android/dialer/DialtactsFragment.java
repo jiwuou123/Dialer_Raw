@@ -419,6 +419,7 @@ public class DialtactsFragment extends TransactionSafeFragment implements View.O
         mFirstLaunch = true;
 
         final Resources resources = getResources();
+        int temp =  resources.getDimensionPixelSize(R.dimen.floating_action_button_width);
         //获取actionbar高度
         mActionBarHeight = resources.getDimensionPixelSize(R.dimen.action_bar_height_large);
 
@@ -555,6 +556,7 @@ public class DialtactsFragment extends TransactionSafeFragment implements View.O
         //底部拨号按钮
         ImageButton floatingActionButton = (ImageButton) view.findViewById(R.id.floating_action_button);
         floatingActionButton.setOnClickListener(this);
+
         mFloatingActionButtonController = new FloatingActionButtonController(getActivity(),
                 floatingActionButtonContainer, floatingActionButton);
 
@@ -737,9 +739,8 @@ public class DialtactsFragment extends TransactionSafeFragment implements View.O
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.floating_action_button:
-//                if (mListsFragment.getCurrentTabIndex()
+        int i = view.getId();
+        if (i == R.id.floating_action_button) {//                if (mListsFragment.getCurrentTabIndex()
 //                        == ListsFragment.TAB_INDEX_ALL_CONTACTS && !mInRegularSearch) {
 //                    DialerUtils.startActivityWithErrorToast(
 //                            this,
@@ -749,83 +750,75 @@ public class DialtactsFragment extends TransactionSafeFragment implements View.O
 //                    mInCallDialpadUp = false;
 //                    showDialpadFragment(true);
 //                }
-                if (!mIsDialpadShown) {
-                    mInCallDialpadUp = false;
-                    showDialpadFragment(true);
-                }
+            if (!mIsDialpadShown) {
+                mInCallDialpadUp = false;
+                showDialpadFragment(true);
+            }
 
-                break;
 
-            case R.id.voice_search_button:
-                try {
-                    startActivityForResult(new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH),
-                            ACTIVITY_REQUEST_CODE_VOICE_SEARCH);
-                } catch (ActivityNotFoundException e) {
-                    Toast.makeText(DialtactsFragment.this.getContext(), R.string.voice_search_not_available,
-                            Toast.LENGTH_SHORT).show();
-                }
-                break;
-            case R.id.dialtacts_options_menu_button:
-                mOverflowMenu.show();
-                break;
-            case R.id.dialtacts_bottom_menu_button_call:
-                if (!mIsDialpadShown) {
-                    mInCallDialpadUp = false;
-                    showDialpadFragment(true);
-                }else {
-                    if (TextUtils.isEmpty(mSearchQuery) ||
-                            (mSmartDialSearchFragment != null && mSmartDialSearchFragment.isVisible()
-                                    && mSmartDialSearchFragment.getAdapter().getCount() == 0)) {
-                        exitSearchUi();
-                    }
-                    hideDialpadFragment(true, true);
-                }
-                break;
-            case R.id.actionbar_menu:
-                initCallLogSelectPopupWindow();
-                Log.e(TAG, " onClick actionbar_menu");
+        } else if (i == R.id.voice_search_button) {
+            try {
+                startActivityForResult(new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH),
+                        ACTIVITY_REQUEST_CODE_VOICE_SEARCH);
+            } catch (ActivityNotFoundException e) {
+                Toast.makeText(DialtactsFragment.this.getContext(), R.string.voice_search_not_available,
+                        Toast.LENGTH_SHORT).show();
+            }
 
-                break;
-            case R.id.actionbar_name:
-                initCallLogSelectPopupWindow();
-                Log.e(TAG, " ---- onClick actionbarName ----");
-                break;
-            case R.id.actionbar_call_dialtacts_action_editer:
-//                StringBuilder sb = new StringBuilder("已选").append(mCalllogList.getSelectLogCount()).append("项通话记录");
-                if (mEditerToCalldetail.getText().toString().trim().equals(getResources().getString(R.string.call_detail_editer))){
-                    showMultipleEditer();
-                    mEditerToCalldetail.setText(getString(R.string.call_delete_select_all));
+        } else if (i == R.id.dialtacts_options_menu_button) {
+            mOverflowMenu.show();
+
+        } else if (i == R.id.dialtacts_bottom_menu_button_call) {
+            if (!mIsDialpadShown) {
+                mInCallDialpadUp = false;
+                showDialpadFragment(true);
+            } else {
+                if (TextUtils.isEmpty(mSearchQuery) ||
+                        (mSmartDialSearchFragment != null && mSmartDialSearchFragment.isVisible()
+                                && mSmartDialSearchFragment.getAdapter().getCount() == 0)) {
+                    exitSearchUi();
+                }
+                hideDialpadFragment(true, true);
+            }
+
+        } else if (i == R.id.actionbar_menu) {
+            initCallLogSelectPopupWindow();
+            Log.e(TAG, " onClick actionbar_menu");
+
+
+        } else if (i == R.id.actionbar_name) {
+            initCallLogSelectPopupWindow();
+            Log.e(TAG, " ---- onClick actionbarName ----");
+
+        } else if (i == R.id.actionbar_call_dialtacts_action_editer) {//                StringBuilder sb = new StringBuilder("已选").append(mCalllogList.getSelectLogCount()).append("项通话记录");
+            if (mEditerToCalldetail.getText().toString().trim().equals(getResources().getString(R.string.call_detail_editer))) {
+                showMultipleEditer();
+                mEditerToCalldetail.setText(getString(R.string.call_delete_select_all));
 //                    mActionbarNameTxt.setText(sb);
-                } else if (mEditerToCalldetail.getText().toString().trim().equals(getResources().getString(R.string.call_delete_select_all))){
-                    mCalllogList.allSelectLog(true);
-                    mEditerToCalldetail.setText(R.string.call_delete_cansel_all);
+            } else if (mEditerToCalldetail.getText().toString().trim().equals(getResources().getString(R.string.call_delete_select_all))) {
+                mCalllogList.allSelectLog(true);
+                mEditerToCalldetail.setText(R.string.call_delete_cansel_all);
 //                    mActionbarNameTxt.setText(sb);
-                } else if (mEditerToCalldetail.getText().toString().trim().equals(getResources().getString(R.string.call_delete_cansel_all))){
-                    mCalllogList.allSelectLog(false);
-                    mEditerToCalldetail.setText(R.string.call_delete_select_all);
+            } else if (mEditerToCalldetail.getText().toString().trim().equals(getResources().getString(R.string.call_delete_cansel_all))) {
+                mCalllogList.allSelectLog(false);
+                mEditerToCalldetail.setText(R.string.call_delete_select_all);
 //                    StringBuilder sb = new StringBuilder("已选").append(mCalllogList.getSelectLogCount()).append("项通话记录");
 //                    mActionbarNameTxt.setText(sb);
-                }
-                mFloatingActionButtonController.setVisible(false);
-                mCalllogList.setmSelectCallLogImpl(mSeletectCallLogImpl);
-
-
-
-                break;
-            case R.id.actionbar_call_dialtacts_action_cancel:
-                hideMultipleEditer();
-                break;
-
-            case R.id.dialtacts_bottom_menu_button_delete:
-
-                    if (mCalllogList != null)
-                    mCalllogList.deleteSelectedCallItems();
-
-                break;
-            default: {
-                Log.wtf(TAG, "Unexpected onClick event from " + view);
-                break;
             }
+            mFloatingActionButtonController.setVisible(false);
+            mCalllogList.setmSelectCallLogImpl(mSeletectCallLogImpl);
+
+
+        } else if (i == R.id.actionbar_call_dialtacts_action_cancel) {
+            hideMultipleEditer();
+
+        } else if (i == R.id.dialtacts_bottom_menu_button_delete) {
+            if (mCalllogList != null)
+                mCalllogList.deleteSelectedCallItems();
+
+
+        } else {
+            Log.wtf(TAG, "Unexpected onClick event from " + view);
         }
     }
 
@@ -893,33 +886,31 @@ public class DialtactsFragment extends TransactionSafeFragment implements View.O
 
     @Override
     public boolean onMenuItemClick(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_history:
-                // Use explicit CallLogActivity intent instead of ACTION_VIEW +
-                // CONTENT_TYPE, so that we always open our call log from our dialer
-                final Intent intent = new Intent(this.getContext(), CallLogActivity.class);
-                startActivity(intent);
-                break;
-            case R.id.menu_add_contact:
-                DialerUtils.startActivityWithErrorToast(
-                        this.getContext(),
-                        IntentUtil.getNewContactIntent(),
-                        R.string.add_contact_not_available);
-                break;
-            case R.id.menu_import_export:
-                // We hard-code the "contactsAreAvailable" argument because doing it properly would
-                // involve querying a {@link ProviderStatusLoader}, which we don't want to do right
-                // now in Dialtacts for (potential) performance reasons. Compare with how it is
-                // done in {@link PeopleActivity}.
-                ImportExportDialogFragment.show(getChildFragmentManager(), true,
-                        DialtactsFragment.class);
-                return true;
-            case R.id.menu_clear_frequents:
-                ClearFrequentsDialog.show(getChildFragmentManager());
-                return true;
-            case R.id.menu_call_settings:
-                handleMenuSettings();
-                return true;
+        int i = item.getItemId();
+        if (i == R.id.menu_history) {// Use explicit CallLogActivity intent instead of ACTION_VIEW +
+            // CONTENT_TYPE, so that we always open our call log from our dialer
+            final Intent intent = new Intent(this.getContext(), CallLogActivity.class);
+            startActivity(intent);
+
+        } else if (i == R.id.menu_add_contact) {
+            DialerUtils.startActivityWithErrorToast(
+                    this.getContext(),
+                    IntentUtil.getNewContactIntent(),
+                    R.string.add_contact_not_available);
+
+        } else if (i == R.id.menu_import_export) {// We hard-code the "contactsAreAvailable" argument because doing it properly would
+            // involve querying a {@link ProviderStatusLoader}, which we don't want to do right
+            // now in Dialtacts for (potential) performance reasons. Compare with how it is
+            // done in {@link PeopleActivity}.
+            ImportExportDialogFragment.show(getChildFragmentManager(), true,
+                    DialtactsFragment.class);
+            return true;
+        } else if (i == R.id.menu_clear_frequents) {
+            ClearFrequentsDialog.show(getChildFragmentManager());
+            return true;
+        } else if (i == R.id.menu_call_settings) {
+            handleMenuSettings();
+            return true;
         }
         return false;
     }
