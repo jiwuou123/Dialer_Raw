@@ -417,5 +417,9 @@
     <string name="favorite">添加到个人收藏</string>
     <string name="block_caller_tips">阻止此联系人后，您将不会收到该联系人的来电和信息，确认阻止吗？</string>
     <string name="common_tip">"提示"</string>
+    <!-- The string of dialtacts_bottom_menu -->
+    <string name="bottom_menu_txt_call">"拨号"</string>
+    <string name="bottom_menu_txt_contacts">"联系人"</string>
+    <string name="bottom_menu_button_group">"群组"</string>
 
 </resources>

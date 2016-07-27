@@ -26,8 +26,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/background_dialer_call_log"
-        android:paddingStart="@dimen/call_log_horizontal_margin"
-        android:paddingEnd="@dimen/call_log_horizontal_margin" />
+        />
 
     <com.android.dialer.widget.EmptyContentView
         android:id="@+id/empty_list_view"

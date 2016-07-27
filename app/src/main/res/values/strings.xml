@@ -1306,5 +1306,9 @@
     <string name="block_caller_tips">You will not receive any calls or messages from this contact once it has been blocked.Are you sure you want to continue?</string>
     <string name="select_call_log">"SELECT CALL LOG"</string>
     <string name="sure_delete_call_log">SURE</string>
+    <!-- The string of dialtacts_bottom_menu -->
+    <string name="bottom_menu_txt_call">DIAL</string>
+    <string name="bottom_menu_txt_contacts">CONTACTS</string>
+    <string name="bottom_menu_button_group">GROUP</string>
 
 </resources>

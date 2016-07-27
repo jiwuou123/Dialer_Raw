@@ -18,26 +18,14 @@
 		android:textSize="@dimen/dialtacts_actionbar_editer_text_size"
 		android:layout_marginLeft="16dp"
 		android:gravity="center_vertical"
-		android:textColor="@color/bbk_actionbar__editer_text_color"
+		android:textColor="@color/bbk_actionbar_editer_text_color"
 		android:layout_alignParentLeft="true"
 		android:singleLine="true"
 		android:text="@string/cansel"
 		android:textAppearance="?android:attr/textAppearanceMedium"
 		android:visibility="gone"/>
-   <TextView
-      android:id="@+id/actionbar_call_dialtacts_action_editer"
-      android:layout_width="wrap_content"
-      android:layout_height="match_parent"
-      android:textSize="@dimen/dialtacts_actionbar_editer_text_size"
-      android:layout_marginRight="16dp"
-      android:gravity="center_vertical"
-      android:textColor="@color/bbk_actionbar__editer_text_color"
-      android:layout_alignParentRight="true"
-      android:singleLine="true"
-      android:text="@string/call_detail_editer"
-      android:textAppearance="?android:attr/textAppearanceMedium" />
 
-		<TextView
+	<TextView
 			android:id="@+id/actionbar_name"
 			android:textSize="@dimen/bbk_tab_text_size"
 			android:layout_marginRight="@dimen/dialtacts_actionbar_name_layout_marginRight"
@@ -59,16 +47,27 @@
 		<ImageView
 			android:id="@+id/actionbar_menu"
 			android:layout_width="wrap_content"
-			android:layout_height="match_parent"
+			android:layout_height="wrap_content"
 			android:layout_marginLeft="@dimen/dialtacts_actionbar_menu_layout_marginLeft"
 			android:clickable="true"
-			android:tint="@color/bbk_actionbar_icon_color"
-			android:src="@drawable/ic_actionbar_meun_down"
-			android:layout_alignParentTop="true"
+			android:background="@drawable/actionbar_menu_bg"
+			android:layout_centerVertical="true"
 			android:layout_toStartOf="@+id/actionbar_call_dialtacts_action_editer"
-			android:layout_marginEnd="75dp" />
+			android:layout_marginEnd="82dp" />
 
-
+	<TextView
+       android:id="@+id/actionbar_call_dialtacts_action_editer"
+       android:layout_width="wrap_content"
+       android:layout_height="match_parent"
+       android:textSize="@dimen/dialtacts_actionbar_editer_text_size"
+       android:gravity="center_vertical"
+       android:textColor="@color/bbk_actionbar_editer_text_color"
+		android:singleLine="true"
+       android:text="@string/call_detail_editer"
+       android:textAppearance="?android:attr/textAppearanceMedium"
+		android:layout_alignParentTop="true"
+		android:layout_alignParentEnd="true"
+		android:layout_marginEnd="20dp" />
 
 
 </RelativeLayout>
