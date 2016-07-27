@@ -21,6 +21,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -76,6 +77,15 @@ public class EmergencyCallActivity extends TransactionSafeActivity implements Vi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        WindowManager.LayoutParams lp = getWindow().getAttributes();
+        lp.flags |= WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED;
+
+        // When no proximity sensor is available, use a shorter timeout.
+        // TODO: Do we enable this for non proximity devices any more?
+        // lp.userActivityTimeout = USER_ACTIVITY_TIMEOUT_WHEN_NO_PROX_SENSOR;
+
+        getWindow().setAttributes(lp);
 
         setContentView(R.layout.emergency_call_surface);
 
