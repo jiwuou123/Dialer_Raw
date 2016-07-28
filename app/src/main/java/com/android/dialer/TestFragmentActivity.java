@@ -1,5 +1,6 @@
 package com.android.dialer;
 
+import android.app.ActionBar;
 import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -8,6 +9,8 @@ import android.telecom.TelecomManager;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
+import android.view.View;
+import android.widget.ImageButton;
 
 import com.android.contacts.common.activity.TransactionSafeActivity;
 import com.android.contacts.common.interactions.TouchPointManager;
@@ -16,15 +19,31 @@ import com.android.dialer.m1000systemdialog.SetupDialog;
 /**
  * Created by Administrator on 2016/7/26.
  */
-public class TestFragmentActivity  extends TransactionSafeActivity {
+public class TestFragmentActivity  extends TransactionSafeActivity implements DialtactsFragment.IControlDeleteBtn{
     private static final String TAG_Dialtacts_Fragment = "dialtacts_fragment";
     private DialtactsFragment mDlf = null;//主fragment
     private SetupDialog mSetupdialog = null;//设置dialog
+    private ImageButton mMenuButtonDelete = null;//删除按钮
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.test_fragment_layout);
+
+        ActionBar actionBar = getActionBar();
+        //在actionbar中放入搜索框
+        actionBar.setCustomView(R.layout.dialtacts_actionbar);
+        actionBar.setDisplayShowCustomEnabled(true);
+
+        mMenuButtonDelete = (ImageButton)findViewById(R.id.dialtacts_bottom_menu_button_delete1);
+        mMenuButtonDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mDlf != null && mDlf.isVisible()) {
+                    mDlf.processDeleteBtn();
+                }
+            }
+        });
 
         //绑定fragment
         final FragmentTransaction transaction = getFragmentManager().beginTransaction();
@@ -116,5 +135,26 @@ public class TestFragmentActivity  extends TransactionSafeActivity {
         }
 
 
+    }
+
+    @Override
+    public void bottomMenuButtonDeleteSlideOut() {
+        if (null != mMenuButtonDelete){
+            mMenuButtonDelete.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void bottomMenuButtonDeleteSlideIn() {
+        if (null != mMenuButtonDelete){
+            mMenuButtonDelete.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    public void setEnable(boolean b) {
+        if (null != mMenuButtonDelete){
+            mMenuButtonDelete.setEnabled(b);
+        }
     }
 }

@@ -1,12 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <FrameLayout
+
+    <LinearLayout
         android:id = "@+id/test_fragment_back"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="horizontal">
 
-    </FrameLayout>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="#eeeeee">
+
+
+
+        <ImageButton
+            android:id="@+id/dialtacts_bottom_menu_button_delete1"
+            android:contentDescription="@string/action_menu_dialpad_button"
+            android:layout_width="wrap_content"
+            android:layout_centerInParent="true"
+            android:visibility="gone"
+            android:gravity="center"
+            android:layout_height="50dp"
+            android:background="@drawable/dialtacts_bottom_menu_button_delete"
+            />
+
+    </RelativeLayout>
 
 </LinearLayout>

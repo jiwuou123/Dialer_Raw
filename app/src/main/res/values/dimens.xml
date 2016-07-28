@@ -365,4 +365,12 @@
     <dimen name="bottom_menu_txt_paddingTop">3dp</dimen>
     <dimen name="bottom_menu_text_size">10sp</dimen>
 
+    <!--联系人actionbar相关参数-->
+    <!--字体大小-->
+    <dimen name="contacts_actionbar_text_size">14.67sp</dimen>
+    <!--右边距-->
+    <dimen name="contacts_actionbar_right_margin">14dp</dimen>
+    <!--左边距-->
+    <dimen name="contacts_actionbar_left_margin">18dp</dimen>
+
 </resources>

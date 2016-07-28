@@ -29,7 +29,6 @@
         android:id="@+id/dialtacts_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="@dimen/dialtacts_container_marginBottom"
         android:layout_gravity="center_horizontal|bottom"
       >
 
@@ -67,6 +66,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="0px"
+        android:visibility="gone"
         android:background="@color/dialtacts_bottom_menu_container_color"
         android:layout_alignParentBottom="true"
         android:layout_gravity="center_horizontal|bottom">

@@ -125,6 +125,14 @@ public class DialtactsFragment extends TransactionSafeFragment implements View.O
         ActionBarController.ActivityUi {
     private static final String TAG = "DialtactsFragment";
 
+    public interface IControlDeleteBtn{
+        public void bottomMenuButtonDeleteSlideOut();
+        public void bottomMenuButtonDeleteSlideIn();
+        public void setEnable(boolean b);
+    }
+
+    IControlDeleteBtn iControlDeleteBtn = null;
+
     public static final boolean DEBUG = false;
 
     public static final String SHARED_PREFS_NAME = "com.android.dialer_preferences";
@@ -416,6 +424,9 @@ public class DialtactsFragment extends TransactionSafeFragment implements View.O
         View retView = null;
         super.onCreateView(inflater, container, savedInstanceState);
 
+        //初始化接口对象
+        iControlDeleteBtn = (IControlDeleteBtn)getActivity();
+
         mFirstLaunch = true;
 
         final Resources resources = getResources();
@@ -431,8 +442,8 @@ public class DialtactsFragment extends TransactionSafeFragment implements View.O
         Trace.beginSection(TAG + " setup Views");
         final ActionBar actionBar = getActivity().getActionBar();
         //在actionbar中放入搜索框
-        actionBar.setCustomView(R.layout.dialtacts_actionbar);
-        actionBar.setDisplayShowCustomEnabled(true);
+        //actionBar.setCustomView(R.layout.dialtacts_actionbar);
+        //actionBar.setDisplayShowCustomEnabled(true);
         mActionbarNameTxt = (TextView)actionBar.getCustomView().findViewById(R.id.actionbar_name);
         mActionbarNameTxt.setOnClickListener(this);
         mActionbarMenu = (ImageView)actionBar.getCustomView().findViewById(R.id.actionbar_menu);
@@ -547,6 +558,7 @@ public class DialtactsFragment extends TransactionSafeFragment implements View.O
         mMenuButtonSetting = (ImageButton) view.findViewById(R.id.dialtacts_bottom_menu_button_group);
         mMenuButtonSetting.setOnClickListener(this);
         mMenuButtonDelete = (ImageButton)view.findViewById(R.id.dialtacts_bottom_menu_button_delete);
+
         mMenuButtonDelete.setOnClickListener(this);
 //        mFloatingActionButtonController = new FloatingActionButtonController(this,
 //                MenuButtonContainer, MenuButtonCall);
@@ -717,6 +729,18 @@ public class DialtactsFragment extends TransactionSafeFragment implements View.O
     }
 
     @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
+
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
+
+    @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString(KEY_SEARCH_QUERY, mSearchQuery);
@@ -813,13 +837,15 @@ public class DialtactsFragment extends TransactionSafeFragment implements View.O
             hideMultipleEditer();
 
         } else if (i == R.id.dialtacts_bottom_menu_button_delete) {
-            if (mCalllogList != null)
-                mCalllogList.deleteSelectedCallItems();
-
-
+            processDeleteBtn();
         } else {
             Log.wtf(TAG, "Unexpected onClick event from " + view);
         }
+    }
+
+    public void processDeleteBtn(){
+        if (mCalllogList != null)
+            mCalllogList.deleteSelectedCallItems();
     }
 
     private void showMultipleEditer() {
@@ -827,7 +853,11 @@ public class DialtactsFragment extends TransactionSafeFragment implements View.O
         mActionbarMenu.setVisibility(View.GONE);
         getActivity().getActionBar().getCustomView().findViewById(R.id.actionbar_call_dialtacts_action_cancel).setVisibility(View.VISIBLE);
         bottomMenuButtonSlideOut();
+
         bottomMenuButtonDeleteSlideIn();
+        if (null != iControlDeleteBtn){
+            iControlDeleteBtn.bottomMenuButtonDeleteSlideIn();
+        }
         mCalllogList.showMultipleDelete(true);
         if (mIsDialpadShown){
 
@@ -850,6 +880,9 @@ public class DialtactsFragment extends TransactionSafeFragment implements View.O
         getActivity().getActionBar().getCustomView().findViewById(R.id.actionbar_call_dialtacts_action_cancel).setVisibility(View.GONE);
         bottomMenuButtonSlideIn();
         bottomMenuButtonDeleteSlideOut();
+        if (null != iControlDeleteBtn){
+            iControlDeleteBtn.bottomMenuButtonDeleteSlideOut();
+        }
         mCalllogList.showMultipleDelete(false);
         mCalllogList.allSelectLog(false);
         if (!mIsDialpadShown) {
@@ -1918,9 +1951,15 @@ public class DialtactsFragment extends TransactionSafeFragment implements View.O
 //            ColorStateList colorStateListTxt = getColorStateList(R.color.multiple_selected_call_log_deletebtn_color);
 //            mMenuButtonDelete.setImageTintList(colorStateListTxt);
             if (count>0){
+                if (null != iControlDeleteBtn){
+                    iControlDeleteBtn.setEnable(true);
+                }
                 mMenuButtonDelete.setEnabled(true);
                 mActionbarNameTxt.setText(sb);
             }else {
+                if (null != iControlDeleteBtn){
+                    iControlDeleteBtn.setEnable(false);
+                }
                 mMenuButtonDelete.setEnabled(false);
                 mActionbarNameTxt.setText(getString(R.string.select_call_log));
             }

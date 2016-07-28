@@ -4,28 +4,32 @@
     android:layout_height="match_parent"
     android:orientation="horizontal" >
 
+	<RelativeLayout
+		android:id="@+id/actionbar_for_dialer"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent">
 
-   <EditText
-	    android:id="@+id/edittext"
-	    android:visibility="gone"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content">
-   </EditText>
-	<TextView
-		android:id="@+id/actionbar_call_dialtacts_action_cancel"
-		android:layout_width="wrap_content"
-		android:layout_height="match_parent"
-		android:textSize="@dimen/dialtacts_actionbar_editer_text_size"
-		android:layout_marginLeft="16dp"
-		android:gravity="center_vertical"
-		android:textColor="@color/bbk_actionbar_editer_text_color"
-		android:layout_alignParentLeft="true"
-		android:singleLine="true"
-		android:text="@string/cansel"
-		android:textAppearance="?android:attr/textAppearanceMedium"
-		android:visibility="gone"/>
+		<EditText
+			android:id="@+id/edittext"
+			android:visibility="gone"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content">
+		</EditText>
+		<TextView
+			android:id="@+id/actionbar_call_dialtacts_action_cancel"
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent"
+			android:textSize="@dimen/dialtacts_actionbar_editer_text_size"
+			android:layout_marginLeft="16dp"
+			android:gravity="center_vertical"
+			android:textColor="@color/bbk_actionbar_editer_text_color"
+			android:layout_alignParentLeft="true"
+			android:singleLine="true"
+			android:text="@string/cansel"
+			android:textAppearance="?android:attr/textAppearanceMedium"
+			android:visibility="gone"/>
 
-	<TextView
+		<TextView
 			android:id="@+id/actionbar_name"
 			android:textSize="@dimen/bbk_tab_text_size"
 			android:layout_marginRight="@dimen/dialtacts_actionbar_name_layout_marginRight"
@@ -55,19 +59,55 @@
 			android:layout_toStartOf="@+id/actionbar_call_dialtacts_action_editer"
 			android:layout_marginEnd="82dp" />
 
-	<TextView
-       android:id="@+id/actionbar_call_dialtacts_action_editer"
-       android:layout_width="wrap_content"
-       android:layout_height="match_parent"
-       android:textSize="@dimen/dialtacts_actionbar_editer_text_size"
-       android:gravity="center_vertical"
-       android:textColor="@color/bbk_actionbar_editer_text_color"
-		android:singleLine="true"
-       android:text="@string/call_detail_editer"
-       android:textAppearance="?android:attr/textAppearanceMedium"
-		android:layout_alignParentTop="true"
-		android:layout_alignParentEnd="true"
-		android:layout_marginEnd="20dp" />
+		<TextView
+			android:id="@+id/actionbar_call_dialtacts_action_editer"
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent"
+			android:textSize="@dimen/dialtacts_actionbar_editer_text_size"
+			android:gravity="center_vertical"
+			android:textColor="@color/bbk_actionbar_editer_text_color"
+			android:singleLine="true"
+			android:text="@string/call_detail_editer"
+			android:textAppearance="?android:attr/textAppearanceMedium"
+			android:layout_alignParentTop="true"
+			android:layout_alignParentEnd="true"
+			android:layout_marginEnd="20dp" />
 
+	</RelativeLayout>
+
+	<RelativeLayout
+		android:id="@+id/actionbar_for_contacts_and_group"
+		android:layout_width="match_parent"
+		android:visibility="gone"
+		android:layout_height="match_parent">
+
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_alignParentLeft="true"
+			android:textSize="@dimen/contacts_actionbar_text_size"
+			android:layout_marginLeft="@dimen/contacts_actionbar_left_margin"
+			android:layout_centerVertical="true"
+			android:textColor="@drawable/bbk_actionbar_alpha1"
+			android:id="@+id/leftBtn"
+			/>
+
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textSize="@dimen/contacts_actionbar_text_size"
+			android:layout_centerInParent="true"
+			android:id="@+id/title"/>
+
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_alignParentRight="true"
+			android:layout_marginRight="@dimen/contacts_actionbar_right_margin"
+			android:layout_centerVertical="true"
+			android:textColor="@drawable/bbk_actionbar_alpha1"
+			android:id="@+id/rightBtn"/>
+
+	</RelativeLayout>
 
 </RelativeLayout>
