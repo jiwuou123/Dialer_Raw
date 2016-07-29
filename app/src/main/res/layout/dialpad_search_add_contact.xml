@@ -1,18 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:orientation="vertical" android:layout_width="@dimen/dialpad_search_add_contact_width"
     android:layout_height="match_parent"
-    android:background="@android:color/white">
+    android:background="@drawable/dialpad_search_new_contact_bg">
     <TextView
         android:id="@+id/contact_phone_number"
-        style="@style/DialpadSearchAddContactStyle"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dialpad_search_add_contact_title_height"
+        android:textColor="@color/dialpad_search_add_contact_title_color"
+        android:textSize="@dimen/dialpad_search_add_contact_title_size"
         android:gravity="center"
         >
     </TextView>
     <View
         android:layout_width="match_parent"
         android:layout_height="1px"
-        android:background="@android:color/darker_gray"></View>
+        android:background="@color/call_detail_divider_color"></View>
     <TextView
         style="@style/DialpadSearchAddContactTextStyle"
         android:text="@string/search_shortcut_create_new_contact"
@@ -21,7 +24,9 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1px"
-        android:background="@android:color/darker_gray"></View>
+        android:layout_marginLeft="@dimen/dialpad_search_add_contact_line_padding_left"
+        android:layout_marginRight="@dimen/dialpad_search_add_contact_line_padding_right"
+        android:background="@color/call_detail_divider_color"></View>
     <TextView
         style="@style/DialpadSearchAddContactTextStyle"
         android:text="@string/search_shortcut_add_to_contact"

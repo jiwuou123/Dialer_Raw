@@ -126,8 +126,8 @@
 
     <include layout="@layout/dialpad_when_emergency"/>
 
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="8dp" />
+    <!--<Space-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="8dp" />-->
 
 </view>

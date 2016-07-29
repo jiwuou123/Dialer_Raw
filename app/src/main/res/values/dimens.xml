@@ -62,6 +62,8 @@
     <dimen name="contact_tile_info_button_height_and_width">36dp</dimen>
     <item name="contact_tile_height_to_width_ratio" type="dimen">76%</item>
 
+
+
     <dimen name="contact_tile_text_side_padding">12dp</dimen>
     <dimen name="contact_tile_text_bottom_padding">9dp</dimen>
     <dimen name="favorites_row_top_padding">2dp</dimen>
@@ -334,18 +336,28 @@
     <dimen name="conference_call_manager_button_dimension">46dp</dimen>
 
 
-    <dimen name="call_detail_text_size">16sp</dimen>
-    <dimen name="call_detail_text_min_size">12sp</dimen>
     <!--呼入和未接通之间的距离-->
     <dimen name="between_huru_and_weijietong">10dp</dimen>
-    <dimen name="call_detail_primary_text_size">18sp</dimen>
     <!--拨号匹配界面相关尺寸-->
-    <dimen name="dialpad_search_list_item_height">56dp</dimen>
+    <dimen name="dialpad_search_list_item_height">60dp</dimen>
     <dimen name="dialpad_search_list_item_padding_left">19.3dp</dimen>
     <dimen name="dialpad_search_list_item_padding_right">20dp</dimen>
+
+    <dimen name="dialpad_search_add_contact_title_height">36dp</dimen>
+    <dimen name="dialpad_search_add_contact_width">253.3dp</dimen>
+    <dimen name="dialpad_search_add_contact_title_size">16sp</dimen>
+    <dimen name="dialpad_search_add_contact_item_size">14.6sp</dimen>
+    <dimen name="dialpad_search_add_contact_item_height">46.6dp</dimen>
+    <dimen name="dialpad_search_add_contact_item_padding_left">28.6dp</dimen>
+    <dimen name="dialpad_search_add_contact_line_padding_left">16.3dp</dimen>
+    <dimen name="dialpad_search_add_contact_line_padding_right">16.3dp</dimen>
+
     <dimen name="phone_number_primary_text_size" >17.3sp</dimen>
     <dimen name="phone_number_secondary_text_size" >10.3sp</dimen>
     <dimen name="secondary_call_info_margin">6.6dp</dimen>
+    <dimen name="call_detail_primary_text_size">18sp</dimen>
+    <dimen name="call_detail_text_size">16sp</dimen>
+    <dimen name="call_detail_text_min_size">12sp</dimen>
     <dimen name="call_detail_history_line_padding">10dp</dimen>
     <dimen name="call_detail_horizontal_margin">13dp</dimen>
     <dimen name="call_detail_horizontal_text_margin">15dp</dimen>
@@ -359,10 +371,17 @@
     <dimen name="call_detail_exist_contact_layout_margin_top">40dp</dimen>
     <dimen name="call_total_padding_left">22dp</dimen>
     <dimen name="call_total_padding_right"> 20dp</dimen>
+
+
     <!-- The dimen of dialtacts_bottom_menu -->
     <dimen name="bottom_menu_button_container_height">51dp</dimen>
     <dimen name="bottom_menu_button_container_paddingTop">8dp</dimen>
     <dimen name="bottom_menu_txt_paddingTop">3dp</dimen>
     <dimen name="bottom_menu_text_size">10sp</dimen>
+    <!--紧急拨号-->
+    <dimen name="dialpad_when_emergency_cancel_button_margin_right">59.6dp</dimen>
+    <dimen name="dialpad_when_emergency_cancel_button_size">11.3dp</dimen>
+    <dimen name="dialpad_when_emergency_floating_margin_bottom">11.3dp</dimen>
+    <dimen name="emergency_call_title_size">13sp</dimen>
 
 </resources>

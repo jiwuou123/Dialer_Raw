@@ -8,9 +8,11 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:textSize="@dimen/emergency_call_title_size"
+        android:textColor="@color/emergency_call_title_color"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="紧急呼叫"/>
+        android:text="@string/emergency_call_name"/>
 
 
 

@@ -89,7 +89,8 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="74dp">
+        android:layout_height="@dimen/floating_action_button_height"
+        android:layout_marginBottom="@dimen/dialpad_when_emergency_floating_margin_bottom">
 
         <ImageView
             android:id="@+id/dial_pic"
@@ -102,10 +103,12 @@
             android:id="@+id/cancel_pic"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center_vertical|left"
-            android:layout_marginLeft="74dp"
+            android:gravity="center_vertical|right"
+            android:textColor="@color/phone_number_primary_text"
+            android:textSize="@dimen/dialpad_when_emergency_cancel_button_size"
+            android:layout_marginRight="@dimen/dialpad_when_emergency_cancel_button_margin_right"
             android:layout_toRightOf="@id/dial_pic"
-            android:text="取消"
+            android:text="@string/back"
             />
 
     </RelativeLayout>

@@ -45,6 +45,7 @@ import com.android.dialer.calllog.IntentProvider;
 import com.android.dialer.database.DialerSearchHelper;
 import com.android.dialer.dialpad.DialpadSearchCursorLoader;
 import com.android.dialer.dialpad.SmartDialCursorLoader;
+import com.android.dialer.m1000systemdialog.RoundAlertDialog;
 import com.android.dialer.util.DialerUtils;
 import com.android.dialer.util.IntentUtil;
 import com.android.dialer.widget.EmptyContentView;
@@ -244,17 +245,18 @@ public class SmartDialSearchFragment extends SearchFragment
     private void initPopupDialog(){
         popupDialog = new Dialog(getContext(), R.style.Theme_Light_Dialog);
         View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.dialpad_search_add_contact,null);
+        popupDialog.setContentView(dialogView);
         //获得dialog的window窗口
         Window window = popupDialog.getWindow();
         //设置dialog在屏幕底部
-        window.setGravity(Gravity.BOTTOM);
-        window.setWindowAnimations(R.style.DialpadSearchPopupWindowAnim);
-        window.getDecorView().setPadding(0, 0, 0, 0);
+//        window.setGravity(Gravity.BOTTOM);
+//        window.setWindowAnimations(R.style.DialpadSearchPopupWindowAnim);
+//        window.getDecorView().setPadding(0, 0, 0, 0);
         android.view.WindowManager.LayoutParams lp = window.getAttributes();
-        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
-        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        lp.width = (int) getResources().getDimension(R.dimen.dialpad_search_add_contact_width);
+        lp.y-=200;
         window.setAttributes(lp);
-        popupDialog.setContentView(dialogView);
+
         popupWindowTitle = (TextView) dialogView.findViewById(R.id.contact_phone_number);
         dialogView.findViewById(R.id.create_new_contact_action).setOnClickListener(this);
         dialogView.findViewById(R.id.add_to_existing_contact_action).setOnClickListener(this);
