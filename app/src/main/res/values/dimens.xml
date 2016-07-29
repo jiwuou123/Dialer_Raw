@@ -217,7 +217,7 @@
     <dimen name="dialpad_overflow_margin">8dp</dimen>
     <dimen name="dialpad_floating_action_button_marginBotton">11.3dp</dimen>
     <!-- dialtacts_container marginBottom -->
-    <dimen name="dialtacts_container_marginBottom">51dp</dimen>
+    <dimen name="dialtacts_container_marginBottom">51.66dp</dimen>
 
     <dimen name="dialtacts_floating_action_button_marginBotton">1dp</dimen>
 
@@ -361,7 +361,7 @@
     <dimen name="call_total_padding_right"> 20dp</dimen>
     <!-- The dimen of dialtacts_bottom_menu -->
     <dimen name="bottom_menu_button_container_height">51dp</dimen>
-    <dimen name="bottom_menu_button_container_paddingTop">8dp</dimen>
+    <dimen name="bottom_menu_button_container_paddingTop">5dp</dimen>
     <dimen name="bottom_menu_txt_paddingTop">3dp</dimen>
     <dimen name="bottom_menu_text_size">10sp</dimen>
 

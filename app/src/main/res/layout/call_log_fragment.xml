@@ -43,9 +43,7 @@
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/background_dialer_call_log"
-            android:paddingStart="@dimen/call_log_horizontal_margin"
-            android:paddingEnd="@dimen/call_log_horizontal_margin" />
+            android:background="@color/background_dialer_call_log" />
 
     </LinearLayout>
 
@@ -56,5 +54,13 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:visibility="gone" />
+    <com.android.dialer.bbkwidget.CallLogEmptyView
+        android:id="@+id/call_log_empty_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone">
+        <include layout="@layout/call_log_empty_layout"/>
+
+    </com.android.dialer.bbkwidget.CallLogEmptyView>
 
 </FrameLayout>

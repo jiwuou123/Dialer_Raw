@@ -16,7 +16,7 @@ import com.google.common.annotations.VisibleForTesting;
  */
 public class ActionBarController {
     public static final boolean DEBUG = DialtactsFragment.DEBUG;
-    public static final String TAG = "ActionBarController";
+    public static final String TAG = "DialtactsActionBarController";
     private static final String KEY_IS_SLID_UP = "key_actionbar_is_slid_up";
     private static final String KEY_IS_FADED_OUT = "key_actionbar_is_faded_out";
     private static final String KEY_IS_EXPANDED = "key_actionbar_is_expanded";

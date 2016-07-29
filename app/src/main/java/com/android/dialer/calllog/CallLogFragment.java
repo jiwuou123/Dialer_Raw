@@ -58,6 +58,8 @@ import com.android.contacts.common.util.ViewUtil;
 import com.android.dialer.R;
 import com.android.dialer.bbk.RecyclerViewChangedImpl;
 import com.android.dialer.bbk.SelectedCallLogImpl;
+import com.android.dialer.bbkwidget.CallLogEmptyView;
+import com.android.dialer.bbkwidget.DividerDecoration;
 import com.android.dialer.bbkwidget.TouchableRecyclerView;
 import com.android.dialer.list.ListsFragment.HostInterface;
 import com.android.dialer.m1000systemdialog.RoundAlertDialog;
@@ -109,6 +111,7 @@ public class CallLogFragment extends Fragment implements CallLogQueryHandler.Lis
     /** Whether there is at least one voicemail source installed. */
     private boolean mVoicemailSourcesAvailable = false;
 
+    private CallLogEmptyView mCallLogEmptyView;
     private EmptyContentView mEmptyListView;
     private KeyguardManager mKeyguardManager;
 
@@ -182,6 +185,10 @@ public class CallLogFragment extends Fragment implements CallLogQueryHandler.Lis
         this(filterType, NO_LOG_LIMIT, dateLimit);
     }
 
+    public int getmCallTypeFilter() {
+        return mCallTypeFilter;
+    }
+
     /**
      * Creates a call log fragment, filtering to include only calls of the desired type, occurring
      * after the specified date.  Also provides a means to limit the number of results returned.
@@ -238,7 +245,8 @@ public class CallLogFragment extends Fragment implements CallLogQueryHandler.Lis
 
         boolean showListView = cursor != null && cursor.getCount() > 0;
         mRecyclerView.setVisibility(showListView ? View.VISIBLE : View.GONE);
-        mEmptyListView.setVisibility(!showListView ? View.VISIBLE : View.GONE);
+//        mEmptyListView.setVisibility(!showListView ? View.VISIBLE : View.GONE);
+        mCallLogEmptyView.setVisibility(!showListView ? View.VISIBLE : View.GONE);
 
         if (mScrollToTop) {
             // The smooth-scroll animation happens over a fixed time period.
@@ -301,7 +309,7 @@ public class CallLogFragment extends Fragment implements CallLogQueryHandler.Lis
         View view = inflater.inflate(R.layout.call_log_fragment, container, false);
 
         mRecyclerView = (TouchableRecyclerView) view.findViewById(R.id.recycler_view);
-        // bbk wangchunhe   2016/07/12
+
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView,
@@ -314,11 +322,14 @@ public class CallLogFragment extends Fragment implements CallLogQueryHandler.Lis
             }
         });
         mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.addItemDecoration(new DividerDecoration(getActivity(),R.drawable.call_log_item_divider));
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
         mEmptyListView = (EmptyContentView) view.findViewById(R.id.empty_list_view);
-        mEmptyListView.setImage(R.drawable.bbk_none_sim);
-        mEmptyListView.setActionClickedListener(this);
+        mCallLogEmptyView  = (CallLogEmptyView) view.findViewById(R.id.call_log_empty_view);
+//        mEmptyListView.setImage(R.drawable.bbk_none_sim);
+//        mEmptyListView.setActionClickedListener(this);
+//        mCallLogEmptyView.setActionClickedListener(this);
 
         String currentCountryIso = GeoUtil.getCurrentCountryIso(getActivity());
         boolean isShowingRecentsTab = mLogLimit != NO_LOG_LIMIT || mDateLimit != NO_DATE_LIMIT;
@@ -432,8 +443,8 @@ public class CallLogFragment extends Fragment implements CallLogQueryHandler.Lis
         }
 
         if (!PermissionsUtil.hasPermission(context, READ_CALL_LOG)) {
-            mEmptyListView.setDescription(R.string.permission_no_calllog);
-            mEmptyListView.setActionLabel(R.string.permission_single_turn_on);
+//            mEmptyListView.setDescription(R.string.permission_no_calllog);
+//            mEmptyListView.setActionLabel(R.string.permission_single_turn_on);
             return;
         }
 
@@ -500,6 +511,7 @@ public class CallLogFragment extends Fragment implements CallLogQueryHandler.Lis
     public void showMultipleDelete( boolean b){
         mAdapter.setEditItem(b);
         mAdapter.notifyDataSetChanged();
+
     }
 
     public void allSelectLog(boolean b){
@@ -528,6 +540,7 @@ public class CallLogFragment extends Fragment implements CallLogQueryHandler.Lis
     public void deleteSelectedCallItems() {
         if (mAdapter.getSelectedItemCount() > 0) {
 
+//            RoundAlertDialog roundAlertDialog = new RoundAlertDialog(getActivity(),R.style.MultipleDeleteCallLogDialog);
             RoundAlertDialog.Builder builder = new RoundAlertDialog.Builder(getActivity());
             RoundAlertDialog deletedialog = builder.setTitle(R.string.multiple_delete_title)
             .setMessage(R.string.multiple_delete_content)
@@ -606,8 +619,10 @@ public class CallLogFragment extends Fragment implements CallLogQueryHandler.Lis
      *new interface to get calllog num.
      */
     public int getListItemCount() {
-        if(mEmptyListView != null)
-            return mEmptyListView.getVisibility() == View.VISIBLE ? 0:1;
+//        if(mEmptyListView != null)
+//            return mEmptyListView.getVisibility() == View.VISIBLE ? 0:1;
+        if (mCallLogEmptyView != null)
+            return mCallLogEmptyView.getVisibility()== View.VISIBLE ? 0:1;
         return 0;
     }
 

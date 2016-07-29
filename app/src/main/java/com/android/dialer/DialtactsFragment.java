@@ -74,6 +74,7 @@ import com.android.contacts.common.util.PermissionsUtil;
 import com.android.contacts.commonbind.analytics.AnalyticsUtil;
 import com.android.dialer.bbk.RecyclerViewChangedImpl;
 import com.android.dialer.bbk.SelectedCallLogImpl;
+import com.android.dialer.bbkwidget.DialtactsActionBarController;
 import com.android.dialer.bbkwidget.FloatingActionButtonController;
 import com.android.dialer.calllog.CallLogActivity;
 import com.android.dialer.calllog.CallLogFragment;
@@ -98,12 +99,15 @@ import com.android.dialer.widget.ActionBarController;
 import com.android.dialer.widget.SearchEditTextLayout;
 import com.android.dialerbind.DatabaseHelperManager;
 import com.android.phone.common.animation.AnimUtils;
+import com.android.dialer.bbkwidget.DialpadFloatingActionButtonController;
 import com.android.phone.common.animation.AnimationListenerAdapter;
 
 import junit.framework.Assert;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.support.v7.widget.StaggeredGridLayoutManager.TAG;
 
 //import com.android.contacts.common.widget.FloatingActionButtonController;
 
@@ -122,7 +126,9 @@ public class DialtactsFragment extends TransactionSafeFragment implements View.O
         OnPhoneNumberPickerActionListener,
         PopupMenu.OnMenuItemClickListener,
         ViewPager.OnPageChangeListener,
-        ActionBarController.ActivityUi {
+        ActionBarController.ActivityUi,
+        DialtactsActionBarController.DialtactUi{
+
     private static final String TAG = "DialtactsFragment";
 
     public static final boolean DEBUG = false;
@@ -241,6 +247,7 @@ public class DialtactsFragment extends TransactionSafeFragment implements View.O
     private boolean mClearSearchOnPause;
     public boolean mIsDialpadShown;
     public boolean mShowDialpadOnResume;
+    public boolean isShowMultipleDeleCallLog;
 
     /**
      * Whether or not the device is in landscape orientation.
@@ -266,8 +273,7 @@ public class DialtactsFragment extends TransactionSafeFragment implements View.O
     private PopupMenu mOverflowMenu;
     private EditText mSearchView;
     private View mVoiceSearchButton;
-    private ImageView mActionbarMenu;
-    private TextView mActionbarNameTxt;
+
 
 
     public String mSearchQuery;
@@ -275,6 +281,8 @@ public class DialtactsFragment extends TransactionSafeFragment implements View.O
     private DialerDatabaseHelper mDialerDatabaseHelper;
     private DragDropController mDragDropController;
     private ActionBarController mActionBarController;
+    private DialtactsActionBarController mDialtactsActionBarController;
+
 
     private FloatingActionButtonController mFloatingActionButtonController;
 
@@ -372,6 +380,8 @@ public class DialtactsFragment extends TransactionSafeFragment implements View.O
     };
 
 
+
+
     /**
      * Open the search UI when the user clicks on the search box.
      */
@@ -408,6 +418,11 @@ public class DialtactsFragment extends TransactionSafeFragment implements View.O
     };
 
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        mFirstLaunch = true;
+        super.onCreate(savedInstanceState);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -416,7 +431,7 @@ public class DialtactsFragment extends TransactionSafeFragment implements View.O
         View retView = null;
         super.onCreateView(inflater, container, savedInstanceState);
 
-        mFirstLaunch = true;
+//        mFirstLaunch = true;
 
         final Resources resources = getResources();
         int temp =  resources.getDimensionPixelSize(R.dimen.floating_action_button_width);
@@ -433,24 +448,25 @@ public class DialtactsFragment extends TransactionSafeFragment implements View.O
         //在actionbar中放入搜索框
         actionBar.setCustomView(R.layout.dialtacts_actionbar);
         actionBar.setDisplayShowCustomEnabled(true);
-        mActionbarNameTxt = (TextView)actionBar.getCustomView().findViewById(R.id.actionbar_name);
-        mActionbarNameTxt.setOnClickListener(this);
-        mActionbarMenu = (ImageView)actionBar.getCustomView().findViewById(R.id.actionbar_menu);
-        mActionbarMenu.setOnClickListener(this);
-        mEditerToCalldetail = (TextView)actionBar.getCustomView().findViewById(R.id.actionbar_call_dialtacts_action_editer);
-        mEditerToCalldetail.setOnClickListener(this);
+        TextView actionbarNameTxt = (TextView)actionBar.getCustomView().findViewById(R.id.actionbar_name);
+        actionbarNameTxt.setOnClickListener(this);
+        ImageView actionbarMenu = (ImageView)actionBar.getCustomView().findViewById(R.id.actionbar_menu);
+        actionbarMenu.setOnClickListener(this);
+        TextView editerToCalldetail = (TextView)actionBar.getCustomView().findViewById(R.id.actionbar_call_dialtacts_action_editer);
+        editerToCalldetail.setOnClickListener(this);
         TextView cancelTxt = (TextView)actionBar.getCustomView().findViewById(R.id.actionbar_call_dialtacts_action_cancel);
         cancelTxt.setOnClickListener(this);
-        mActionbarNameTxt.setText(getString(R.string.all_calls));
+        actionbarNameTxt.setText(getString(R.string.all_calls));
         mSearchView = (EditText) actionBar.getCustomView().findViewById(R.id.edittext);
         mSearchView.setVisibility(View.GONE);
+        mDialtactsActionBarController  = new DialtactsActionBarController(actionbarMenu,editerToCalldetail,cancelTxt,actionbarNameTxt,this);
 //        actionBar.setBackgroundDrawable(null);
 
         SearchEditTextLayout searchEditTextLayout =
                 (SearchEditTextLayout) actionBar.getCustomView().findViewById(R.id.search_view_container);
 //        searchEditTextLayout.setPreImeKeyListener(mSearchEditTextLayoutListener);
 
-//        mActionBarController = new ActionBarController(this, searchEditTextLayout);
+//        mActionBarController = new DialtactsActionBarController(this, searchEditTextLayout);
 
 //        mSearchView = (EditText) searchEditTextLayout.findViewById(R.id.search_view);
         mSearchView.addTextChangedListener(mPhoneSearchQueryTextListener);
@@ -537,7 +553,7 @@ public class DialtactsFragment extends TransactionSafeFragment implements View.O
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // bbk wangchunhe 2016/07/12
+
         final View MenuButtonContainer = view.findViewById(
                 R.id.dialtacts_bottom_menu_container);
         mMenuButtonCall = (ImageButton) view.findViewById(R.id.dialtacts_bottom_menu_button_call);
@@ -591,7 +607,7 @@ public class DialtactsFragment extends TransactionSafeFragment implements View.O
             //   mCalllogList.scrollToTop();
 //            showDialpadFragment(false);
             Log.e(TAG," ------ onResume() ----    hide 1" );
-        }else {
+        } else {
             showSearchFragment();
             showDialpadFragment(true);
             mFloatingActionButtonController.setVisible(true);
@@ -632,15 +648,15 @@ public class DialtactsFragment extends TransactionSafeFragment implements View.O
 
         mFirstLaunch = false;
 
-//        if (mIsRestarting) {
-//            // This is only called when the activity goes from resumed -> paused -> resumed, so it
-//            // will not cause an extra view to be sent out on rotation
-//            if (mIsDialpadShown) {
-//                AnalyticsUtil.sendScreenView(mDialpadFragment, this);
-//                Log.e(TAG," ----- onResume() ----- 4   mIsDialpadShown is true ");
-//            }
-//            mIsRestarting = false;
-//        }
+        if (mIsRestarting) {
+            // This is only called when the activity goes from resumed -> paused -> resumed, so it
+            // will not cause an extra view to be sent out on rotation
+            if (mIsDialpadShown) {
+                AnalyticsUtil.sendScreenView(mDialpadFragment, getActivity());
+                Log.e(TAG," ----- onResume() ----- 4   mIsDialpadShown is true ");
+            }
+            mIsRestarting = false;
+        }
 
         prepareVoiceSearchButton();
         mDialerDatabaseHelper.startSmartDialUpdateThread();
@@ -694,9 +710,14 @@ public class DialtactsFragment extends TransactionSafeFragment implements View.O
         }
     }
 
+    @Override
+    public void onStart() {
+        mIsRestarting = true;
+        Log.e(TAG,"  ----- onRestart() ----- " + " mIsDialpadShown is:  " + mIsDialpadShown);
+        super.onStart();
+    }
 
-
-//    @Override
+    //    @Override
 //    protected void onRestart() {
 //        super.onRestart();
 //        mIsRestarting = true;
@@ -750,6 +771,7 @@ public class DialtactsFragment extends TransactionSafeFragment implements View.O
 //                    mInCallDialpadUp = false;
 //                    showDialpadFragment(true);
 //                }
+            Log.d(TAG, " onClic mIsDialpadShown "+ mIsDialpadShown);
             if (!mIsDialpadShown) {
                 mInCallDialpadUp = false;
                 showDialpadFragment(true);
@@ -790,27 +812,30 @@ public class DialtactsFragment extends TransactionSafeFragment implements View.O
             initCallLogSelectPopupWindow();
             Log.e(TAG, " ---- onClick actionbarName ----");
 
-        } else if (i == R.id.actionbar_call_dialtacts_action_editer) {//                StringBuilder sb = new StringBuilder("已选").append(mCalllogList.getSelectLogCount()).append("项通话记录");
-            if (mEditerToCalldetail.getText().toString().trim().equals(getResources().getString(R.string.call_detail_editer))) {
+        } else if (i == R.id.actionbar_call_dialtacts_action_editer) {
+            StringBuilder sb = new StringBuilder("已选");
+            if (mDialtactsActionBarController.getEditerText().equals(getResources().getString(R.string.call_detail_editer))){
                 showMultipleEditer();
-                mEditerToCalldetail.setText(getString(R.string.call_delete_select_all));
-//                    mActionbarNameTxt.setText(sb);
-            } else if (mEditerToCalldetail.getText().toString().trim().equals(getResources().getString(R.string.call_delete_select_all))) {
+                mDialtactsActionBarController.setEditerTxt(getString(R.string.call_delete_select_all));
+            } else if (mDialtactsActionBarController.getEditerText().equals(getResources().getString(R.string.call_delete_select_all))){
                 mCalllogList.allSelectLog(true);
-                mEditerToCalldetail.setText(R.string.call_delete_cansel_all);
-//                    mActionbarNameTxt.setText(sb);
-            } else if (mEditerToCalldetail.getText().toString().trim().equals(getResources().getString(R.string.call_delete_cansel_all))) {
+                mDialtactsActionBarController.setEditerTxt(getString(R.string.call_delete_cansel_all));
+                sb.append(mCalllogList.getSelectLogCount()).append("项通话记录");
+                mDialtactsActionBarController.setActionName(new String(sb));
+            } else if (mDialtactsActionBarController.getEditerText().equals(getResources().getString(R.string.call_delete_cansel_all))){
                 mCalllogList.allSelectLog(false);
-                mEditerToCalldetail.setText(R.string.call_delete_select_all);
-//                    StringBuilder sb = new StringBuilder("已选").append(mCalllogList.getSelectLogCount()).append("项通话记录");
-//                    mActionbarNameTxt.setText(sb);
+                mDialtactsActionBarController.setEditerTxt(getString(R.string.call_delete_select_all));
+                mDialtactsActionBarController.setActionName(getString(R.string.select_call_log));
             }
             mFloatingActionButtonController.setVisible(false);
             mCalllogList.setmSelectCallLogImpl(mSeletectCallLogImpl);
 
 
+
+
         } else if (i == R.id.actionbar_call_dialtacts_action_cancel) {
             hideMultipleEditer();
+
 
         } else if (i == R.id.dialtacts_bottom_menu_button_delete) {
             if (mCalllogList != null)
@@ -823,9 +848,10 @@ public class DialtactsFragment extends TransactionSafeFragment implements View.O
     }
 
     private void showMultipleEditer() {
-        mActionbarNameTxt.setText(getString(R.string.select_call_log));
-        mActionbarMenu.setVisibility(View.GONE);
-        getActivity().getActionBar().getCustomView().findViewById(R.id.actionbar_call_dialtacts_action_cancel).setVisibility(View.VISIBLE);
+
+        mDialtactsActionBarController.setActionName(getString(R.string.select_call_log));
+        mDialtactsActionBarController.getmActionMenu().setVisibility(View.GONE);
+        mDialtactsActionBarController.showCanselTxt(true);
         bottomMenuButtonSlideOut();
         bottomMenuButtonDeleteSlideIn();
         mCalllogList.showMultipleDelete(true);
@@ -833,21 +859,21 @@ public class DialtactsFragment extends TransactionSafeFragment implements View.O
 
             hideDialpadFragment(true,true);
         }
-        Log.d(TAG, "  showMultipleEditer()  --- ActionButton  --1- " + mFloatingActionButtonController.isVisible());
-
-
-
-        Log.d(TAG, "  showMultipleEditer()  --- ActionButton  --2- " + mFloatingActionButtonController.isVisible());
-
 
 
     }
 
     private void hideMultipleEditer(){
-        mActionbarNameTxt.setText(getString(R.string.all_calls));
-        mActionbarMenu.setVisibility(View.VISIBLE);
-        mEditerToCalldetail.setText(getString(R.string.call_detail_editer));
-        getActivity().getActionBar().getCustomView().findViewById(R.id.actionbar_call_dialtacts_action_cancel).setVisibility(View.GONE);
+        if (mCalllogList.getmCallTypeFilter() == CallLogQueryHandler.CALL_TYPE_ALL){
+            mDialtactsActionBarController.setActionName(getString(R.string.all_calls));
+        }else {
+            mDialtactsActionBarController.setActionName(getString(R.string.call_log_missed));
+        }
+
+        mDialtactsActionBarController.showActionMenu(true);
+        mDialtactsActionBarController.showCanselTxt(false);
+        mDialtactsActionBarController.setEditerTxt(getString(R.string.call_detail_editer));
+
         bottomMenuButtonSlideIn();
         bottomMenuButtonDeleteSlideOut();
         mCalllogList.showMultipleDelete(false);
@@ -858,7 +884,6 @@ public class DialtactsFragment extends TransactionSafeFragment implements View.O
         }
         mFloatingActionButtonController.setVisible(true);
 
-        Log.d(TAG, "  hideMultipleEditer()  --- ActionButton  --- " + mFloatingActionButtonController.isVisible());
     }
 
 
@@ -1161,13 +1186,14 @@ public class DialtactsFragment extends TransactionSafeFragment implements View.O
         if (mDialpadFragment != null) {
             final boolean phoneIsInUse = phoneIsInUse();
             if (phoneIsInUse || (intent.getData() !=  null && isDialIntent(intent))) {
+
                 mDialpadFragment.setStartedFromNewIntent(true);
                 if (phoneIsInUse && !mDialpadFragment.isVisible()) {
                     mInCallDialpadUp = true;
                 }
                 showDialpadFragment(false);
             }
-
+            Log.e(TAG, "        --- displayFragment(Intent intent) ---  mDialpadFragment != null ");
         }
         Log.e(TAG, " --- displayFragment(Intent intent) --- " + " mIsDialpadShown  is " + mIsDialpadShown);
     }
@@ -1769,14 +1795,16 @@ public class DialtactsFragment extends TransactionSafeFragment implements View.O
         mCallLogSelectPopupWindow.setAnimationStyle(R.style.PopupWindowAinm);
         mCallLogSelectPopupWindow.setBackgroundDrawable(new BitmapDrawable());
         mCallLogSelectPopupWindow.showAsDropDown(getActivity().getActionBar().getCustomView());
-        mActionbarMenu.setImageResource(R.drawable.actionbar_menu_down);
+//        mActionbarMenu.setImageResource(R.drawable.actionbar_menu_down_up);
+        mDialtactsActionBarController.setActionMenuIcon(R.drawable.actionbar_menu_down_up);
         popupWindowItemSelect(mCallLogSelectPopupWindow);
         mCallLogSelectPopupWindow.update();
         mCallLogSelectPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
             @Override
             public void onDismiss() {
-                mActionbarMenu.setImageResource(R.drawable.actionbar_menu_down);
+//                mActionbarMenu.setImageResource(R.drawable.actionbar_menu_down);
 
+                mDialtactsActionBarController.setActionMenuIcon(R.drawable.actionbar_menu_down);
             }
         });
 
@@ -1794,7 +1822,10 @@ public class DialtactsFragment extends TransactionSafeFragment implements View.O
     private void showCallLogFragment(int filterType){
 
         final FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-        mCalllogList = null;
+        if (mCalllogList != null){
+            transaction.remove(mCalllogList);
+        }
+
         mCalllogList  = new CallLogFragment(filterType);
         transaction.add(R.id.dialtacts_frame, mCalllogList,"mCalllogList");
         mCalllogList.setRecyclerViewChangedImpl(mRecyclerViewChangedImpl);
@@ -1847,7 +1878,11 @@ public class DialtactsFragment extends TransactionSafeFragment implements View.O
                 callLogMissedImage.setSelected(false);
                 callLogMissedTxt.setSelected(false);
                 showCallLogFragment(CallLogQueryHandler.CALL_TYPE_ALL);
-                mActionbarNameTxt.setText(getString(R.string.all_calls));
+//                mActionbarNameTxt.setText(getString(R.string.all_calls));
+//                mDialtactsActionBarController.setActionNameAndMenu(R.string.all_calls,R.string.call_log_missed,R.string.select_call_log);
+                Log.e(TAG," action Name  --1" + mDialtactsActionBarController.getmActionNameTxt().getText());
+                mDialtactsActionBarController.setActionName(getString(R.string.all_calls));
+                Log.e(TAG," action Name  --2" + mDialtactsActionBarController.getmActionNameTxt().getText());
                 mCallLogSelectPopupWindow.dismiss();
 
 
@@ -1863,7 +1898,11 @@ public class DialtactsFragment extends TransactionSafeFragment implements View.O
                 callLogMissedImage.setSelected(true);
                 callLogMissedTxt.setSelected(true);
                 showCallLogFragment(Calls.MISSED_TYPE);
-                mActionbarNameTxt.setText(getString(R.string.call_log_missed));
+//                mActionbarNameTxt.setText(getString(R.string.call_log_missed));
+//                mDialtactsActionBarController.setActionNameAndMenu(R.string.all_calls,R.string.call_log_missed,R.string.select_call_log);
+                Log.e(TAG," action Name  --3" + mDialtactsActionBarController.getmActionNameTxt().getText());
+                mDialtactsActionBarController.setActionName(getString(R.string.call_log_missed));
+                Log.e(TAG," action Name  --4" + mDialtactsActionBarController.getmActionNameTxt().getText());
                 mCallLogSelectPopupWindow.dismiss();
 
             }
@@ -1873,14 +1912,16 @@ public class DialtactsFragment extends TransactionSafeFragment implements View.O
     }
 
 
+
+
     /**
-     * @author bbk wangchunhe
      * @Date 2016/07/13
      * change actionbarMenu icon
      */
     private void actionbarMenuOpen() {
         if(mCallLogSelectPopupWindow != null && mCallLogSelectPopupWindow.isShowing()){
-            mActionbarMenu.setImageResource(R.drawable.actionbar_menu_down_up);
+//            mActionbarMenu.setImageResource(R.drawable.actionbar_menu_down_up);
+            mDialtactsActionBarController.setActionMenuIcon(R.drawable.actionbar_menu_down_up);
 
         }
     }
@@ -1903,6 +1944,7 @@ public class DialtactsFragment extends TransactionSafeFragment implements View.O
                     exitSearchUi();
                 }
                 hideDialpadFragment(true, true);
+                Log.e(TAG," mIsDialpadShown is" + true);
             } else if (isInSearchUi()) {
                 //exitSearchUi();
                 //DialerUtils.hideInputMethod(mParentLayout);
@@ -1915,18 +1957,19 @@ public class DialtactsFragment extends TransactionSafeFragment implements View.O
         public void selectCallLogToDelete(int count) {
             StringBuilder sb = new StringBuilder("已选").append(count).append("项通话记录");
 
-//            ColorStateList colorStateListTxt = getColorStateList(R.color.multiple_selected_call_log_deletebtn_color);
-//            mMenuButtonDelete.setImageTintList(colorStateListTxt);
             if (count>0){
                 mMenuButtonDelete.setEnabled(true);
-                mActionbarNameTxt.setText(sb);
+//                mActionbarNameTxt.setText(sb);
+                mDialtactsActionBarController.setActionName(new String(sb));
             }else {
                 mMenuButtonDelete.setEnabled(false);
-                mActionbarNameTxt.setText(getString(R.string.select_call_log));
+
             }
 
         }
     };
+
+
 }
 
 

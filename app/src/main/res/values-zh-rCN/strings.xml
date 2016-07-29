@@ -423,4 +423,8 @@
     <string name="bottom_menu_txt_contacts">"联系人"</string>
     <string name="bottom_menu_button_group">"群组"</string>
 
+    <!--  the string of call_log_empty_layout-->
+    <string name="conten_ru">如查找\"张晓鸥\"（</string>
+
+
 </resources>
