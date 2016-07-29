@@ -1313,5 +1313,6 @@
     <string name="bottom_menu_button_group">GROUP</string>
     <string name="emergency_call_name">EmergencyCall</string>
     <string name="back">back</string>
-
+<!--  the string of call_log_empty_layout-->
+    <string name="conten_ru">如查找\"张晓鸥\"（</string>
 </resources>

@@ -210,7 +210,7 @@
     <!-- 20% opacity, theme color. -->
     <color name="incall_dialpad_touch_tint">#330288d1</color>
 
-    <!-- color for dialtacts_bottom_menu_button_delete -->
+    <!-- color for bottom_menu_button_delete_bg -->
     <color name="bottom_menu_button_delete_select_unable">#a3a3a3</color>
     <color name="bottom_menu_button_delete_select_enable">#b3000000</color>
     <color name="bottom_menu_button_delete_select_press">#ff16b900</color>

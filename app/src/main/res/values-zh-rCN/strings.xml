@@ -425,4 +425,8 @@
     <string name="emergency_call_name">"紧急拨号"</string>
     <string name="back">"返回"</string>
 
+    <!--  the string of call_log_empty_layout-->
+    <string name="conten_ru">如查找\"张晓鸥\"（</string>
+
+
 </resources>

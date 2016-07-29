@@ -45,6 +45,7 @@ public class CallTypeIconsView extends View {
     private Resources mResources;
     private int mWidth;
     private int mHeight;
+    public static final int ALL_REJECT = 0x123;
 
     public CallTypeIconsView(Context context) {
         this(context, null);
@@ -114,6 +115,8 @@ public class CallTypeIconsView extends View {
                 return mResources.missed;
             case Calls.VOICEMAIL_TYPE:
                 return mResources.voicemail;
+            case ALL_REJECT:
+                return mResources.rejected;
             default:
                 // It is possible for users to end up with calls with unknown call types in their
                 // call history, possibly due to 3rd party call log implementations (e.g. to
@@ -175,6 +178,8 @@ public class CallTypeIconsView extends View {
          */
         public final Drawable videoCall;
 
+        public final Drawable rejected;
+
         /**
          * The margin to use for icons.
          */
@@ -203,7 +208,10 @@ public class CallTypeIconsView extends View {
             missed = r.getDrawable(R.drawable.call_missed);
 //            missed.setColorFilter(r.getColor(R.color.missed_call), PorterDuff.Mode.MULTIPLY);
 
+            rejected = r.getDrawable(R.drawable.call_rejected);
+
             voicemail = r.getDrawable(R.drawable.ic_call_voicemail_holo_dark);
+
 
             // Get the video call icon, scaled to match the height of the call arrows.
             // We want the video call icon to be the same height as the call arrows, while keeping

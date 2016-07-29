@@ -101,7 +101,8 @@ public class PhoneCallDetailsHelper {
             //拒接类型
             if (details.duration == 0){
                 if (Calls.INCOMING_TYPE == details.callTypes[index]){
-                    views.callTypeIcons.add(Calls.VOICEMAIL_TYPE);
+                    views.callTypeIcons.add(CallTypeIconsView.ALL_REJECT);
+                    type = CallTypeIconsView.ALL_REJECT;
                     Log.d(TAG, " --- setPhoneCallDetails ---   INCOMING_TYPE");
                 } else {
                     views.callTypeIcons.add(details.callTypes[index]);
@@ -170,7 +171,7 @@ public class PhoneCallDetailsHelper {
         }
         int missColor  = R.color.bbk_miss_call_color;
         int callColor = R.color.bbk_call_color;
-        if(type == Calls.MISSED_TYPE)views.nameView.setTextColor(mResources.getColor(missColor));
+        if(type == Calls.MISSED_TYPE||type == CallTypeIconsView.ALL_REJECT)views.nameView.setTextColor(mResources.getColor(missColor));
         else views.nameView.setTextColor(mResources.getColor(callColor));
 
         views.nameView.setText(nameText);
