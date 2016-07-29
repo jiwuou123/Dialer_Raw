@@ -434,7 +434,7 @@ public class DialtactsFragment extends TransactionSafeFragment implements View.O
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Log.e(TAG, " --- onCreate(Bundle savedInstanceState) ---  start ");
+        Log.e(TAG, " --- onCreateView(Bundle savedInstanceState) ---  start ");
         Trace.beginSection(TAG + " onCreate");
         View retView = null;
         super.onCreateView(inflater, container, savedInstanceState);
@@ -556,7 +556,7 @@ public class DialtactsFragment extends TransactionSafeFragment implements View.O
         Trace.endSection();
         initFlushHandler();
 
-        Log.e(TAG, " onCreate()  dialerFragment  " +  mIsDialpadShown  );
+        Log.e(TAG, " onCreateView()  dialerFragment  " +  mIsDialpadShown  );
         return retView;
     }
 
@@ -619,7 +619,7 @@ public class DialtactsFragment extends TransactionSafeFragment implements View.O
             //   mCalllogList.scrollToTop();
 //            showDialpadFragment(false);
             Log.e(TAG," ------ onResume() ----    hide 1" );
-        }else {
+        } else {
             showSearchFragment();
             showDialpadFragment(true);
             mFloatingActionButtonController.setVisible(true);
@@ -725,7 +725,7 @@ public class DialtactsFragment extends TransactionSafeFragment implements View.O
     @Override
     public void onStart() {
         mIsRestarting = true;
-        Log.e(TAG,"  ----- onRestart() ----- " + " mIsDialpadShown is:  " + mIsDialpadShown);
+        Log.e(TAG,"  ----- onStart() ----- " + " mIsDialpadShown is:  " + mIsDialpadShown);
         super.onStart();
     }
 

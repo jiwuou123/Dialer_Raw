@@ -202,7 +202,6 @@ public class PhoneCallDetailsHelper {
         // Get type of call (ie mobile, home, etc) if known, or the caller's location.
         //CharSequence callTypeOrLocation = getCallTypeOrLocation(details);//不再显示手机存储状态
         CharSequence callTypeOrLocation = details.geocode;
-        Log.d(TAG," --- getCallLocation ---" + details.number);
         if (!TextUtils.isEmpty(details.name)){
             callTypeOrLocation = details.number;
         } else {
@@ -375,20 +374,33 @@ public class PhoneCallDetailsHelper {
                 return hour%24+":"+hourAndminute[1];
             }
         }else{
-
-            if(now-518400000l-millisecOfNow>time){       //此时为一周以前
-
-                return yearMonthDay;
-            }else{
+//            if(now-518400000l-millisecOfNow>time){       //此时为一周以前
+//
+//                return yearMonthDay;
+//            }else{
+//
+//                if(now-millisecOfNow-86400000l<time){		     //此时为昨天
+//
+//                    return res.getString(R.string.call_log_header_yesterday);
+//                }else{
+//
+//                    return dayOfWeek;
+//                }
+//            }
+//            if(now-518400000l-millisecOfNow>time){       //此时为一周以前
+//
+//                return yearMonthDay;
+//            }else{
 
                 if(now-millisecOfNow-86400000l<time){		     //此时为昨天
 
                     return res.getString(R.string.call_log_header_yesterday);
                 }else{
 
-                    return dayOfWeek;
+                    return yearMonthDay;
                 }
-            }
+//            }
+
         }
     }
 
@@ -480,14 +492,19 @@ public class PhoneCallDetailsHelper {
         if(DEG)
             Log.e("liupengfei","setCallDataAndTime date.length ="+date.length+",dateTestString = "+dateTestString);
         if(date.length > 1){
+//            views.dataAndTime2.setVisibility(View.VISIBLE);
+//            views.dataAndTime.setText(date[0]);
+//            views.dataAndTime2.setText(date[1]);
             views.dataAndTime2.setVisibility(View.VISIBLE);
-            views.dataAndTime.setText(date[0]);
-            views.dataAndTime2.setText(date[1]);
+            views.dataAndTime2.setText(date[0]);
+            views.dataAndTime.setVisibility(View.GONE);
             if(DEG)
                 Log.e("liupengfei","setCallDataAndTime date[0] ="+date[0]+",date[1] = "+date[1]);
         }else{
-            views.dataAndTime2.setVisibility(View.GONE);
-            views.dataAndTime.setText(dateText);
+//            views.dataAndTime2.setVisibility(View.GONE);
+//            views.dataAndTime.setText(dateText);
+            views.dataAndTime2.setText(dateText);
+            views.dataAndTime.setVisibility(View.GONE);
         }
     }
 
