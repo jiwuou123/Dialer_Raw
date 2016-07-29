@@ -261,4 +261,14 @@
     <color name="phone_number_primary_text">#313131</color>
     <color name="phone_number_secondary_text">#898989</color>
     <color name="call_detail_divider_color">#dedede</color>
+    <color name="setup_dialog_startbar_color">#eeeeee</color>//设置dialog的状态栏颜色
+
+    <!--按钮字体颜色-->
+    <color name="bbk_actionbar_text_color1">#16B900</color>
+    <!--按钮按下时的字体颜色-->
+    <color name="bbk_actionbar_text_color_pressed1">#8016B900</color>
+    
+    <color name="emergency_call_title_color">#de5d5d</color>
+    <color name="dialpad_search_add_contact_title_color">#1e1e1e</color>
+    <color name="dialpad_search_add_contact_item_color">#464646</color>
 </resources>

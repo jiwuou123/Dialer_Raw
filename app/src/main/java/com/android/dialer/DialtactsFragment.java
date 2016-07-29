@@ -131,6 +131,14 @@ public class DialtactsFragment extends TransactionSafeFragment implements View.O
 
     private static final String TAG = "DialtactsFragment";
 
+    public interface IControlDeleteBtn{
+        public void bottomMenuButtonDeleteSlideOut();
+        public void bottomMenuButtonDeleteSlideIn();
+        public void setEnable(boolean b);
+    }
+
+    IControlDeleteBtn iControlDeleteBtn = null;
+
     public static final boolean DEBUG = false;
 
     public static final String SHARED_PREFS_NAME = "com.android.dialer_preferences";
@@ -431,7 +439,10 @@ public class DialtactsFragment extends TransactionSafeFragment implements View.O
         View retView = null;
         super.onCreateView(inflater, container, savedInstanceState);
 
-//        mFirstLaunch = true;
+        //初始化接口对象
+        iControlDeleteBtn = (IControlDeleteBtn)getActivity();
+
+        //mFirstLaunch = true;
 
         final Resources resources = getResources();
         int temp =  resources.getDimensionPixelSize(R.dimen.floating_action_button_width);
@@ -446,8 +457,8 @@ public class DialtactsFragment extends TransactionSafeFragment implements View.O
         Trace.beginSection(TAG + " setup Views");
         final ActionBar actionBar = getActivity().getActionBar();
         //在actionbar中放入搜索框
-        actionBar.setCustomView(R.layout.dialtacts_actionbar);
-        actionBar.setDisplayShowCustomEnabled(true);
+        //actionBar.setCustomView(R.layout.dialtacts_actionbar);
+        //actionBar.setDisplayShowCustomEnabled(true);
         TextView actionbarNameTxt = (TextView)actionBar.getCustomView().findViewById(R.id.actionbar_name);
         actionbarNameTxt.setOnClickListener(this);
         ImageView actionbarMenu = (ImageView)actionBar.getCustomView().findViewById(R.id.actionbar_menu);
@@ -563,6 +574,7 @@ public class DialtactsFragment extends TransactionSafeFragment implements View.O
         mMenuButtonSetting = (ImageButton) view.findViewById(R.id.dialtacts_bottom_menu_button_group);
         mMenuButtonSetting.setOnClickListener(this);
         mMenuButtonDelete = (ImageButton)view.findViewById(R.id.dialtacts_bottom_menu_button_delete);
+
         mMenuButtonDelete.setOnClickListener(this);
 //        mFloatingActionButtonController = new FloatingActionButtonController(this,
 //                MenuButtonContainer, MenuButtonCall);
@@ -605,7 +617,7 @@ public class DialtactsFragment extends TransactionSafeFragment implements View.O
         if (!isInSearchUi()) {
             //if(mCalllogList != null)
             //   mCalllogList.scrollToTop();
-            showDialpadFragment(false);
+//            showDialpadFragment(false);
             Log.e(TAG," ------ onResume() ----    hide 1" );
         } else {
             showSearchFragment();
@@ -652,7 +664,7 @@ public class DialtactsFragment extends TransactionSafeFragment implements View.O
 //            // This is only called when the activity goes from resumed -> paused -> resumed, so it
 //            // will not cause an extra view to be sent out on rotation
 //            if (mIsDialpadShown) {
-//                AnalyticsUtil.sendScreenView(mDialpadFragment, getActivity());
+//                AnalyticsUtil.sendScreenView(mDialpadFragment, this);
 //                Log.e(TAG," ----- onResume() ----- 4   mIsDialpadShown is true ");
 //            }
 //            mIsRestarting = false;
@@ -717,7 +729,7 @@ public class DialtactsFragment extends TransactionSafeFragment implements View.O
         super.onStart();
     }
 
-    //    @Override
+//    @Override
 //    protected void onRestart() {
 //        super.onRestart();
 //        mIsRestarting = true;
@@ -735,6 +747,18 @@ public class DialtactsFragment extends TransactionSafeFragment implements View.O
         }
         Log.e(TAG, "  ----- onPause() ----- " + " mIsDialpadShown is:  " + mIsDialpadShown);
         super.onPause();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
+
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
     }
 
     @Override
@@ -838,27 +862,32 @@ public class DialtactsFragment extends TransactionSafeFragment implements View.O
 
 
         } else if (i == R.id.dialtacts_bottom_menu_button_delete) {
-            if (mCalllogList != null)
-                mCalllogList.deleteSelectedCallItems();
-
-
+            processDeleteBtn();
         } else {
             Log.wtf(TAG, "Unexpected onClick event from " + view);
         }
     }
 
-    private void showMultipleEditer() {
+    public void processDeleteBtn(){
+        if (mCalllogList != null)
+            mCalllogList.deleteSelectedCallItems();
+    }
 
+    private void showMultipleEditer() {
         mDialtactsActionBarController.setActionName(getString(R.string.select_call_log));
         mDialtactsActionBarController.getmActionMenu().setVisibility(View.GONE);
         mDialtactsActionBarController.showCanselTxt(true);
         bottomMenuButtonSlideOut();
         bottomMenuButtonDeleteSlideIn();
+		if (null != iControlDeleteBtn){
+            iControlDeleteBtn.bottomMenuButtonDeleteSlideIn();
+        }
         mCalllogList.showMultipleDelete(true);
         if (mIsDialpadShown){
 
             hideDialpadFragment(true,true);
         }
+
 
 
     }
@@ -876,6 +905,9 @@ public class DialtactsFragment extends TransactionSafeFragment implements View.O
 
         bottomMenuButtonSlideIn();
         bottomMenuButtonDeleteSlideOut();
+		if (null != iControlDeleteBtn){
+            iControlDeleteBtn.bottomMenuButtonDeleteSlideOut();
+        }
         mCalllogList.showMultipleDelete(false);
         mCalllogList.allSelectLog(false);
         if (!mIsDialpadShown) {
@@ -883,7 +915,6 @@ public class DialtactsFragment extends TransactionSafeFragment implements View.O
             showDialpadFragment(true);
         }
         mFloatingActionButtonController.setVisible(true);
-
     }
 
 
@@ -1186,14 +1217,13 @@ public class DialtactsFragment extends TransactionSafeFragment implements View.O
         if (mDialpadFragment != null) {
             final boolean phoneIsInUse = phoneIsInUse();
             if (phoneIsInUse || (intent.getData() !=  null && isDialIntent(intent))) {
-
                 mDialpadFragment.setStartedFromNewIntent(true);
                 if (phoneIsInUse && !mDialpadFragment.isVisible()) {
                     mInCallDialpadUp = true;
                 }
                 showDialpadFragment(false);
             }
-            Log.e(TAG, "        --- displayFragment(Intent intent) ---  mDialpadFragment != null ");
+
         }
         Log.e(TAG, " --- displayFragment(Intent intent) --- " + " mIsDialpadShown  is " + mIsDialpadShown);
     }
@@ -1958,18 +1988,22 @@ public class DialtactsFragment extends TransactionSafeFragment implements View.O
             StringBuilder sb = new StringBuilder("已选").append(count).append("项通话记录");
 
             if (count>0){
+if (null != iControlDeleteBtn){
+                    iControlDeleteBtn.setEnable(true);
+                }
                 mMenuButtonDelete.setEnabled(true);
 //                mActionbarNameTxt.setText(sb);
                 mDialtactsActionBarController.setActionName(new String(sb));
             }else {
+if (null != iControlDeleteBtn){
+                    iControlDeleteBtn.setEnable(false);
+                }
                 mMenuButtonDelete.setEnabled(false);
 
             }
 
         }
     };
-
-
 }
 
 

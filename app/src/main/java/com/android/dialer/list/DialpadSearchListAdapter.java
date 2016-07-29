@@ -8,8 +8,10 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.RecyclerView;
 import android.telephony.PhoneNumberUtils;
 import android.text.LoginFilter;
+import android.text.Selection;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
@@ -19,6 +21,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -35,9 +38,13 @@ import com.android.dialer.database.DialerSearchHelper;
 import com.android.dialer.dialpad.DialpadSearchCursorLoader;
 import com.android.dialer.dialpad.SmartDialCursorLoader;
 import com.android.dialer.util.DialerSearchUtils;
+import com.android.incallui.CallerInfo;
+import com.google.i18n.phonenumbers.AsYouTypeFormatter;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Formatter;
 
 /**
  * Created by Administrator on 2016/7/13.
@@ -51,9 +58,11 @@ public class DialpadSearchListAdapter extends DialerPhoneNumberListAdapter{
 
     private MoreFetcher moreFetcher;
     private String mCountryIso;
+    AsYouTypeFormatter mFormatter ;
     public DialpadSearchListAdapter(Context context) {
         super(context);
         mCountryIso = GeoUtil.getCurrentCountryIso(context);
+//        mFormatter = PhoneNumberUtil.getInstance().getAsYouTypeFormatter(mCountryIso);
     }
     public void configureLoader(DialpadSearchCursorLoader loader) {
         if (getQueryString() == null) {
@@ -124,7 +133,7 @@ public class DialpadSearchListAdapter extends DialerPhoneNumberListAdapter{
     }
     @Override
     public void changeCursor(int partitionIndex, Cursor cursor) {
-        boolean change = cursor!=null&&cursor.getCount()==0&&!TextUtils.isEmpty(getFormattedQueryString());
+        boolean change = cursor!=null&&cursor.getCount()==0&&!TextUtils.isEmpty(getQueryString());
         setShortcutEnabled(SHORTCUT_DIRECT_CALL,change);
         super.changeCursor(partitionIndex,cursor);
     }
@@ -135,10 +144,23 @@ public class DialpadSearchListAdapter extends DialerPhoneNumberListAdapter{
         if(getShortcutTypeFromPosition(position)==SHORTCUT_DIRECT_CALL){
             if(convertView == null){
                 convertView =  newView(mContext,parent);
+                ViewHolder viewHolder = (ViewHolder) convertView.getTag();
+//                PhoneNumberFormatter.setPhoneNumberFormattingTextWatcher(mContext, viewHolder.primaryCallInfo);
             }
             ViewHolder viewHolder = (ViewHolder) convertView.getTag();
             viewHolder.primaryCallInfo.setText(getQueryString());
-            viewHolder.secondaryCallInfo.setVisibility(View.GONE);
+//            CharSequence c = getQueryString();
+//            PhoneNumberFormatter.setPhoneNumberFormattingTextWatcher(mContext, viewHolder.primaryCallInfo);
+            String location = null;
+            try {
+                location = CallerInfo.getGeoDescriptionByContext(mContext,getQueryString());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            if(TextUtils.isEmpty(location))
+                viewHolder.secondaryCallInfo.setText(R.string.unkown_location);
+            else
+                viewHolder.secondaryCallInfo.setText(location);
             viewHolder.callDetail.setImageDrawable(mContext.getDrawable(R.drawable.add_contact));
             bindListener(NEW_CONTACT,position, viewHolder);
             return convertView;
@@ -170,7 +192,7 @@ public class DialpadSearchListAdapter extends DialerPhoneNumberListAdapter{
         viewHolder.primaryCallInfo = (TextView) view.findViewById(R.id.dialpad_search_primary_call_info);
         viewHolder.secondaryCallInfo = (TextView) view.findViewById(R.id.dialpad_search_secondary_call_info);
         viewHolder.callDetail = (ImageButton) view.findViewById(R.id.dialpad_search_call_detail);
-        PhoneNumberFormatter.setPhoneNumberFormattingTextWatcher(context, viewHolder.secondaryCallInfo);
+//        PhoneNumberFormatter.setPhoneNumberFormattingTextWatcher(context, viewHolder.secondaryCallInfo);
 //        viewHolder.callDate = (TextView) view.findViewById(R.id.dialpad_search_call_date);
         view.setTag(viewHolder);
         return view;
@@ -207,7 +229,7 @@ public class DialpadSearchListAdapter extends DialerPhoneNumberListAdapter{
             viewHolder.secondaryCallInfo.setText(callGeocodeLocation);
         }
         else
-            viewHolder.secondaryCallInfo.setVisibility(View.GONE);
+            viewHolder.secondaryCallInfo.setText(R.string.unkown_location);
 
     }
     private void bindContactView(ViewHolder viewHolder, Context context, Cursor cursor){
@@ -310,7 +332,36 @@ public class DialpadSearchListAdapter extends DialerPhoneNumberListAdapter{
         }
         return style;
     }
-
+    private String reformat(CharSequence s, int cursor) {
+        // The index of char to the leftward of the cursor.
+        int curIndex = cursor - 1;
+        String formatted = null;
+        mFormatter.clear();
+        char lastNonSeparator = 0;
+        boolean hasCursor = false;
+        int len = s.length();
+        for (int i = 0; i < len; i++) {
+            char c = s.charAt(i);
+            if (PhoneNumberUtils.isNonSeparator(c)) {
+                if (lastNonSeparator != 0) {
+                    formatted = getFormattedNumber(lastNonSeparator, hasCursor);
+                    hasCursor = false;
+                }
+                lastNonSeparator = c;
+            }
+            if (i == curIndex) {
+                hasCursor = true;
+            }
+        }
+        if (lastNonSeparator != 0) {
+            formatted = getFormattedNumber(lastNonSeparator, hasCursor);
+        }
+        return formatted;
+    }
+    private String getFormattedNumber(char lastNonSeparator, boolean hasCursor) {
+        return hasCursor ? mFormatter.inputDigitAndRememberPosition(lastNonSeparator)
+                : mFormatter.inputDigit(lastNonSeparator);
+    }
 
     private String numberLeftToRight(String origin) {
         return TextUtils.isEmpty(origin) ? origin : '\u202D' + origin + '\u202C';
