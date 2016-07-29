@@ -426,7 +426,7 @@ public class DialtactsFragment extends TransactionSafeFragment implements View.O
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Log.e(TAG, " --- onCreate(Bundle savedInstanceState) ---  start ");
+        Log.e(TAG, " --- onCreateView(Bundle savedInstanceState) ---  start ");
         Trace.beginSection(TAG + " onCreate");
         View retView = null;
         super.onCreateView(inflater, container, savedInstanceState);
@@ -545,7 +545,7 @@ public class DialtactsFragment extends TransactionSafeFragment implements View.O
         Trace.endSection();
         initFlushHandler();
 
-        Log.e(TAG, " onCreate()  dialerFragment  " +  mIsDialpadShown  );
+        Log.e(TAG, " onCreateView()  dialerFragment  " +  mIsDialpadShown  );
         return retView;
     }
 
@@ -605,7 +605,7 @@ public class DialtactsFragment extends TransactionSafeFragment implements View.O
         if (!isInSearchUi()) {
             //if(mCalllogList != null)
             //   mCalllogList.scrollToTop();
-//            showDialpadFragment(false);
+            showDialpadFragment(false);
             Log.e(TAG," ------ onResume() ----    hide 1" );
         } else {
             showSearchFragment();
@@ -648,15 +648,15 @@ public class DialtactsFragment extends TransactionSafeFragment implements View.O
 
         mFirstLaunch = false;
 
-        if (mIsRestarting) {
-            // This is only called when the activity goes from resumed -> paused -> resumed, so it
-            // will not cause an extra view to be sent out on rotation
-            if (mIsDialpadShown) {
-                AnalyticsUtil.sendScreenView(mDialpadFragment, getActivity());
-                Log.e(TAG," ----- onResume() ----- 4   mIsDialpadShown is true ");
-            }
-            mIsRestarting = false;
-        }
+//        if (mIsRestarting) {
+//            // This is only called when the activity goes from resumed -> paused -> resumed, so it
+//            // will not cause an extra view to be sent out on rotation
+//            if (mIsDialpadShown) {
+//                AnalyticsUtil.sendScreenView(mDialpadFragment, getActivity());
+//                Log.e(TAG," ----- onResume() ----- 4   mIsDialpadShown is true ");
+//            }
+//            mIsRestarting = false;
+//        }
 
         prepareVoiceSearchButton();
         mDialerDatabaseHelper.startSmartDialUpdateThread();
@@ -713,7 +713,7 @@ public class DialtactsFragment extends TransactionSafeFragment implements View.O
     @Override
     public void onStart() {
         mIsRestarting = true;
-        Log.e(TAG,"  ----- onRestart() ----- " + " mIsDialpadShown is:  " + mIsDialpadShown);
+        Log.e(TAG,"  ----- onStart() ----- " + " mIsDialpadShown is:  " + mIsDialpadShown);
         super.onStart();
     }
 
