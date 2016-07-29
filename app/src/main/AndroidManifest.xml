@@ -78,7 +78,7 @@
 
         <!--emergency call activity-->
         <activity android:name=".EmergencyCallActivity"
-            android:theme="@android:style/Theme.Black.NoTitleBar"
+            android:theme="@style/EmergencyCallTheme"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:exported="true">

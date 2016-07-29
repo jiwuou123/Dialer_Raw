@@ -1311,5 +1311,7 @@
     <string name="bottom_menu_txt_call">DIAL</string>
     <string name="bottom_menu_txt_contacts">CONTACTS</string>
     <string name="bottom_menu_button_group">GROUP</string>
+    <string name="emergency_call_name">EmergencyCall</string>
+    <string name="back">back</string>
 
 </resources>

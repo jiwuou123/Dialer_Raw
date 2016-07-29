@@ -89,28 +89,31 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="74dp">
+        android:layout_height="@dimen/floating_action_button_height"
+        android:layout_marginBottom="@dimen/dialpad_when_emergency_floating_margin_bottom">
 
         <ImageView
             android:id="@+id/dial_pic"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_lockscreen_answer_normal"
+            android:layout_width="@dimen/floating_action_button_width"
+            android:layout_height="@dimen/floating_action_button_height"
+            android:src="@drawable/dialpad_floating_action_button_btn_bg"
             android:layout_centerInParent="true"/>
 
         <TextView
             android:id="@+id/cancel_pic"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center_vertical|left"
-            android:layout_marginLeft="74dp"
+            android:gravity="center_vertical|right"
+            android:textColor="@color/phone_number_primary_text"
+            android:textSize="@dimen/dialpad_when_emergency_cancel_button_size"
+            android:layout_marginRight="@dimen/dialpad_when_emergency_cancel_button_margin_right"
             android:layout_toRightOf="@id/dial_pic"
-            android:text="取消"
+            android:text="@string/back"
             />
 
     </RelativeLayout>
 
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/dialpad_bottom_key_height" />
+    <!--<Space-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="@dimen/dialpad_bottom_key_height" />-->
 </LinearLayout>

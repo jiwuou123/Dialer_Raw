@@ -422,5 +422,7 @@
     <string name="bottom_menu_txt_call">"拨号"</string>
     <string name="bottom_menu_txt_contacts">"联系人"</string>
     <string name="bottom_menu_button_group">"群组"</string>
+    <string name="emergency_call_name">"紧急拨号"</string>
+    <string name="back">"返回"</string>
 
 </resources>
