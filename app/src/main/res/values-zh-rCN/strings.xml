@@ -406,8 +406,8 @@
 
     <!-- call_detail_add <-->
     <string name="send_contact">发送联系人</string>
-    <string name="block_contact">阻止联系人</string>
-    <string name="unblock_contact">取消阻止联系人</string>
+    <string name="block_contact">阻止此联系人</string>
+    <string name="unblock_contact">取消阻止此联系人</string>
 
     <string name="call_contact">呼叫</string>
     <string name="send_message">发送信息</string>

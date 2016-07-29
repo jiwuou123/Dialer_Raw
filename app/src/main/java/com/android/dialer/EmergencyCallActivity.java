@@ -113,7 +113,6 @@ public class EmergencyCallActivity extends TransactionSafeActivity implements Vi
         mDigits.setOnClickListener(this);
         mDigits.addTextChangedListener(this);
         mDigits.setElegantTextHeight(false);
-
         mDigits.setCursorVisible(false);
 
         mDelete = mDialpadView.getDeleteButton();
@@ -473,7 +472,8 @@ public class EmergencyCallActivity extends TransactionSafeActivity implements Vi
             dialpadKey.setOnPressedListener(this);
         }
 
-
+        final DialpadKeyButton zero = (DialpadKeyButton) view.findViewById(R.id.zero);
+        zero.setOnLongClickListener(this);
     }
 
     /**
@@ -556,9 +556,23 @@ public class EmergencyCallActivity extends TransactionSafeActivity implements Vi
         if (id == R.id.deleteButton) {
             digits.clear();
             return true;
-        } else {
+        }else if (id == R.id.zero) {
+            removePreviousDigitIfPossible();
+            keyPressed(KeyEvent.KEYCODE_PLUS);
+            stopTone();
+            mPressedDialpadKeys.remove(view);
+            return true;
+        }
+        else {
         }
         return false;
+    }
+    private void removePreviousDigitIfPossible() {
+        final int currentPosition = mDigits.getSelectionStart();
+        if (currentPosition > 0) {
+            mDigits.setSelection(currentPosition);
+            mDigits.getText().delete(currentPosition - 1, currentPosition);
+        }
     }
 }
 

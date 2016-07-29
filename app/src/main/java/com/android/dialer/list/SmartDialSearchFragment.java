@@ -278,13 +278,13 @@ public class SmartDialSearchFragment extends SearchFragment
             intent = IntentUtil.getNewContactIntent(number);
             DialerUtils.startActivityWithErrorToast(getActivity(), intent,
                     R.string.add_contact_not_available);
-
+            popupDialog.dismiss();
         } else if (i == R.id.add_to_existing_contact_action) {
             number = adapter.getFormattedQueryString();
             intent = IntentUtil.getAddToExistingContactIntent(number);
             DialerUtils.startActivityWithErrorToast(getActivity(), intent,
                     R.string.add_contact_not_available);
-
+            popupDialog.dismiss();
         }
     }
 

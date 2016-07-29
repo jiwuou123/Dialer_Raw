@@ -300,7 +300,7 @@
         <!-- IntentService to update the user's current country -->
         <service android:name="com.android.contacts.common.location.UpdateCountryService"
             android:exported="false"/>
-
+        <service android:name=".calllog.ContactSaveService"></service>
 
     </application>
 </manifest>

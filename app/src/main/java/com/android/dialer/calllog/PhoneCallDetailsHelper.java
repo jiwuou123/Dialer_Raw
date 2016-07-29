@@ -279,20 +279,21 @@ public class PhoneCallDetailsHelper {
                 DateUtils.FORMAT_ABBREV_RELATIVE);*/
         boolean isSameDay = false;
         CharSequence month,time,time1;
-        month = getRelativeTimeSpanStringForIphone(details.date,System.currentTimeMillis());
+        month = getRelativeTimeSpanStringForBBK(details.date,System.currentTimeMillis());
         time = DateFormat.format("HH:mm", details.date);
         time1 = getTime(details);
         isSameDay = DateUtils.isToday(details.date);
         if(isSameDay)return time1;
         else  {
-
-            return  month+"::"+time1;
+            return  month;
+//            return  month::time1;
         }
 
     }
 
     /**
      *获取时间
+     *
      **/
     private CharSequence getTime(PhoneCallDetails details){
         // Set the date.
@@ -388,6 +389,87 @@ public class PhoneCallDetailsHelper {
                     return dayOfWeek;
                 }
             }
+        }
+    }
+
+
+    /**
+     *     根据bbk规则来获取时间格式
+     * @param time 输入时间
+     * @param now 现在时间
+     * @return 格式化后时间
+     */
+    public String getRelativeTimeSpanStringForBBK(long time,long now){
+        SimpleDateFormat formatter = null;//时间标准格式生成器
+        Resources res = mContext.getResources();
+        formatter = new SimpleDateFormat("yyyy/MM/dd");//获取输入时间年月日格式
+        String yearMonthDay = formatter.format(time);
+        if(time>now){//如果输入时间是未来时间，则显示年月日
+            return yearMonthDay;
+        }
+
+        formatter = new SimpleDateFormat("E");
+        String dayOfWeek = formatter.format(time);//获取输入时间星期
+
+        if(DEG)
+            Log.e("liupengfei","dayOfWeek = "+dayOfWeek);
+
+        formatter = new SimpleDateFormat("kk:mm");
+        String hourMinuOfTime = formatter.format(time);//获取输入时间与分
+
+        if(DEG)
+            Log.e("liupengfei","hourMinuOfTime = "+hourMinuOfTime);
+
+        formatter = new SimpleDateFormat("kk:mm:ss");
+        String hourMinuSecOfNow = formatter.format(now);//获取当前时间时分秒
+        long millisecOfNow = 0;
+        try {
+            millisecOfNow = formatter.parse(hourMinuSecOfNow).getTime();//获取当前时间时分秒的毫秒数
+        } catch (ParseException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        if(DEG)
+            Log.e("liupengfei","hourMinuSecOfNow = "+hourMinuSecOfNow+",millisecOfNow = "+millisecOfNow);
+
+        if(DateUtils.isToday(time)){
+
+            String timeOfCurrentDay = hourMinuOfTime;
+            String[] hourAndminute = timeOfCurrentDay.split(":");
+            int hour =Integer.parseInt(hourAndminute[0]);
+
+            if(DEG){
+                Log.e("liupengfei","timeOfCurrentDay = "+timeOfCurrentDay);
+                Log.e("liupengfei","hourAndminute = "+hourAndminute);
+                Log.e("liupengfei","hour = "+hour);
+            }
+
+            ContentResolver cv = mContext.getContentResolver();
+            String strTimeFormat = android.provider.Settings.System.getString(cv,android.provider.Settings.System.TIME_12_24);
+            //判断是否是12小时制
+            if(DEG)
+                Log.e("liupengfei","strTimeFormat = "+strTimeFormat);
+            if(strTimeFormat!=null){
+                if(strTimeFormat.equals("12")){
+                    if(hour>12){
+
+                        return  res.getString(R.string.call_log_pm)+hour%12+":"+hourAndminute[1];
+                    }else{
+
+                        return  res.getString(R.string.call_log_am)+hour%12+":"+hourAndminute[1];
+                    }
+                }else{
+
+                    return hour%24+":"+hourAndminute[1];
+                }
+            }else{
+
+                return hour%24+":"+hourAndminute[1];
+            }
+        }else{
+                //其余时间均显示年月日
+                return yearMonthDay;
         }
     }
 

@@ -24,11 +24,13 @@ import android.content.ActivityNotFoundException;
 import android.content.ClipboardManager;
 import android.content.ComponentName;
 import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.res.Resources;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -40,6 +42,7 @@ import android.telecom.PhoneAccountHandle;
 import android.text.BidiFormatter;
 import android.text.TextDirectionHeuristics;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -100,6 +103,8 @@ public class CallDetailActivity extends Activity implements View.OnClickListener
     private boolean isBlack;//检验是否为黑名单联系人
     private boolean isStarted;//判断联系人是否收藏。
     private boolean isShowCallLog;
+    View unExistItems = null;
+    View existItems = null;
     private CallLogAsyncTaskListener mCallLogAsyncTaskListener = new CallLogAsyncTaskListener() {
 
         @Override
@@ -115,6 +120,7 @@ public class CallDetailActivity extends Activity implements View.OnClickListener
         @Override
         public void onGetCallDetails(PhoneCallDetails[] details) {
             detail = details;
+
             if (details == null) {
                 // Somewhere went wrong: we're going to bail out and show error to users.
                 Toast.makeText(mContext, R.string.toast_call_detail_error,
@@ -206,18 +212,22 @@ public class CallDetailActivity extends Activity implements View.OnClickListener
                 findViewById(R.id.contact_phone_numbers_divide).setVisibility(View.VISIBLE);
                 adater.setCallDetailCallback(CallDetailActivity.this);
                 isStarted = firstDetails.isStarred;
-                View view =  findViewById(R.id.call_detail_exist_contact);
-                if(view !=null){
-                    view.setVisibility(View.VISIBLE);
+                existItems =  findViewById(R.id.call_detail_exist_contact);
+                if(existItems !=null){
+                    existItems.setVisibility(View.VISIBLE);
                     initCallExistItemView();
                 }
+                if(unExistItems!=null)
+                    unExistItems.setVisibility(View.GONE);
                 checkStarted();
             }else {
-                View view = findViewById(R.id.call_detail_no_exist_contact);
-                if(view !=null){
-                    view.setVisibility(View.VISIBLE);
+                unExistItems = findViewById(R.id.call_detail_no_exist_contact);
+                if(unExistItems !=null){
+                    unExistItems.setVisibility(View.VISIBLE);
                     initCallNotExistItemView();
                 }
+                if(existItems!=null)
+                    existItems.setVisibility(View.GONE);
             }
             String lookupKey = contactUri == null ? null
                     : ContactInfoHelper.getLookupKeyFromUri(contactUri);
@@ -398,7 +408,7 @@ public class CallDetailActivity extends Activity implements View.OnClickListener
         if(!isShowCallLog){
             title.setText(R.string.intro);
         }else {
-            title.setText(R.string.call_history);
+            title.setText(R.string.callDetailTitle);
         }
     }
 
@@ -455,11 +465,11 @@ public class CallDetailActivity extends Activity implements View.OnClickListener
 
         final DefaultImageRequest request = new DefaultImageRequest(displayName, lookupKey,
                 contactType, true /* isCircular */);
-
-        mQuickContactBadge.assignContactUri(contactUri);
-        mQuickContactBadge.setContentDescription(
-                mResources.getString(R.string.description_contact_details, displayName));
-
+        if(existItems!=null){
+            mQuickContactBadge.assignContactUri(contactUri);
+            mQuickContactBadge.setContentDescription(
+                    mResources.getString(R.string.description_contact_details, displayName));
+        }
         mContactPhotoManager.loadDirectoryPhoto(mQuickContactBadge, photoUri,
                 false /* darkTheme */, true /* isCircular */, request);
     }
@@ -498,7 +508,7 @@ public class CallDetailActivity extends Activity implements View.OnClickListener
         currentNumber = detail[0].number.toString();
         String lookUpKey = detail[0].lookUpKey;
         long contactId = detail[0].contactId;
-        Uri ContactUri = detail[0].contactUri;
+        Uri contactUri = detail[0].contactUri;
         Intent intent = null;
         if(TextUtils.isEmpty(currentNumber))
             return;
@@ -517,11 +527,34 @@ public class CallDetailActivity extends Activity implements View.OnClickListener
 
         } else if (i == R.id.add_to_the_personal_favorites) {
             intent = ContactSaveService.createSetStarredIntent(
-                    getApplicationContext(), ContactUri, !isStarted);
+                    getApplicationContext(), contactUri, !isStarted);
             startService(intent);
             isStarted = !isStarted;
             checkStarted();
-
+//            final ContentValues values = new ContentValues(1);
+//            values.put(ContactsContract.Contacts.STARRED, !isStarted);
+//            getContentResolver().update(contactUri, values, null, null);
+//
+//            // Undemote the contact if necessary
+//            final Cursor c = getContentResolver().query(contactUri, new String[] {ContactsContract.Contacts._ID},
+//                    null, null, null);
+//            if (c == null) {
+//                return;
+//            }
+//            try {
+//                if (c.moveToFirst()) {
+//                    final long id = c.getLong(0);
+//
+//                    // Don't bother undemoting if this contact is the user's profile.
+//                    if (id < ContactsContract.Profile.MIN_ID) {
+//                        ContactsContract.PinnedPositions.undemote(getContentResolver(), id);
+//                    }
+//                    isStarted = !isStarted;
+//                    checkStarted();
+//                }
+//            } finally {
+//                c.close();
+//            }
         } else if (i == R.id.block_contact) {
             if (isConnection) {
                 if (isBlack)
@@ -552,7 +585,7 @@ public class CallDetailActivity extends Activity implements View.OnClickListener
 
         } else if (i == R.id.call_detail_action_editer) {
             intent = new Intent(Intent.ACTION_EDIT);
-            intent.setDataAndType(ContactUri, ContactsContract.Contacts.CONTENT_ITEM_TYPE);
+            intent.setDataAndType(contactUri, ContactsContract.Contacts.CONTENT_ITEM_TYPE);
             startActivity(intent);
 
         }
